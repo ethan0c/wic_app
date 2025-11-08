@@ -3,19 +3,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface User {
   id: string;
-  email: string;
+  email?: string; // legacy prototype email
   firstName: string;
   lastName?: string;
+  cardNumber?: string; // WIC EBT card number for card-only auth
+  state?: string; // Selected state/program
 }
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  // Legacy email/password prototype auth
   signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signUp: (email: string, password: string, firstName: string, lastName?: string) => Promise<{ success: boolean; error?: string }>;
-  signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
+  // Card-based auth for WIC flow
+  signInCard: (cardNumber: string, state: string) => Promise<{ success: boolean; error?: string }>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -90,6 +95,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return { success: true };
     } catch (error) {
       return { success: false, error: 'An error occurred during sign in' };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Card-only sign in used in the WIC flow. Accepts any non-empty card number >= 8 chars.
+  const signInCard = async (cardNumber: string, state: string): Promise<{ success: boolean; error?: string }> => {
+    setIsLoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 400)); // small simulated delay
+
+      if (!cardNumber || cardNumber.trim().length < 8) {
+        return { success: false, error: 'Card number must be at least 8 characters' };
+      }
+      if (!state) {
+        return { success: false, error: 'Please select your state' };
+      }
+
+      const userData: User = {
+        id: Date.now().toString(),
+        firstName: 'Participant',
+        cardNumber: cardNumber.trim(),
+        state,
+      };
+
+      setUser(userData);
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+
+      return { success: true };
+    } catch (e) {
+      return { success: false, error: 'An error occurred during card sign in' };
     } finally {
       setIsLoading(false);
     }
@@ -184,6 +220,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signUp,
         signOut,
         resetPassword,
+        signInCard,
       }}
     >
       {children}

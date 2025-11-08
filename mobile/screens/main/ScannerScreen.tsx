@@ -10,66 +10,150 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
-import { useWIC } from '../../context/WICContext';
+import { useNavigation } from '@react-navigation/native';
 import Button from '../../components/Button';
 import Typography from '../../components/Typography';
 import Card from '../../components/Card';
+import aplData from '../../data/apl.json';
+import * as Speech from 'expo-speech';
 
-export default function ScannerScreen() {
+type Product = {
+  upc: string;
+  name: string;
+  brand: string;
+  category: string;
+  size_oz: number;
+  size_display: string;
+  isApproved: boolean;
+  image: string;
+  reasons: string[];
+  alternatives: Array<{
+    upc: string;
+    suggestion: string;
+    reason: string;
+  }>;
+};
+
+export default function ScannerScreen({ route }: any) {
   const { theme } = useTheme();
-  const { checkItemEligibility } = useWIC();
+  const navigation = useNavigation();
   const [isScanning, setIsScanning] = useState(false);
   const [showResult, setShowResult] = useState(false);
-  const [scanResult, setScanResult] = useState<{
-    eligible: boolean;
-    message: string;
-    alternative?: string;
-    benefit?: any;
-  } | null>(null);
+  const [scanResult, setScanResult] = useState<Product | null>(null);
+  const [language, setLanguage] = useState<'en' | 'ht'>('en');
   
   // For testing - allow manual barcode entry
   const [showManualEntry, setShowManualEntry] = useState(false);
   const [manualBarcode, setManualBarcode] = useState('');
 
+  const categoryKey = route?.params?.categoryKey;
+
+  const lookupProduct = (upcOrName: string): Product | null => {
+    return aplData.products.find((p: Product) => 
+      p.upc === upcOrName || 
+      p.name.toLowerCase().includes(upcOrName.toLowerCase()) ||
+      p.brand.toLowerCase().includes(upcOrName.toLowerCase())
+    ) || null;
+  };
+
+  const speakResult = (product: Product) => {
+    const status = product.isApproved ? "approved" : "not covered";
+    let message = `${product.name} by ${product.brand} is ${status} by WIC.`;
+    
+    if (!product.isApproved && product.alternatives.length > 0) {
+      message += ` ${product.alternatives[0].reason}. ${product.alternatives[0].suggestion}.`;
+    }
+    
+    const voice = language === 'ht' ? 'ht-HT' : 'en-US';
+    Speech.speak(message, { language: voice, rate: 0.8 });
+  };
+
   const handleScan = () => {
     setIsScanning(true);
     
-    // Simulate camera scanning - In production, use expo-camera
-    // For now, we'll simulate random products
+    // Simulate camera scanning - Demo with predefined UPCs
     setTimeout(() => {
-      const testProducts = ['milk', 'CEREAL', 'bread', 'EGG', 'cheese'];
-      const randomProduct = testProducts[Math.floor(Math.random() * testProducts.length)];
+      const testUPCs = [
+        "041303001813", // Gallon milk (not approved)
+        "041303001806", // Half-gallon milk (approved)  
+        "016000275218", // Cheerios 18oz (approved)
+        "072250015144", // Wonder 20oz bread (not approved)
+        "072250015137", // Wonder 16oz bread (approved)
+      ];
+      const randomUPC = testUPCs[Math.floor(Math.random() * testUPCs.length)];
       
-      const result = checkItemEligibility(randomProduct);
+      const product = lookupProduct(randomUPC);
       
-      // Vibrate for feedback
-      if (result.eligible) {
-        Vibration.vibrate([0, 200]); // Success vibration
-      } else {
-        Vibration.vibrate([0, 100, 100, 100]); // Error vibration
+      if (product) {
+        // Vibrate for feedback
+        if (product.isApproved) {
+          Vibration.vibrate([0, 200]); // Success vibration
+        } else {
+          Vibration.vibrate([0, 100, 100, 100]); // Error vibration
+        }
+        
+        setScanResult(product);
+        setShowResult(true);
+        speakResult(product);
       }
       
       setIsScanning(false);
-      setScanResult(result);
-      setShowResult(true);
     }, 2000);
   };
 
   const handleManualScan = () => {
     if (!manualBarcode.trim()) return;
     
-    const result = checkItemEligibility(manualBarcode);
+    const product = lookupProduct(manualBarcode.trim());
     
-    if (result.eligible) {
-      Vibration.vibrate([0, 200]);
+    if (product) {
+      if (product.isApproved) {
+        Vibration.vibrate([0, 200]);
+      } else {
+        Vibration.vibrate([0, 100, 100, 100]);
+      }
+      
+      setScanResult(product);
+      setShowResult(true);
+      speakResult(product);
     } else {
+      // Create a "not found" product for demo
+      const notFound: Product = {
+        upc: manualBarcode,
+        name: "Unknown Product",
+        brand: "Unknown",
+        category: "unknown",
+        size_oz: 0,
+        size_display: "Unknown",
+        isApproved: false,
+        image: "",
+        reasons: ["product_not_found"],
+        alternatives: []
+      };
+      setScanResult(notFound);
+      setShowResult(true);
       Vibration.vibrate([0, 100, 100, 100]);
     }
     
-    setScanResult(result);
     setShowManualEntry(false);
-    setShowResult(true);
     setManualBarcode('');
+  };
+
+  const getResultMessage = (product: Product): string => {
+    if (product.isApproved) {
+      return `${product.name} by ${product.brand} (${product.size_display}) is WIC approved!`;
+    } else {
+      if (product.reasons.includes("product_not_found")) {
+        return "This product was not found in our WIC database. Please check the barcode or try a different product.";
+      }
+      const categoryRules = (aplData.rules as any)[product.category];
+      if (categoryRules?.messages) {
+        if (product.reasons.includes("package_size_not_allowed")) {
+          return categoryRules.messages.size_restriction?.en || "Package size not allowed by WIC.";
+        }
+      }
+      return `${product.name} by ${product.brand} is not covered by WIC.`;
+    }
   };
 
   const ResultModal = () => (
@@ -81,14 +165,33 @@ export default function ScannerScreen() {
     >
       <View style={styles.modalOverlay}>
         <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
+          {/* Header with language toggle */}
+          <View style={styles.modalHeader}>
+            <TouchableOpacity 
+              onPress={() => setLanguage(lang => lang === 'en' ? 'ht' : 'en')}
+              style={[styles.langButton, { backgroundColor: theme.primary + '15' }]}
+            >
+              <Text style={[styles.langText, { color: theme.primary }]}>
+                {language === 'en' ? 'EN' : 'HT'}
+              </Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              onPress={() => scanResult && speakResult(scanResult)}
+              style={[styles.audioButton, { backgroundColor: theme.primary }]}
+            >
+              <Ionicons name="volume-high" size={20} color="white" />
+            </TouchableOpacity>
+          </View>
+
           <View style={[
             styles.resultIcon,
-            { backgroundColor: scanResult?.eligible ? '#10B98120' : '#EF444420' }
+            { backgroundColor: scanResult?.isApproved ? '#10B98120' : '#EF444420' }
           ]}>
             <Ionicons
-              name={scanResult?.eligible ? 'checkmark-circle' : 'close-circle'}
+              name={scanResult?.isApproved ? 'checkmark-circle' : 'close-circle'}
               size={80}
-              color={scanResult?.eligible ? '#10B981' : '#EF4444'}
+              color={scanResult?.isApproved ? '#10B981' : '#EF4444'}
             />
           </View>
 
@@ -97,47 +200,68 @@ export default function ScannerScreen() {
             align="center"
             style={{ marginBottom: 16 }}
           >
-            {scanResult?.eligible ? 'WIC Approved!' : 'Not Covered'}
+            {scanResult?.isApproved ? 'WIC Approved!' : 'Not Covered'}
           </Typography>
 
           <Text style={[styles.resultMessage, { color: theme.text }]}>
-            {scanResult?.message}
+            {scanResult ? getResultMessage(scanResult) : ''}
           </Text>
 
-          {scanResult?.alternative && (
+          {scanResult?.alternatives && scanResult.alternatives.length > 0 && (
             <Card variant="outlined" padding="medium" style={{ marginTop: 16 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                <Ionicons name="bulb" size={24} color={theme.secondary} />
+                <Ionicons name="bulb" size={24} color={theme.primary} />
                 <View style={{ flex: 1 }}>
                   <Typography variant="label" style={{ marginBottom: 4 }}>
-                    Alternative Option
+                    Try This Instead
                   </Typography>
                   <Typography variant="body">
-                    {scanResult.alternative}
+                    {scanResult.alternatives[0].suggestion}
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 4 }}>
+                    {scanResult.alternatives[0].reason}
                   </Typography>
                 </View>
               </View>
             </Card>
           )}
 
-          {scanResult?.benefit && (
+          {scanResult?.isApproved && (
             <View style={[styles.benefitInfo, { backgroundColor: theme.primary + '10' }]}>
               <Typography variant="label" style={{ marginBottom: 8 }}>
-                Remaining This Month
+                Category Allowance
               </Typography>
-              <Typography variant="title" color="primary">
-                {scanResult.benefit.amount - scanResult.benefit.used} {scanResult.benefit.unit}
+              <Typography variant="body" color="primary">
+                {(aplData.categories as any)[scanResult.category]?.monthly_allowance} {(aplData.categories as any)[scanResult.category]?.unit} per month
               </Typography>
             </View>
           )}
 
-          <Button
-            title="Scan Another Item"
-            onPress={() => setShowResult(false)}
-            fullWidth
-            size="large"
-            style={{ marginTop: 24 }}
-          />
+          <View style={styles.modalActions}>
+            <Button
+              title="View Product Details"
+              onPress={() => {
+                setShowResult(false);
+                if (scanResult) {
+                  (navigation as any).navigate('ProductDetail', { 
+                    product: scanResult, 
+                    categoryName: (aplData.categories as any)[scanResult.category]?.name || 'Unknown'
+                  });
+                }
+              }}
+              fullWidth
+              size="large"
+              style={{ marginBottom: 12 }}
+            />
+
+            <Button
+              title="Scan Another Item"
+              onPress={() => setShowResult(false)}
+              fullWidth
+              size="large"
+              variant="outline"
+            />
+          </View>
 
           <TouchableOpacity
             onPress={() => setShowResult(false)}

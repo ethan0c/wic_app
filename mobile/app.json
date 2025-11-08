@@ -16,12 +16,17 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.CAMERA"
+      ],
+      "package": "com.wic.mobile"
     },
     "web": {
       "bundler": "metro",
       "output": "single"
-    }
+    },
+    "plugins": []
   }
 }
-

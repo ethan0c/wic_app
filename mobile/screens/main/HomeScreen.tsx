@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useWIC } from '../../context/WICContext';
@@ -17,6 +18,7 @@ export default function HomeScreen() {
   const { user } = useAuth();
   const { benefits, monthPeriod, daysRemaining } = useWIC();
   const sharedStyles = createSharedStyles(theme);
+  const navigation = useNavigation();
 
   // Calculate total cash value from all benefits
   const totalCashValue = benefits
@@ -29,11 +31,11 @@ export default function HomeScreen() {
     >
       <View style={styles.header}>
         <View>
-          <Text style={[sharedStyles.secondaryText]}>
-            {monthPeriod}
+          <Text style={[sharedStyles.heading]}>
+            Welcome back, {user?.firstName || 'WIC Participant'}
           </Text>
-          <Text style={[sharedStyles.heading, { marginTop: 4 }]}>
-            {user?.firstName || 'WIC Participant'}
+          <Text style={[sharedStyles.secondaryText, { marginTop: 6 }]}>
+            {monthPeriod}
           </Text>
         </View>
         <View>
@@ -61,6 +63,7 @@ export default function HomeScreen() {
         </Text>
         <TouchableOpacity
           style={[styles.scanButton, { backgroundColor: theme.primary }]}
+          onPress={() => navigation.navigate('Scanner' as never)}
         >
           <Ionicons name="scan" size={24} color="white" />
           <Text style={styles.scanButtonText}>Start Scanning</Text>

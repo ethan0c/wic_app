@@ -8,10 +8,10 @@ import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { WICProvider } from './context/WICContext';
 
 // Auth Screens
-import IntroScreen from './screens/auth/auth/IntroScreen';
-import StateProviderScreen from './screens/auth/auth/StateProviderScreen';
-import CardScanScreen from './screens/auth/auth/CardScanScreen';
-import AuthIndexScreen from './screens/auth/auth/AuthIndexScreen';
+import IntroScreen from './screens/auth/IntroScreen';
+import StateProviderScreen from './screens/auth/StateProviderScreen';
+import CardScanScreen from './screens/auth/CardScanScreen';
+import AuthIndexScreen from './screens/auth/AuthIndexScreen';
 
 // Main App Screens
 import MainTabs from './navigation/MainTabs';

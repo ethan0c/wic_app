@@ -7,7 +7,7 @@ import { useTheme } from '../context/ThemeContext';
 import HomeScreen from '../screens/main/HomeScreen';
 import ScannerScreen from '../screens/main/ScannerScreen';
 import BenefitsScreen from '../screens/main/BenefitsScreen';
-import ResourcesScreen from '../screens/main/ResourcesScreen';
+import ExploreScreen from '../screens/main/ExploreScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,8 +26,8 @@ export default function MainTabs() {
             iconName = focused ? 'scan' : 'scan-outline';
           } else if (route.name === 'Benefits') {
             iconName = focused ? 'list' : 'list-outline';
-          } else if (route.name === 'Resources') {
-            iconName = focused ? 'information-circle' : 'information-circle-outline';
+          } else if (route.name === 'Explore') {
+            iconName = focused ? 'grid' : 'grid-outline';
           } else {
             iconName = 'help-outline';
           }
@@ -63,9 +63,9 @@ export default function MainTabs() {
         options={{ title: 'My Benefits' }}
       />
       <Tab.Screen 
-        name="Resources" 
-        component={ResourcesScreen}
-        options={{ title: 'Resources' }}
+        name="Explore" 
+        component={ExploreScreen}
+        options={{ title: 'Explore' }}
       />
     </Tab.Navigator>
   );

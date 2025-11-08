@@ -1,0 +1,164 @@
+{
+  "categories": {
+    "milk": {
+      "name": "Milk & Dairy",
+      "icon": "water-outline",
+      "allowance_type": "quantity",
+      "monthly_allowance": 6,
+      "unit": "half-gallons"
+    },
+    "cereal": {
+      "name": "Cereal",
+      "icon": "nutrition-outline", 
+      "allowance_type": "weight",
+      "monthly_allowance": 72,
+      "unit": "ounces"
+    },
+    "bread": {
+      "name": "Bread",
+      "icon": "restaurant-outline",
+      "allowance_type": "quantity", 
+      "monthly_allowance": 2,
+      "unit": "loaves"
+    },
+    "cheese": {
+      "name": "Cheese",
+      "icon": "cube-outline",
+      "allowance_type": "weight",
+      "monthly_allowance": 16,
+      "unit": "ounces"
+    },
+    "eggs": {
+      "name": "Eggs",
+      "icon": "ellipse-outline",
+      "allowance_type": "quantity",
+      "monthly_allowance": 2,
+      "unit": "dozens"
+    },
+    "cvb": {
+      "name": "Cash Value Benefits",
+      "icon": "card-outline",
+      "allowance_type": "cash",
+      "monthly_allowance": 11.00,
+      "unit": "dollars"
+    }
+  },
+  "products": [
+    {
+      "upc": "041303001806",
+      "name": "Whole Milk",
+      "brand": "Great Value",
+      "category": "milk",
+      "size_oz": 64,
+      "size_display": "½ gallon",
+      "isApproved": true,
+      "image": "milk_half_gallon.jpg",
+      "reasons": [],
+      "alternatives": []
+    },
+    {
+      "upc": "041303001813", 
+      "name": "Whole Milk",
+      "brand": "Great Value", 
+      "category": "milk",
+      "size_oz": 128,
+      "size_display": "1 gallon",
+      "isApproved": false,
+      "image": "milk_gallon.jpg",
+      "reasons": ["package_size_not_allowed"],
+      "alternatives": [
+        {
+          "upc": "041303001806",
+          "suggestion": "Try ½ gallon instead",
+          "reason": "WIC allows half-gallons, not gallons"
+        }
+      ]
+    },
+    {
+      "upc": "016000275218",
+      "name": "Cheerios",
+      "brand": "General Mills",
+      "category": "cereal", 
+      "size_oz": 18,
+      "size_display": "18 oz",
+      "isApproved": true,
+      "image": "cheerios_18oz.jpg",
+      "reasons": [],
+      "alternatives": []
+    },
+    {
+      "upc": "016000275225",
+      "name": "Cheerios Family Size",
+      "brand": "General Mills",
+      "category": "cereal",
+      "size_oz": 36,
+      "size_display": "36 oz", 
+      "isApproved": true,
+      "image": "cheerios_36oz.jpg",
+      "reasons": [],
+      "alternatives": []
+    },
+    {
+      "upc": "072250015144",
+      "name": "White Bread",
+      "brand": "Wonder",
+      "category": "bread",
+      "size_oz": 20,
+      "size_display": "20 oz loaf",
+      "isApproved": false,
+      "image": "wonder_20oz.jpg", 
+      "reasons": ["package_size_not_allowed"],
+      "alternatives": [
+        {
+          "upc": "072250015137",
+          "suggestion": "Try 16 oz loaf",
+          "reason": "WIC only covers 16 oz bread packages"
+        }
+      ]
+    },
+    {
+      "upc": "072250015137",
+      "name": "White Bread", 
+      "brand": "Wonder",
+      "category": "bread",
+      "size_oz": 16,
+      "size_display": "16 oz loaf",
+      "isApproved": true,
+      "image": "wonder_16oz.jpg",
+      "reasons": [],
+      "alternatives": []
+    }
+  ],
+  "rules": {
+    "milk": {
+      "allowed_sizes": [64],
+      "size_rule": "only_half_gallons",
+      "messages": {
+        "gallon_not_allowed": {
+          "en": "WIC covers half-gallons, not gallons. Try two half-gallons instead.",
+          "ht": "WIC kouvri mwatye galon yo, pa galon antye. Eseye de mwatye galon olye de sa."
+        }
+      }
+    },
+    "cereal": {
+      "max_ounces": 72,
+      "combinable": true,
+      "messages": {
+        "ounce_limit": {
+          "en": "Cereal total cannot exceed 72 ounces per month.",
+          "ht": "Total sereyal la pa ka depase 72 ons nan yon mwa."
+        }
+      }
+    },
+    "bread": {
+      "allowed_sizes": [16],
+      "size_rule": "exactly_16oz",
+      "messages": {
+        "size_restriction": {
+          "en": "Only 16-ounce bread packages are covered by WIC.",
+          "ht": "Se sèlman pake pen 16 ons yo ki kouvri pa WIC."
+        }
+      }
+    }
+  }
+}
