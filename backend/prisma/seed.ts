@@ -666,7 +666,7 @@ async function main() {
       const lightTrans1 = await prisma.transaction.create({
         data: {
           wicCardNumber: CARD_NUMBERS.LIGHT_USER,
-          storeId: stores[0].id,
+          storeId: storeList[0].id,
           transactionType: 'purchase',
           totalItems: 2,
           totalValue: 6.75,
