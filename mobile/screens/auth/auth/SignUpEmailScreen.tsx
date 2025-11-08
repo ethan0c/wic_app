@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
-  TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +11,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../../navigation/types';
 import { useTheme } from '../../../context/ThemeContext';
 import { sharedAuthStyles } from '../../../assets/styles/sharedAuth.styles';
+import { Button, Input, Typography } from '../../../components';
 
 type SignUpEmailScreenNavigationProp = StackNavigationProp<
   AuthStackParamList,
@@ -49,24 +48,16 @@ export default function SignUpEmailScreen() {
       style={[sharedAuthStyles.container, { backgroundColor: theme.background }]}
     >
       <View style={sharedAuthStyles.content}>
-        <Text style={[sharedAuthStyles.title, { color: theme.text }]}>
+        <Typography variant="heading" align="center">
           What's your email?
-        </Text>
-        <Text style={[sharedAuthStyles.subtitle, { color: theme.textSecondary }]}>
+        </Typography>
+        <Typography variant="body" color="textSecondary" align="center" style={{ marginBottom: 32 }}>
           We'll use this to keep your account secure
-        </Text>
+        </Typography>
 
-        <TextInput
-          style={[
-            sharedAuthStyles.input,
-            {
-              backgroundColor: theme.inputBackground,
-              color: theme.text,
-              borderColor: theme.border,
-            },
-          ]}
+        <Input
+          icon="mail-outline"
           placeholder="Email address"
-          placeholderTextColor={theme.textSecondary}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -74,25 +65,18 @@ export default function SignUpEmailScreen() {
           autoComplete="email"
         />
 
-        <TouchableOpacity
-          style={[
-            sharedAuthStyles.button,
-            { backgroundColor: theme.primary },
-            !email.trim() && sharedAuthStyles.buttonDisabled,
-          ]}
+        <Button
+          title="Next"
           onPress={handleNext}
           disabled={!email.trim()}
-        >
-          <Text style={sharedAuthStyles.buttonText}>Next</Text>
-        </TouchableOpacity>
+          fullWidth
+        />
 
         <TouchableOpacity
           style={sharedAuthStyles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={[sharedAuthStyles.backButtonText, { color: theme.primary }]}>
-            ← Back
-          </Text>
+          <Typography color="primary">← Back</Typography>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

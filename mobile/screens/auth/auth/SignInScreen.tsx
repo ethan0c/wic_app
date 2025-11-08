@@ -39,30 +39,23 @@ const SignInScreen = ({ navigation }: any) => {
     setPasswordError("");
     setGeneralError("");
 
-    let hasErrors = false;
-
+    // For now, allow any input to sign in
     if (!email.trim()) {
       setEmailError("Please enter your email address");
-      hasErrors = true;
-    } else if (!validateEmail(email)) {
-      setEmailError("Please enter a valid email address");
-      hasErrors = true;
+      return;
     }
 
     if (!password.trim()) {
       setPasswordError("Please enter your password");
-      hasErrors = true;
-    } else if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters long");
-      hasErrors = true;
+      return;
     }
 
-    if (hasErrors) return;
-
+    // Allow sign in with any credentials for prototype
     const result = await signIn(email.trim().toLowerCase(), password);
 
     if (!result.success) {
-      setGeneralError(result.error || "Invalid email or password");
+      // Still allow sign in even if credentials don't match
+      setGeneralError("");
     }
   };
 
@@ -96,7 +89,7 @@ const SignInScreen = ({ navigation }: any) => {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.formSection}>
-            <Text style={[styles.sectionLabel, { fontSize: 28, fontWeight: 'bold', color: theme.text, marginBottom: 32 }]}>
+            <Text style={[sharedStyles.heading, sharedStyles.centerText, { marginBottom: 32 }]}>
               Welcome Back
             </Text>
 

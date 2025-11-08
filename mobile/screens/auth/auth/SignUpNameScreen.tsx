@@ -60,10 +60,10 @@ const SignUpNameScreen = ({ navigation }: any) => {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.formSection}>
-            <Text style={[styles.sectionLabel, { fontSize: 28, fontWeight: 'bold', color: theme.text, marginBottom: 8 }]}>
+            <Text style={[sharedStyles.heading, sharedStyles.centerText]}>
               What's your name?
             </Text>
-            <Text style={[styles.sectionLabel, { color: theme.textSecondary, marginBottom: 32 }]}>
+            <Text style={[sharedStyles.secondaryText, sharedStyles.centerText, { marginBottom: 32 }]}>
               Let's get started with your WIC account
             </Text>
 

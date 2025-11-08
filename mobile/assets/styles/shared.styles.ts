@@ -45,6 +45,40 @@ export const createSharedStyles = (theme: any) => StyleSheet.create({
     paddingTop: SPACING.md,
     paddingBottom: SPACING.md,
   },
+  // Common text styles
+  heading: {
+    fontSize: 28,
+    fontWeight: FONT_WEIGHTS.medium,
+    color: theme.text,
+    letterSpacing: -0.5,
+  },
+  subheading: {
+    fontSize: 22,
+    fontWeight: FONT_WEIGHTS.medium,
+    color: theme.text,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: FONT_WEIGHTS.medium,
+    color: theme.text,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: FONT_WEIGHTS.medium,
+    color: theme.text,
+  },
+  bodyText: {
+    fontSize: 16,
+    fontWeight: FONT_WEIGHTS.light,
+    color: theme.text,
+    lineHeight: 24,
+  },
+  secondaryText: {
+    fontSize: 14,
+    fontWeight: FONT_WEIGHTS.light,
+    color: theme.textSecondary,
+  },
+  // Button styles
   button: {
     borderRadius: BORDER_RADIUS.full,
     paddingVertical: 16,
@@ -56,5 +90,24 @@ export const createSharedStyles = (theme: any) => StyleSheet.create({
     fontSize: 16,
     fontWeight: FONT_WEIGHTS.regular,
     letterSpacing: 0.3,
+  },
+  // Card styles
+  card: {
+    backgroundColor: theme.card,
+    borderRadius: BORDER_RADIUS.lg,
+    padding: SPACING.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 3,
+  },
+  // Centered content
+  centerContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  centerText: {
+    textAlign: 'center',
   },
 });

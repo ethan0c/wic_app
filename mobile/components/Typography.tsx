@@ -1,0 +1,101 @@
+import React, { ReactNode } from 'react';
+import { Text, StyleSheet, TextProps } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
+import { FONT_WEIGHTS } from '../assets/styles/shared.styles';
+
+interface TypographyProps extends TextProps {
+  children: ReactNode;
+  variant?: 'heading' | 'subheading' | 'title' | 'body' | 'label' | 'caption';
+  color?: 'primary' | 'secondary' | 'text' | 'textSecondary' | 'error' | 'success';
+  align?: 'left' | 'center' | 'right';
+  weight?: '300' | '400' | '500' | '600' | '700';
+}
+
+export default function Typography({
+  children,
+  variant = 'body',
+  color = 'text',
+  align = 'left',
+  weight,
+  style,
+  ...props
+}: TypographyProps) {
+  const { theme } = useTheme();
+
+  const getTextStyle = () => {
+    switch (variant) {
+      case 'heading':
+        return {
+          fontSize: 28,
+          fontWeight: weight || FONT_WEIGHTS.medium,
+          letterSpacing: -0.5,
+        };
+      case 'subheading':
+        return {
+          fontSize: 22,
+          fontWeight: weight || FONT_WEIGHTS.medium,
+        };
+      case 'title':
+        return {
+          fontSize: 20,
+          fontWeight: weight || FONT_WEIGHTS.medium,
+        };
+      case 'body':
+        return {
+          fontSize: 16,
+          fontWeight: weight || FONT_WEIGHTS.light,
+          lineHeight: 24,
+        };
+      case 'label':
+        return {
+          fontSize: 14,
+          fontWeight: weight || FONT_WEIGHTS.medium,
+        };
+      case 'caption':
+        return {
+          fontSize: 12,
+          fontWeight: weight || FONT_WEIGHTS.light,
+        };
+      default:
+        return {
+          fontSize: 16,
+          fontWeight: weight || FONT_WEIGHTS.light,
+        };
+    }
+  };
+
+  const getColor = () => {
+    switch (color) {
+      case 'primary':
+        return theme.primary;
+      case 'secondary':
+        return theme.secondary;
+      case 'text':
+        return theme.text;
+      case 'textSecondary':
+        return theme.textSecondary;
+      case 'error':
+        return theme.error;
+      case 'success':
+        return theme.success;
+      default:
+        return theme.text;
+    }
+  };
+
+  return (
+    <Text
+      style={[
+        getTextStyle(),
+        {
+          color: getColor(),
+          textAlign: align,
+        },
+        style,
+      ]}
+      {...props}
+    >
+      {children}
+    </Text>
+  );
+}

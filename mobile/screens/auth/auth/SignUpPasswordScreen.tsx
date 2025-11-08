@@ -93,10 +93,10 @@ const SignUpPasswordScreen = ({ route, navigation }: any) => {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.formSection}>
-            <Text style={[styles.sectionLabel, { fontSize: 28, fontWeight: 'bold', color: theme.text, marginBottom: 8 }]}>
+            <Text style={[sharedStyles.heading, sharedStyles.centerText]}>
               Create a password
             </Text>
-            <Text style={[styles.sectionLabel, { color: theme.textSecondary, marginBottom: 32 }]}>
+            <Text style={[sharedStyles.secondaryText, sharedStyles.centerText, { marginBottom: 32 }]}>
               Choose a secure password for your account
             </Text>
 

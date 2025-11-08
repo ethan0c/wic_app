@@ -9,10 +9,12 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import { createSharedStyles } from '../../assets/styles/shared.styles';
 
 export default function HomeScreen() {
   const { theme } = useTheme();
   const { user } = useAuth();
+  const sharedStyles = createSharedStyles(theme);
 
   // Mock data - will be replaced with actual data later
   const benefitsRemaining = {
@@ -31,10 +33,10 @@ export default function HomeScreen() {
     >
       <View style={styles.header}>
         <View>
-          <Text style={[styles.greeting, { color: theme.textSecondary }]}>
+          <Text style={[sharedStyles.secondaryText]}>
             Welcome back,
           </Text>
-          <Text style={[styles.name, { color: theme.text }]}>
+          <Text style={[sharedStyles.heading, { marginTop: 4 }]}>
             {user?.firstName || 'WIC Participant'}
           </Text>
         </View>
@@ -113,16 +115,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     padding: 20,
-  },
-  greeting: {
-    fontSize: 16,
-    fontWeight: '300',
-  },
-  name: {
-    fontSize: 28,
-    fontWeight: '300',
-    marginTop: 4,
-    letterSpacing: -0.5,
   },
   badge: {
     paddingHorizontal: 14,

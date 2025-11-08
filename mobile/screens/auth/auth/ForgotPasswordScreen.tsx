@@ -75,10 +75,10 @@ const ForgotPasswordScreen = ({ navigation }: any) => {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.formSection}>
-            <Text style={[styles.sectionLabel, { fontSize: 28, fontWeight: 'bold', color: theme.text, marginBottom: 8 }]}>
+            <Text style={[sharedStyles.heading, sharedStyles.centerText]}>
               Reset Password
             </Text>
-            <Text style={[styles.sectionLabel, { color: theme.textSecondary, marginBottom: 32 }]}>
+            <Text style={[sharedStyles.secondaryText, sharedStyles.centerText, { marginBottom: 32 }]}>
               Enter your email and we'll send you a link to reset your password
             </Text>
 
