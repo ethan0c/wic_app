@@ -12,9 +12,9 @@ const IntroScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
 
   useEffect(() => {
-    // Auto-navigate to AuthIndex after showing app name
+    // Auto-navigate to State Provider screen after showing app name
     const timer = setTimeout(() => {
-      navigation.replace("AuthIndex");
+      navigation.replace("StateProvider");
     }, 2000);
 
     return () => clearTimeout(timer);

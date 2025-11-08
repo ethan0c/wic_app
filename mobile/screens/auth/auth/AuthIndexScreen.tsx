@@ -6,7 +6,9 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  Alert,
 } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from "../../../context/ThemeContext";
 import { SPACING, BORDER_RADIUS } from "../../../assets/styles/shared.styles";
 
@@ -21,8 +23,36 @@ const AuthIndexScreen = ({ navigation }: any) => {
     navigation.navigate("SignUpName");
   };
 
+  const handleCardLogin = () => {
+    // In production, this would scan/input WIC card number
+    Alert.alert(
+      "Login with WIC Card",
+      "Scan your WIC card barcode or enter your card number to access your benefits.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Enter Card Number", onPress: navigateToSignIn }
+      ]
+    );
+  };
+
+  const handleHelp = () => {
+    Alert.alert(
+      "Need Help?",
+      "Contact your local WIC office:\n\n📞 1-800-WIC-HELP\n📧 support@wic.gov\n\nOffice hours: Mon-Fri 8AM-5PM",
+      [{ text: "OK" }]
+    );
+  };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      {/* Help Button - Top Right */}
+      <TouchableOpacity 
+        style={styles.helpButton}
+        onPress={handleHelp}
+      >
+        <Ionicons name="help-circle-outline" size={28} color={theme.primary} />
+      </TouchableOpacity>
+
       <View style={styles.content}>
         {/* Logo Section */}
         <View style={styles.logoSection}>
@@ -53,12 +83,29 @@ const AuthIndexScreen = ({ navigation }: any) => {
         {/* Action Buttons */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
+            style={[styles.cardButton, { backgroundColor: theme.primary }]}
+            onPress={handleCardLogin}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="card-outline" size={24} color="white" />
+            <Text style={styles.cardButtonText}>
+              Login with WIC Card
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.divider}>
+            <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
+            <Text style={[styles.dividerText, { color: theme.textSecondary }]}>or</Text>
+            <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
+          </View>
+
+          <TouchableOpacity
             style={[styles.primaryButton, { backgroundColor: theme.buttonBackground }]}
             onPress={navigateToSignUp}
             activeOpacity={0.8}
           >
             <Text style={[styles.primaryButtonText, { color: theme.buttonText }]}>
-              Get Started
+              Register New Account
             </Text>
           </TouchableOpacity>
 
@@ -68,7 +115,7 @@ const AuthIndexScreen = ({ navigation }: any) => {
             activeOpacity={0.8}
           >
             <Text style={[styles.secondaryButtonText, { color: theme.text }]}>
-              Sign In
+              Sign In with Email
             </Text>
           </TouchableOpacity>
         </View>
@@ -80,6 +127,13 @@ const AuthIndexScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  helpButton: {
+    position: 'absolute',
+    top: 60,
+    right: 20,
+    zIndex: 10,
+    padding: 8,
   },
   content: {
     flex: 1,
@@ -121,6 +175,34 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     gap: SPACING.md,
+  },
+  cardButton: {
+    paddingVertical: 18,
+    borderRadius: BORDER_RADIUS.full,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 12,
+  },
+  cardButtonText: {
+    color: 'white',
+    fontSize: 17,
+    fontWeight: '500',
+    letterSpacing: 0.3,
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+    gap: 12,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+  },
+  dividerText: {
+    fontSize: 14,
+    fontWeight: '300',
   },
   primaryButton: {
     paddingVertical: 18,

@@ -9,23 +9,19 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import { useWIC } from '../../context/WICContext';
 import { createSharedStyles } from '../../assets/styles/shared.styles';
 
 export default function HomeScreen() {
   const { theme } = useTheme();
   const { user } = useAuth();
+  const { benefits, monthPeriod, daysRemaining } = useWIC();
   const sharedStyles = createSharedStyles(theme);
 
-  // Mock data - will be replaced with actual data later
-  const benefitsRemaining = {
-    milk: { used: 2, total: 4, unit: 'gallons' },
-    cereal: { used: 1, total: 2, unit: 'boxes' },
-    eggs: { used: 0, total: 1, unit: 'dozen' },
-    bread: { used: 1, total: 2, unit: 'loaves' },
-    peanutButter: { used: 0, total: 1, unit: 'jar' },
-  };
-
-  const daysRemaining = 15;
+  // Calculate total cash value from all benefits
+  const totalCashValue = benefits
+    .filter(b => b.unit === 'Cash Value Benefit')
+    .reduce((sum, b) => sum + (b.amount - b.used), 0);
 
   return (
     <ScrollView
@@ -34,16 +30,25 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <View>
           <Text style={[sharedStyles.secondaryText]}>
-            Welcome back,
+            {monthPeriod}
           </Text>
           <Text style={[sharedStyles.heading, { marginTop: 4 }]}>
             {user?.firstName || 'WIC Participant'}
           </Text>
         </View>
-        <View style={[styles.badge, { backgroundColor: theme.primary + '20' }]}>
-          <Text style={[styles.badgeText, { color: theme.primary }]}>
-            {daysRemaining} days left
-          </Text>
+        <View>
+          <View style={[styles.badge, { backgroundColor: theme.primary + '20', marginBottom: 8 }]}>
+            <Text style={[styles.badgeText, { color: theme.primary }]}>
+              {daysRemaining} days left
+            </Text>
+          </View>
+          {totalCashValue > 0 && (
+            <View style={[styles.badge, { backgroundColor: '#10B98120' }]}>
+              <Text style={[styles.badgeText, { color: '#10B981', fontWeight: '500' }]}>
+                ${totalCashValue} CVB
+              </Text>
+            </View>
+          )}
         </View>
       </View>
 
@@ -66,21 +71,29 @@ export default function HomeScreen() {
         Benefits Overview
       </Text>
 
-      {Object.entries(benefitsRemaining).map(([key, benefit]) => {
-        const percentage = (benefit.used / benefit.total) * 100;
-        const remaining = benefit.total - benefit.used;
+      {benefits.map((benefit) => {
+        const percentage = (benefit.used / benefit.amount) * 100;
+        const remaining = benefit.amount - benefit.used;
+        const isCashValue = benefit.unit === 'Cash Value Benefit';
 
         return (
           <View
-            key={key}
+            key={benefit.name}
             style={[styles.benefitCard, { backgroundColor: theme.card }]}
           >
             <View style={styles.benefitHeader}>
-              <Text style={[styles.benefitName, { color: theme.text }]}>
-                {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
-              </Text>
-              <Text style={[styles.benefitRemaining, { color: theme.primary }]}>
-                {remaining} {benefit.unit} left
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.benefitName, { color: theme.text }]}>
+                  {benefit.name}
+                </Text>
+                {benefit.notes && (
+                  <Text style={[styles.benefitNotes, { color: theme.textSecondary }]}>
+                    {benefit.notes}
+                  </Text>
+                )}
+              </View>
+              <Text style={[styles.benefitRemaining, { color: isCashValue ? '#10B981' : theme.primary }]}>
+                {isCashValue ? `$${remaining}` : `${remaining} ${benefit.unit}`}
               </Text>
             </View>
             <View style={[styles.progressBar, { backgroundColor: theme.border }]}>
@@ -95,7 +108,9 @@ export default function HomeScreen() {
               />
             </View>
             <Text style={[styles.benefitUsed, { color: theme.textSecondary }]}>
-              Used {benefit.used} of {benefit.total} {benefit.unit}
+              {isCashValue 
+                ? `Used $${benefit.used} of $${benefit.amount}` 
+                : `Used ${benefit.used} of ${benefit.amount} ${benefit.unit.toLowerCase()}`}
             </Text>
           </View>
         );
@@ -182,6 +197,12 @@ const styles = StyleSheet.create({
   benefitName: {
     fontSize: 16,
     fontWeight: '400',
+  },
+  benefitNotes: {
+    fontSize: 12,
+    fontWeight: '300',
+    marginTop: 4,
+    lineHeight: 16,
   },
   benefitRemaining: {
     fontSize: 14,

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface User {
@@ -25,7 +25,26 @@ const USERS_KEY = '@wic_users';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start with true to check stored session
+
+  // Restore user session on app startup
+  useEffect(() => {
+    const restoreSession = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem(STORAGE_KEY);
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error('Failed to restore session:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    restoreSession();
+  }, []);
 
   // Load stored users (simulating a database)
   const getStoredUsers = async (): Promise<Record<string, any>> => {
@@ -52,23 +71,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Simulate network delay
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      const users = await getStoredUsers();
-      const userKey = email.toLowerCase();
-      const storedUser = users[userKey];
-
-      if (!storedUser) {
-        return { success: false, error: 'No account found with this email' };
+      // For prototyping: Allow any non-empty credentials
+      if (!email || !password) {
+        return { success: false, error: 'Please enter email and password' };
       }
 
-      if (storedUser.password !== password) {
-        return { success: false, error: 'Incorrect password' };
-      }
-
+      // Create a mock user from the provided email
       const userData: User = {
-        id: storedUser.id,
-        email: storedUser.email,
-        firstName: storedUser.firstName,
-        lastName: storedUser.lastName,
+        id: Date.now().toString(),
+        email: email.toLowerCase(),
+        firstName: 'Demo',
+        lastName: 'User',
       };
 
       setUser(userData);

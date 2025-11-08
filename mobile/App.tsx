@@ -1,12 +1,15 @@
 import React from 'react';
+import { View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { WICProvider } from './context/WICContext';
 
 // Auth Screens
 import IntroScreen from './screens/auth/auth/IntroScreen';
+import StateProviderScreen from './screens/auth/auth/StateProviderScreen';
 import AuthIndexScreen from './screens/auth/auth/AuthIndexScreen';
 import SignInScreen from './screens/auth/auth/SignInScreen';
 import SignUpNameScreen from './screens/auth/auth/SignUpNameScreen';
@@ -20,8 +23,17 @@ import MainTabs from './navigation/MainTabs';
 const Stack = createStackNavigator();
 
 function AppNavigator() {
-  const { isAuthenticated } = useAuth();
-  const { themeKey } = useTheme();
+  const { isAuthenticated, isLoading } = useAuth();
+  const { themeKey, theme } = useTheme();
+
+  // Show loading screen while checking for stored session
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background }}>
+        <ActivityIndicator size="large" color={theme.primary} />
+      </View>
+    );
+  }
 
   return (
     <>
@@ -32,6 +44,7 @@ function AppNavigator() {
             // Auth Stack
             <>
               <Stack.Screen name="Intro" component={IntroScreen} />
+              <Stack.Screen name="StateProvider" component={StateProviderScreen} />
               <Stack.Screen name="AuthIndex" component={AuthIndexScreen} />
               <Stack.Screen name="SignIn" component={SignInScreen} />
               <Stack.Screen name="SignUpName" component={SignUpNameScreen} />
@@ -53,7 +66,9 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <AppNavigator />
+        <WICProvider>
+          <AppNavigator />
+        </WICProvider>
       </AuthProvider>
     </ThemeProvider>
   );
