@@ -3,11 +3,12 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 
 import { Search, XCircle, Check, MapPin, HelpCircle } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
-import { createSharedStyles, BORDER_RADIUS } from '../../assets/styles/shared.styles';
+ 
 import SectionCard from '../../components/home/SectionCard';
 import Typography from '../../components/Typography';
 import Button from '../../components/Button';
 import WicLogo from '../../components/WicLogo';
+import StateCard from '../../components/StateCard';
 
 const US_STATES_WITH_WIC = [
   { name: 'Alabama', app: 'ALABAMA WIC' },
@@ -77,7 +78,9 @@ export default function StateProviderScreen() {
     state.app.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleStateSelect = (stateName: string) => setSelectedState(stateName);
+  const handleStateSelect = (stateName: string) => {
+    setSelectedState(stateName);
+  };
   const handleContinue = () => selectedState && (navigation as any).navigate('CardScan', { selectedState });
   const handleStateNotFound = () => alert('Please contact your local WIC office for assistance.');
 
@@ -85,78 +88,52 @@ export default function StateProviderScreen() {
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
       {/* Header Card - Fixed at top like Home */}
       <View style={styles.headerSection}>
-        <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
+        <Typography variant="heading" weight="500" style={{ fontSize: 20, marginBottom: 12 }}>
           Select Your State
         </Typography>
+        <View style={[styles.searchContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
+          <Search size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
+          <TextInput
+            style={[styles.searchInput, { color: theme.text }]}
+            placeholder="Search states..."
+            placeholderTextColor={theme.textSecondary}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <XCircle size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <SectionCard contentStyle={{ padding: 0 }}>
-          <View style={[styles.searchContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
-            <Search size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
-            <TextInput
-              style={[styles.searchInput, { color: theme.text }]}
-              placeholder="Search states..."
-              placeholderTextColor={theme.textSecondary}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
+        <View style={styles.stateList}>
+          {filteredStates.map((state, index) => (
+            <StateCard
+              key={state.name}
+              stateName={state.name}
+              stateApp={state.app}
+              isSelected={selectedState === state.name}
+              onPress={() => handleStateSelect(state.name)}
             />
-            {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={() => setSearchQuery('')}>
-                <XCircle size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
-              </TouchableOpacity>
-            )}
+          ))}
+        </View>
+
+        {filteredStates.length === 0 && (
+          <View style={styles.emptyState}>
+            <MapPin size={64} color={theme.textSecondary} stroke={theme.textSecondary} />
+            <Typography variant="body" align="center" color="textSecondary" style={{ marginTop: 16 }}>
+              No states found matching "{searchQuery}"
+            </Typography>
           </View>
-        </SectionCard>
+        )}
 
-        <SectionCard title="Select Your State" contentStyle={{ padding: 0 }}>
-            <View style={styles.stateList}>
-              {filteredStates.map(state => (
-                <TouchableOpacity
-                  key={state.name}
-                  style={[
-                    styles.stateItem,
-                    {
-                      backgroundColor: theme.card,
-                      borderColor: selectedState === state.name ? theme.primary : 'transparent',
-                      borderWidth: 2,
-                    },
-                  ]}
-                  onPress={() => handleStateSelect(state.name)}
-                  activeOpacity={0.8}
-                >
-                  <View style={styles.stateContent}>
-                    <View style={styles.stateLeftContent}>
-                      <WicLogo stateName={state.name} width={48} height={48} />
-                      <View style={{ flex: 1 }}>
-                        <Text style={[styles.stateName, { color: theme.text }]}>{state.name}</Text>
-                        <Text style={[styles.stateApp, { color: theme.textSecondary }]}>{state.app}</Text>
-                      </View>
-                    </View>
-                    {selectedState === state.name && (
-                      <View style={[styles.checkmark, { backgroundColor: theme.primary }]}>
-                        <Check size={20} color="white" stroke="white" />
-                      </View>
-                    )}
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            {filteredStates.length === 0 && (
-              <View style={styles.emptyState}>
-                <MapPin size={64} color={theme.textSecondary} stroke={theme.textSecondary} />
-                <Typography variant="body" align="center" color="textSecondary" style={{ marginTop: 16 }}>
-                  No states found matching "{searchQuery}"
-                </Typography>
-              </View>
-            )}
-
-            <TouchableOpacity style={styles.notFoundButton} onPress={handleStateNotFound}>
-              <HelpCircle size={20} color="#EF4444" stroke="#EF4444" />
-              <Text style={styles.notFoundText}>State not found? Get help</Text>
-            </TouchableOpacity>
-          </SectionCard>
+        <TouchableOpacity style={styles.notFoundButton} onPress={handleStateNotFound}>
+          <HelpCircle size={20} color="#EF4444" stroke="#EF4444" />
+          <Text style={styles.notFoundText}>State not found? Get help</Text>
+        </TouchableOpacity>
       </ScrollView>
       {selectedState && (
         <View style={[styles.footer, { backgroundColor: '#F5F5F5', borderTopColor: theme.border }]}>
@@ -173,20 +150,12 @@ export default function StateProviderScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  headerSection: { backgroundColor: '#FFFFFF', paddingHorizontal: 16, paddingTop: 60, paddingBottom: 12 },
+  headerSection: { backgroundColor: '#FFFFFF', paddingHorizontal: 16, paddingTop: 60, paddingBottom: 16 },
   scrollContainer: { flex: 1 },
-  contentContainer: { paddingHorizontal: 0, paddingBottom: 160, paddingTop: 3 },
-  sectionNoPad: { marginHorizontal: 16, marginBottom: 12 },
+  contentContainer: { paddingHorizontal: 16, paddingBottom: 160, paddingTop: 3 },
   searchContainer: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 16, borderWidth: 1, gap: 12 },
   searchInput: { flex: 1, fontSize: 16, fontWeight: '300' },
-  stateList: { gap: 0, paddingHorizontal: 0 },
-  stateItem: { borderRadius: 0, padding: 20, borderWidth: 0, borderBottomWidth: 1, borderColor: '#E5E7EB' },
-  stateContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  stateLeftContent: { flexDirection: 'row', alignItems: 'center', gap: 16, flex: 1 },
-  stateLogo: { width: 48, height: 48 },
-  stateName: { fontSize: 18, fontWeight: '400', flex: 1 },
-  stateApp: { fontSize: 13, fontWeight: '300', marginTop: 2 },
-  checkmark: { width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
+  stateList: { gap: 0, paddingVertical: 4 },
   emptyState: { alignItems: 'center', paddingVertical: 48 },
   notFoundButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 32, marginBottom: 20, padding: 16 },
   notFoundText: { fontSize: 16, fontWeight: '400', color: '#EF4444' },

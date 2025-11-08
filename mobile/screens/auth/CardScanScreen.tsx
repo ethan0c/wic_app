@@ -34,16 +34,54 @@ export default function CardScanScreen({ route }: any) {
 
   const ManualEntryModal = () => (
     <Modal visible={showManualEntry} transparent animationType="slide" onRequestClose={() => setShowManualEntry(false)}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.modalOverlay}>
-        <View style={[styles.modalContent, { backgroundColor: theme.card }]}>          
-          <Typography variant="heading" align="center" style={{ marginBottom: 8 }}>Enter Card Number</Typography>
-          <Text style={[styles.modalSubtext, { color: theme.textSecondary }]}>Enter the number on your WIC EBT card</Text>
-          <TextInput style={[styles.input, { backgroundColor: theme.background, color: theme.text, borderColor: error ? '#EF4444' : theme.border }]} placeholder="Card number" placeholderTextColor={theme.textSecondary} value={cardNumber} onChangeText={(text) => { setCardNumber(text); setError(''); }} keyboardType="number-pad" autoFocus maxLength={16} />
-          {error && (<View style={styles.errorContainer}><AlertCircle size={16} color="#EF4444" stroke="#EF4444" /><Text style={styles.errorText}>{error}</Text></View>)}
-          <Button title="Continue" onPress={handleManualSubmit} loading={loading} fullWidth size="large" />
-          <TouchableOpacity onPress={() => { setShowManualEntry(false); setCardNumber(''); setError(''); }} style={{ marginTop: 16, padding: 8 }}><Text style={[styles.closeText, { color: theme.textSecondary }]}>Cancel</Text></TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+      <TouchableOpacity 
+        style={styles.modalOverlay} 
+        activeOpacity={1} 
+        onPress={() => {
+          setShowManualEntry(false);
+          setCardNumber('');
+          setError('');
+        }}
+      >
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <TouchableOpacity activeOpacity={1} onPress={(e) => e.stopPropagation()}>
+            <View style={[styles.modalContent, { backgroundColor: theme.card }]}>          
+              <Typography variant="heading" align="center" style={{ marginBottom: 8 }}>Enter Card Number</Typography>
+              <Text style={[styles.modalSubtext, { color: theme.textSecondary }]}>Enter the number on your WIC EBT card</Text>
+              <TextInput 
+                style={[styles.input, { backgroundColor: theme.background, color: theme.text, borderColor: error ? '#EF4444' : theme.border }]} 
+                placeholder="Card number" 
+                placeholderTextColor={theme.textSecondary} 
+                value={cardNumber} 
+                onChangeText={(text) => { 
+                  setCardNumber(text); 
+                  setError(''); 
+                }} 
+                keyboardType="number-pad" 
+                autoFocus 
+                maxLength={16} 
+              />
+              {error && (
+                <View style={styles.errorContainer}>
+                  <AlertCircle size={16} color="#EF4444" stroke="#EF4444" />
+                  <Text style={styles.errorText}>{error}</Text>
+                </View>
+              )}
+              <Button title="Continue" onPress={handleManualSubmit} loading={loading} fullWidth size="large" />
+              <TouchableOpacity 
+                onPress={() => { 
+                  setShowManualEntry(false); 
+                  setCardNumber(''); 
+                  setError(''); 
+                }} 
+                style={{ marginTop: 16, padding: 8 }}
+              >
+                <Text style={[styles.closeText, { color: theme.textSecondary }]}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </TouchableOpacity>
     </Modal>
   );
 
