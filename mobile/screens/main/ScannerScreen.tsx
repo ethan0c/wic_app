@@ -450,7 +450,9 @@ export default function ScannerScreen({ route }: any) {
 
   return (
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
-      <ScannerHeader />
+      <View style={styles.headerSection}>
+        <ScannerHeader />
+      </View>
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.content}>
         <ScanArea
           isScanning={isScanning}
@@ -492,6 +494,12 @@ export default function ScannerScreen({ route }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerSection: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingTop: 60,
+    paddingBottom: 0,
   },
   scrollContainer: {
     flex: 1,

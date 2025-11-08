@@ -23,9 +23,11 @@ export default function CategoriesScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <CategoriesHeader />
+      <View style={styles.headerSection}>
+        <CategoriesHeader />
+      </View>
       <ScrollView style={styles.scrollContainer}>
-        <View style={styles.headerSection}>
+        <View style={styles.contentSection}>
           <SectionCard>
             <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
               Shop by Category
@@ -69,11 +71,22 @@ export default function CategoriesScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  headerSection: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingTop: 60,
+    paddingBottom: 0,
+  },
+  scrollContainer: { flex: 1 },
   sectionNoPad: {
     marginHorizontal: 16,
     marginBottom: 12,
   },
-  headerSection: { paddingTop: 60, paddingHorizontal: 20, paddingBottom: 24 },
+  contentSection: { 
+    paddingTop: 16, 
+    paddingHorizontal: 20, 
+    paddingBottom: 12 
+  },
   content: { flex: 1 },
   grid: { 
     flexDirection: 'row',

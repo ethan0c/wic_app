@@ -8,11 +8,16 @@ export default function CategoriesHeader() {
     <View style={styles.headerWrapper}>
       <View style={styles.headerRow}>
         <View style={{ width: 24 }} />
-        <Typography variant="heading" style={{ flex: 1, textAlign: 'center' }}>
+        <Typography variant="heading" weight="500" style={{ fontSize: 20, textAlign: 'center', flex: 1 }}>
           Explore
         </Typography>
-        <TouchableOpacity onPress={() => {}} style={styles.iconButton}>
-          <Search size={24} color="#1A1A1A" />
+        <TouchableOpacity 
+          activeOpacity={0.7} 
+          accessibilityRole="button" 
+          accessibilityLabel="Search"
+          onPress={() => {}}
+        >
+          <Search size={24} color="#1A1A1A" stroke="#1A1A1A" />
         </TouchableOpacity>
       </View>
     </View>
@@ -21,22 +26,12 @@ export default function CategoriesHeader() {
 
 const styles = StyleSheet.create({
   headerWrapper: {
-    backgroundColor: '#FFFFFF',
-    paddingTop: 60,
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
     paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
   },
   headerRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  iconButton: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
     alignItems: 'center',
   },
 });

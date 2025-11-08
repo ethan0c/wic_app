@@ -98,23 +98,7 @@ export default function MainTabs() {
         name="Scanner" 
         component={ScannerScreen}
         options={{ 
-          title: 'Scan Item',
-          headerRight: () => (
-            <TouchableOpacity
-              style={{
-                marginRight: 16,
-                width: 40,
-                height: 40,
-                borderRadius: 20,
-                backgroundColor: '#F3F4F6',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={() => navigation.navigate('ScannerSettings')}
-            >
-              <Settings size={20} color="#1A1A1A" stroke="#1A1A1A" />
-            </TouchableOpacity>
-          )
+          headerShown: false
         }}
       />
       <Tab.Screen 
@@ -125,7 +109,7 @@ export default function MainTabs() {
       <Tab.Screen 
         name="Explore" 
         component={ExploreScreen}
-        options={{ title: 'Explore' }}
+        options={{ headerShown: false }}
       />
     </Tab.Navigator>
   );
