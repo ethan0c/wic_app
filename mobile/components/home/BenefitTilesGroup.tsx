@@ -24,7 +24,7 @@ export default function BenefitTilesGroup({ items, onCardPress }: BenefitTilesGr
     <View style={styles.wrapper}>
       <View style={styles.cardBackground}>
         <View style={styles.header}>
-          <Typography variant="body" weight="600">
+          <Typography variant="title" weight="700">
             You Have Left This Month
           </Typography>
         </View>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    borderRadius: 0,
+    borderRadius: 20,
   },
   header: {
     marginBottom: 12,

@@ -47,18 +47,12 @@ const styles = StyleSheet.create({
   utilityIcon: {
     width: 48,
     height: 48,
-    borderRadius: 12,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   utilityText: {
     fontSize: 14,

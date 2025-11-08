@@ -27,21 +27,21 @@ export default function Typography({
       case 'heading':
         return {
           fontSize: 28,
-          fontWeight: weight || FONT_WEIGHTS.medium,
+          fontWeight: weight || FONT_WEIGHTS.bold,
           letterSpacing: -0.5,
-          fontFamily: 'PlayfairDisplay-Regular',
+          fontFamily: 'PlayfairDisplay_400Regular',
         };
       case 'subheading':
         return {
           fontSize: 22,
-          fontWeight: weight || FONT_WEIGHTS.medium,
-          fontFamily: 'PlayfairDisplay-Regular',
+          fontWeight: weight || FONT_WEIGHTS.bold,
+          fontFamily: 'PlayfairDisplay_400Regular',
         };
       case 'title':
         return {
           fontSize: 20,
-          fontWeight: weight || FONT_WEIGHTS.medium,
-          fontFamily: 'PlayfairDisplay-Regular',
+          fontWeight: weight || FONT_WEIGHTS.bold,
+          fontFamily: 'PlayfairDisplay_400Regular',
         };
       case 'body':
         return {

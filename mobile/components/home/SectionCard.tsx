@@ -35,7 +35,7 @@ export default function SectionCard({ title, subtitle, right, style, contentStyl
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 0,
+    borderRadius: 20,
     padding: 16,
     borderWidth: 1,
     borderColor: '#E5E7EB',

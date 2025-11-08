@@ -78,12 +78,12 @@ export default function BenefitCard({
     >
       <View style={styles.benefitHeader}>
         <Ionicons name={icon} size={24} color={iconColor} />
-        <Typography variant="body" weight="600" style={{ color: iconColor }}>
+        <Typography variant="title" weight="600" style={{ color: iconColor, fontSize: 16 }}>
           {title}
         </Typography>
       </View>
       
-      <Typography variant="title" weight="700" style={{ color: iconColor, marginVertical: 8 }}>
+      <Typography variant="body" weight="700" style={{ color: iconColor, marginVertical: 8, fontSize: 20 }}>
         {unit === 'dollars' ? `$${remaining.toFixed(2)}` : remaining} {unit === 'dollars' ? '' : unit}
       </Typography>
       

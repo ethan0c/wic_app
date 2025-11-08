@@ -34,7 +34,7 @@ export default function MainTabs() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: theme.primary,
+        tabBarActiveTintColor: '#1A1A1A',
         tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {
           backgroundColor: theme.background,

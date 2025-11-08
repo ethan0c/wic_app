@@ -17,7 +17,7 @@ export default function SmartPickItem({ title, subtitle, status }: SmartPickItem
     <View style={[styles.smartPickCard, { backgroundColor: '#FFFFFF' }]}>
       <View style={styles.smartPickContent}>
         <View style={styles.smartPickText}>
-          <Typography variant="body" weight="600" style={{ marginBottom: 2 }}>
+          <Typography variant="title" weight="600" style={{ marginBottom: 2, fontSize: 16 }}>
             {title}
           </Typography>
           <Typography variant="caption" color="textSecondary">
@@ -39,17 +39,11 @@ export default function SmartPickItem({ title, subtitle, status }: SmartPickItem
 
 const styles = StyleSheet.create({
   smartPickCard: {
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
+    marginBottom: 3,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   smartPickContent: {
     flexDirection: 'row',

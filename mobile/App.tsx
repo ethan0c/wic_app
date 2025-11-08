@@ -3,6 +3,8 @@ import { View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
+import { useFonts, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
+import * as SplashScreen from 'expo-splash-screen';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { WICProvider } from './context/WICContext';
@@ -22,8 +24,13 @@ function AppNavigator() {
   const { isAuthenticated, isLoading } = useAuth();
   const { themeKey, theme } = useTheme();
 
-  // Show loading screen while checking for stored session
-  if (isLoading) {
+  // Load Google Fonts
+  const [fontsLoaded] = useFonts({
+    PlayfairDisplay_400Regular,
+  });
+
+  // Show loading screen while checking for stored session or loading fonts
+  if (isLoading || !fontsLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background }}>
         <ActivityIndicator size="large" color={theme.primary} />

@@ -71,7 +71,7 @@ export default function NotificationsScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
+    <ScrollView style={[styles.container, { backgroundColor: '#F5F5F5' }]} contentContainerStyle={styles.contentContainer}>
       <View style={styles.content}>
         {mockNotifications.map((notification) => (
           <View
@@ -89,10 +89,11 @@ export default function NotificationsScreen() {
                   color={getIconColor(notification.type, notification.isRead)}
                 />
                 <Typography
-                  variant="body"
+                  variant="title"
                   weight="600"
                   style={[
                     styles.notificationTitle,
+                    { fontSize: 16 },
                     !notification.isRead && { color: '#1A1A1A' },
                   ]}
                 >
@@ -138,8 +139,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  contentContainer: {
+    paddingTop: 5,
+  },
   content: {
-    padding: 16,
+    padding: 0,
   },
   notificationCard: {
     backgroundColor: '#FFFFFF',
@@ -147,10 +151,11 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     borderWidth: 1,
     borderColor: '#E5E7EB',
+    borderRadius: 20,
   },
   unreadCard: {
     borderLeftWidth: 4,
-    borderLeftColor: '#3B82F6',
+    borderLeftColor: '#1A1A1A',
   },
   notificationHeader: {
     flexDirection: 'row',
@@ -171,7 +176,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#1A1A1A',
     marginLeft: 8,
   },
   notificationMessage: {
