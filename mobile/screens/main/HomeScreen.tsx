@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Milk, Apple, Wheat, Zap, List, MapPin, ReceiptText, Plus } from 'lucide-react-native';
+import { Milk, Apple, Wheat, Zap, List, MapPin, ReceiptText, Plus, CircleDot, Carrot } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../../context/ThemeContext';
@@ -71,12 +71,13 @@ export default function HomeScreen() {
       case 'dairy':
         return Milk;
       case 'fruits':
-      case 'vegetables':
         return Apple;
+      case 'vegetables':
+        return Carrot;
       case 'grains':
         return Wheat;
       case 'protein':
-        return Zap;
+        return CircleDot;
       default:
         return Zap;
     }

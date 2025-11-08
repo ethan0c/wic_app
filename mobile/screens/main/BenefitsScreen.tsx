@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { 
-  Milk, Wheat, Egg, Apple, Carrot, AlertCircle, Package2
+  Milk, Wheat, Fish, Apple, Leaf, AlertCircle, Package2
 } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -21,9 +21,9 @@ import { getUserBenefits, WicBenefit } from '../../services/wicApi';
 const categoryIcons: Record<string, any> = {
   dairy: Milk,
   grains: Wheat,
-  protein: Egg,
+  protein: Fish,
   fruits: Apple,
-  vegetables: Carrot,
+  vegetables: Leaf,
 };
 
 // Category color mapping

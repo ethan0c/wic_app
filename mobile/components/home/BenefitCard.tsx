@@ -21,7 +21,7 @@ const iconMapping: { [key: string]: keyof typeof LucideIcons } = {
   'nutrition-outline': 'Apple',      // Fruits & Veg
   'restaurant-outline': 'Wheat',     // Whole Grains (wheat icon)
   'cube-outline': 'Zap',            // Cereal (energy/lightning icon - could also be 'Battery' or 'Flame')
-  'egg': 'Egg',                     // Protein
+  'egg': 'CircleDot',               // Protein (Lucide doesn't have an Egg icon, using CircleDot as alternative)
   'leaf': 'Wheat',                  // Alternative grains
   'fitness': 'Carrot',              // Vegetables
   'pizza': 'Cherry',                // Fruits

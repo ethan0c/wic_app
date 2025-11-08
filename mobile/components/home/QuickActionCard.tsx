@@ -24,7 +24,7 @@ export default function QuickActionCard({
       activeOpacity={0.8}
     >
   <Icon size={28} color={iconColor} stroke="black" strokeWidth={1} fill="white" />
-      <Typography variant="body" weight="600" style={{ color: '#1A1A1A', marginTop: 10, textAlign: 'center' }}>
+      <Typography variant="title" weight="500" style={{ color: '#1A1A1A', marginTop: 10, textAlign: 'center', fontSize: 14 }}>
         {title}
       </Typography>
     </TouchableOpacity>

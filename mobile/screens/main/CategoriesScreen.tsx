@@ -18,9 +18,9 @@ export default function CategoriesScreen() {
     { key: 'all', label: 'All Foods', emoji: '🛒' },
     { key: 'dairy', label: 'Dairy', emoji: '🥛' },
     { key: 'grains', label: 'Grains', emoji: '🌾' },
-    { key: 'protein', label: 'Protein', emoji: '🥚' },
+    { key: 'protein', label: 'Protein', emoji: '🐟' },
     { key: 'fruits', label: 'Fruits', emoji: '🍎' },
-    { key: 'vegetables', label: 'Vegetables', emoji: '🥕' },
+    { key: 'vegetables', label: 'Vegetables', emoji: '�' },
   ];
 
   useEffect(() => {
