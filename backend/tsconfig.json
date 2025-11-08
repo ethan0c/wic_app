@@ -12,6 +12,6 @@
     "resolveJsonModule": true,
     "moduleResolution": "node"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "scripts/seed.ts", "scripts/seed-wic-foods.ts"],
   "exclude": ["node_modules", "dist"]
 }
