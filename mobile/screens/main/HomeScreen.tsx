@@ -15,7 +15,6 @@ import HomeHeader from '../../components/home/HomeHeader';
 import BenefitTilesGroup from '../../components/home/BenefitTilesGroup';
 import QuickActionCard from '../../components/home/QuickActionCard';
 import SectionCard from '../../components/home/SectionCard';
-import CardDisplay from '../../components/home/CardDisplay';
 import BenefitDetailModal from '../../components/home/BenefitDetailModal';
 
 type HomeScreenNavigationProp = StackNavigationProp<MainNavigatorParamList>;
@@ -162,13 +161,6 @@ export default function HomeScreen() {
         style={styles.scrollContainer}
         contentContainerStyle={styles.contentContainer}
       >
-        {/* Current Card - Right under header */}
-        <View style={styles.sectionNoPad}>
-        <SectionCard style={styles.cardDisplaySection}>
-          <CardDisplay cardNumber={cardNumber || ''} />
-        </SectionCard>
-      </View>
-      
       {/* You Have Left This Month */}
       <View style={styles.sectionNoPad}>
         <SectionCard title={t('home.leftThisMonth')}>
@@ -337,10 +329,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 16,
-  },
-  cardDisplaySection: {
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
   },
   transactionsList: {
     gap: 0,
