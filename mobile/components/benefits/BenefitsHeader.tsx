@@ -46,7 +46,7 @@ export default function BenefitsHeader() {
 const styles = StyleSheet.create({
   headerWrapper: {
     paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingTop: 60,
     paddingBottom: 12,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
