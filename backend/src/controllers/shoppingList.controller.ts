@@ -9,9 +9,6 @@ export const getShoppingList = async (req: Request, res: Response) => {
 
     const items = await prisma.shoppingListItem.findMany({
       where: { userId },
-      include: {
-        approvedFood: true,
-      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -25,18 +22,13 @@ export const getShoppingList = async (req: Request, res: Response) => {
 export const addShoppingListItem = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const { approvedFoodId, customName, quantity, notes } = req.body;
+    const { itemName, category } = req.body;
 
     const item = await prisma.shoppingListItem.create({
       data: {
         userId,
-        approvedFoodId,
-        customName,
-        quantity,
-        notes,
-      },
-      include: {
-        approvedFood: true,
+        itemName,
+        category,
       },
     });
 
@@ -50,17 +42,12 @@ export const addShoppingListItem = async (req: Request, res: Response) => {
 export const updateShoppingListItem = async (req: Request, res: Response) => {
   try {
     const { itemId } = req.params;
-    const { isChecked, quantity, notes } = req.body;
+    const { isChecked } = req.body;
 
     const item = await prisma.shoppingListItem.update({
       where: { id: itemId },
       data: {
         isChecked,
-        quantity,
-        notes,
-      },
-      include: {
-        approvedFood: true,
       },
     });
 
