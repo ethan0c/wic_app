@@ -35,7 +35,7 @@ export default function SectionCard({ title, subtitle, right, style, contentStyl
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: 0,
     padding: 16,
     borderWidth: 1,
     borderColor: '#E5E7EB',
@@ -44,6 +44,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 4,
+    marginBottom: 8,
   },
 });
