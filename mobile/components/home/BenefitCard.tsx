@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Typography from '../Typography';
+import * as LucideIcons from 'lucide-react-native';
 
 interface BenefitCardProps {
   icon: keyof typeof Ionicons.glyphMap;
@@ -13,6 +14,18 @@ interface BenefitCardProps {
   iconColor: string;
   onPress?: () => void;
 }
+
+// Mapping from Ionicons to Lucide icons for better outline/fill control
+const iconMapping: { [key: string]: keyof typeof LucideIcons } = {
+  'water-outline': 'Droplets',
+  'nutrition-outline': 'Apple',
+  'restaurant-outline': 'Utensils',
+  'cube-outline': 'Package',
+  'egg': 'Egg',
+  'leaf': 'Wheat',
+  'fitness': 'Carrot',
+  'pizza': 'Cherry',
+};
 
 export default function BenefitCard({
   icon,
@@ -77,7 +90,27 @@ export default function BenefitCard({
       activeOpacity={0.8}
     >
       <View style={styles.benefitHeader}>
-        <Ionicons name={icon} size={24} color={iconColor} />
+        {(() => {
+          const lucideIconName = iconMapping[icon as string] || 'Package';
+          const LucideIcon = LucideIcons[lucideIconName] as React.ComponentType<{
+            size?: number;
+            color?: string;
+            fill?: string;
+            stroke?: string;
+            strokeWidth?: number;
+          }>;
+          
+          return LucideIcon ? (
+            <LucideIcon 
+              size={24} 
+              stroke="#1A1A1A" 
+              fill="#FFFFFF" 
+              strokeWidth={2}
+            />
+          ) : (
+            <Ionicons name={icon} size={24} color={iconColor} />
+          );
+        })()}
         <Typography variant="title" weight="600" style={{ color: iconColor, fontSize: 16 }}>
           {title}
         </Typography>
