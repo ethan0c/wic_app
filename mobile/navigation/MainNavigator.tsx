@@ -12,6 +12,9 @@ import ProductGridScreen from '../screens/main/ProductGridScreen';
 import ProductDetailScreen from '../screens/main/ProductDetailScreen';
 import NotificationsScreen from '../screens/main/NotificationsScreen';
 import ScannerSettingsScreen from '../screens/settings/ScannerSettingsScreen';
+import ShowCashierScreen from '../screens/main/ShowCashierScreen';
+import ShoppingListScreen from '../screens/main/ShoppingListScreen';
+import WICStoresScreen from '../screens/main/WICStoresScreen';
 
 export type MainNavigatorParamList = {
   MainTabs: undefined;
@@ -26,6 +29,9 @@ export type MainNavigatorParamList = {
   };
   Notifications: undefined;
   ScannerSettings: undefined;
+  ShowCashier: undefined;
+  ShoppingList: undefined;
+  WICStores: undefined;
 };
 
 const Stack = createStackNavigator<MainNavigatorParamList>();
@@ -147,6 +153,30 @@ export default function MainNavigator() {
         component={ScannerSettingsScreen}
         options={{
           title: 'Scanner Settings',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen 
+        name="ShowCashier" 
+        component={ShowCashierScreen}
+        options={{
+          title: 'Show Cashier',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen 
+        name="ShoppingList" 
+        component={ShoppingListScreen}
+        options={{
+          title: 'Shopping List',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen 
+        name="WICStores" 
+        component={WICStoresScreen}
+        options={{
+          title: 'WIC Stores Near You',
           headerShown: true,
         }}
       />

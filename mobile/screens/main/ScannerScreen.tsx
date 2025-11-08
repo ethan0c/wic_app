@@ -18,6 +18,7 @@ import ScanInstructions from '../../components/scanner/ScanInstructions';
 import DemoExamples from '../../components/scanner/DemoExamples';
 import ManualEntry from '../../components/scanner/ManualEntry';
 import ScanResultModal from '../../components/scanner/ScanResultModal';
+import QuickResultFlash from '../../components/scanner/QuickResultFlash';
 
 type Product = {
   upc: string;
@@ -43,6 +44,7 @@ export default function ScannerScreen({ route }: any) {
   const { settings } = useScannerSettings();
   const [isScanning, setIsScanning] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const [showQuickFlash, setShowQuickFlash] = useState(false);
   const [scanResult, setScanResult] = useState<Product | null>(null);
   const [showManualEntry, setShowManualEntry] = useState(false);
 
@@ -95,11 +97,20 @@ export default function ScannerScreen({ route }: any) {
         }
         
         setScanResult(product);
-        setShowResult(true);
-        speakResult(product);
+        setIsScanning(false);
+        
+        // Show quick flash first
+        setShowQuickFlash(true);
+        
+        // Then show full modal after 1.5 seconds
+        setTimeout(() => {
+          setShowQuickFlash(false);
+          setShowResult(true);
+          speakResult(product);
+        }, 1500);
+      } else {
+        setIsScanning(false);
       }
-      
-      setIsScanning(false);
     }, 2000);
   };
 
@@ -114,8 +125,17 @@ export default function ScannerScreen({ route }: any) {
       }
       
       setScanResult(product);
-      setShowResult(true);
-      speakResult(product);
+      setShowManualEntry(false);
+      
+      // Show quick flash first
+      setShowQuickFlash(true);
+      
+      // Then show full modal after 1.5 seconds
+      setTimeout(() => {
+        setShowQuickFlash(false);
+        setShowResult(true);
+        speakResult(product);
+      }, 1500);
     } else {
       // Create a "not found" product for demo
       const notFound: Product = {
@@ -131,11 +151,16 @@ export default function ScannerScreen({ route }: any) {
         alternatives: []
       };
       setScanResult(notFound);
-      setShowResult(true);
+      setShowManualEntry(false);
+      
+      setShowQuickFlash(true);
+      setTimeout(() => {
+        setShowQuickFlash(false);
+        setShowResult(true);
+      }, 1500);
+      
       Vibration.vibrate([0, 100, 100, 100]);
     }
-    
-    setShowManualEntry(false);
   };
 
   const handleProductSelect = (product: Product) => {
@@ -146,8 +171,16 @@ export default function ScannerScreen({ route }: any) {
     }
     
     setScanResult(product);
-    setShowResult(true);
-    speakResult(product);
+    
+    // Show quick flash first
+    setShowQuickFlash(true);
+    
+    // Then show full modal after 1.5 seconds
+    setTimeout(() => {
+      setShowQuickFlash(false);
+      setShowResult(true);
+      speakResult(product);
+    }, 1500);
   };
 
   const handleCloseResult = () => {
@@ -220,6 +253,12 @@ export default function ScannerScreen({ route }: any) {
         visible={showManualEntry}
         onClose={() => setShowManualEntry(false)}
         onSubmit={handleManualScan}
+      />
+
+      <QuickResultFlash
+        visible={showQuickFlash}
+        isApproved={scanResult?.isApproved ?? false}
+        productName={scanResult?.name ?? ''}
       />
     </View>
   );

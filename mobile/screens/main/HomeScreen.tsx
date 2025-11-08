@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Milk, Apple, Wheat, Zap, ScanLine, List, MapPin } from 'lucide-react-native';
+import { Milk, Apple, Wheat, Zap, ScanLine, List, MapPin, ReceiptText } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../../context/ThemeContext';
@@ -124,7 +124,7 @@ export default function HomeScreen() {
   const quickActions = [
     {
       key: 'scan',
-      title: 'Scan Item',
+      title: 'Scanner',
       Icon: ScanLine,
       backgroundColor: '#E8F5E8',
       iconColor: '#22C55E',
@@ -136,6 +136,7 @@ export default function HomeScreen() {
       Icon: List,
       backgroundColor: '#FEF3C7',
       iconColor: '#F59E0B',
+      action: () => navigation.navigate('ShoppingList'),
     },
     {
       key: 'stores',
@@ -143,6 +144,15 @@ export default function HomeScreen() {
       Icon: MapPin,
       backgroundColor: '#DBEAFE',
       iconColor: '#3B82F6',
+      action: () => navigation.navigate('WICStores'),
+    },
+    {
+      key: 'receipt',
+      title: 'Cashier',
+      Icon: ReceiptText,
+      backgroundColor: '#F3E8FF',
+      iconColor: '#A855F7',
+      action: () => navigation.navigate('ShowCashier'),
     },
   ];
 
@@ -190,6 +200,89 @@ export default function HomeScreen() {
               onPress={action.action}
             />
           ))}
+          </View>
+        </SectionCard>
+      </View>
+
+      {/* Recent Transactions */}
+      <View style={styles.sectionNoPad}>
+        <SectionCard title="Recent Transactions">
+          <View style={styles.transactionsList}>
+            <View style={styles.transactionItem}>
+              <View style={styles.transactionLeft}>
+                <View style={[styles.transactionIcon, { backgroundColor: '#F0FDF4' }]}>
+                  <Typography style={{ fontSize: 20 }}>🛒</Typography>
+                </View>
+                <View style={styles.transactionInfo}>
+                  <Typography variant="body" weight="600">
+                    Walmart Supercenter
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary">
+                    Nov 6, 2025 • 3:42 PM
+                  </Typography>
+                </View>
+              </View>
+              <View style={styles.transactionRight}>
+                <Typography variant="body" weight="700" style={{ color: '#EF4444' }}>
+                  -$24.50
+                </Typography>
+                <Typography variant="caption" color="textSecondary" style={{ textAlign: 'right' }}>
+                  WIC Card
+                </Typography>
+              </View>
+            </View>
+
+            <View style={styles.transactionDivider} />
+
+            <View style={styles.transactionItem}>
+              <View style={styles.transactionLeft}>
+                <View style={[styles.transactionIcon, { backgroundColor: '#F0FDF4' }]}>
+                  <Typography style={{ fontSize: 20 }}>🛒</Typography>
+                </View>
+                <View style={styles.transactionInfo}>
+                  <Typography variant="body" weight="600">
+                    Target
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary">
+                    Nov 3, 2025 • 10:15 AM
+                  </Typography>
+                </View>
+              </View>
+              <View style={styles.transactionRight}>
+                <Typography variant="body" weight="700" style={{ color: '#EF4444' }}>
+                  -$18.32
+                </Typography>
+                <Typography variant="caption" color="textSecondary" style={{ textAlign: 'right' }}>
+                  WIC Card
+                </Typography>
+              </View>
+            </View>
+
+            <View style={styles.transactionDivider} />
+
+            <View style={styles.transactionItem}>
+              <View style={styles.transactionLeft}>
+                <View style={[styles.transactionIcon, { backgroundColor: '#EFF6FF' }]}>
+                  <Typography style={{ fontSize: 20 }}>💳</Typography>
+                </View>
+                <View style={styles.transactionInfo}>
+                  <Typography variant="body" weight="600">
+                    Monthly Benefits Reset
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary">
+                    Nov 1, 2025 • 12:00 AM
+                  </Typography>
+                </View>
+              </View>
+              <View style={styles.transactionRight}>
+                <Typography variant="body" weight="700" style={{ color: '#10B981' }}>
+                  +$115.00
+                </Typography>
+                <Typography variant="caption" color="textSecondary" style={{ textAlign: 'right' }}>
+                  Balance
+                </Typography>
+              </View>
+            </View>
           </View>
         </SectionCard>
       </View>
@@ -245,10 +338,44 @@ const styles = StyleSheet.create({
   },
   actionsGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
   },
   cardDisplaySection: {
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
+  },
+  transactionsList: {
+    gap: 0,
+  },
+  transactionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+  },
+  transactionLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  transactionIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  transactionInfo: {
+    flex: 1,
+  },
+  transactionRight: {
+    alignItems: 'flex-end',
+  },
+  transactionDivider: {
+    height: 1,
+    backgroundColor: '#F3F4F6',
+    marginVertical: 4,
   },
 });
