@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Modal, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, Modal, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -69,24 +69,55 @@ export default function ScanResultModal({
     if (product.isApproved) {
       return `${product.name} ${t('scanner.byBrand')} ${product.brand} (${product.size_display}) ${t('scanner.isApproved')}`;
     } else {
+      // Product not found
       if (product.reasons.includes("product_not_found")) {
         return t('scanner.productNotFound');
       }
       
-      if (product.reasons.includes("package_size_not_allowed")) {
-        if (product.category === "milk" && product.size_oz === 128) {
-          return `${product.name} (${product.size_display}) ${t('scanner.wrongSize')}. ${t('scanner.milkSizeRule')}`;
-        }
-        
-        if (product.category === "bread" && product.size_oz !== 16) {
-          return `${product.name} (${product.size_display}) ${t('scanner.wrongSize')}. ${t('scanner.breadSizeRule')}`;
-        }
-        
-        if (product.category === "cereal") {
-          return `${product.name} (${product.size_display}) ${t('scanner.cerealSizeRule')}`;
-        }
+      // Not in WIC category at all
+      if (product.reasons.includes("product_not_in_wic_category") || product.reasons.includes("notInWicCategory")) {
+        return `${product.name} is not a WIC-approved product category.`;
       }
       
+      // Wrong package size
+      if (product.reasons.includes("package_size_not_allowed")) {
+        const categoryRules = (aplData.rules as any)[product.category];
+        
+        // Milk - gallon not allowed
+        if (product.category === "milk" && product.size_oz === 128) {
+          return categoryRules?.messages?.size_restriction?.en || 
+                 `${product.name} (${product.size_display}) is not approved. WIC only covers half-gallon (64 oz) milk containers.`;
+        }
+        
+        // Bread - must be exactly 16 oz
+        if (product.category === "bread") {
+          return categoryRules?.messages?.size_restriction?.en || 
+                 `${product.name} (${product.size_display}) is not approved. WIC only covers 16-ounce bread loaves.`;
+        }
+        
+        // Generic size restriction
+        return categoryRules?.messages?.size_restriction?.en || 
+               `${product.name} (${product.size_display}) is the wrong size for WIC coverage.`;
+      }
+      
+      // Exceeds monthly limit
+      if (product.reasons.includes("exceeds_monthly_limit")) {
+        const categoryRules = (aplData.rules as any)[product.category];
+        
+        if (product.category === "cereal") {
+          return categoryRules?.messages?.size_restriction?.en || 
+                 `${product.name} (${product.size_display}) exceeds your monthly 72 oz cereal allowance. Choose a smaller size.`;
+        }
+        
+        return `${product.name} (${product.size_display}) exceeds your monthly benefit allowance for this category.`;
+      }
+      
+      // Brand not approved
+      if (product.reasons.includes("brand_or_product_not_approved") || product.reasons.includes("brand_not_approved")) {
+        return `${product.brand} ${product.name} is not on the WIC approved product list for this category.`;
+      }
+      
+      // Generic fallback
       return `${product.name} ${t('scanner.byBrand')} ${product.brand} (${product.size_display}) ${t('scanner.notCovered')}`;
     }
   };
@@ -118,6 +149,10 @@ export default function ScanResultModal({
             </TouchableOpacity>
           </View>
 
+          <ScrollView 
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 20 }}
+          >
           {/* Result Status */}
           <View style={styles.resultHeader}>
             {/* Product Image or Emoji */}
@@ -211,21 +246,57 @@ export default function ScanResultModal({
                   <Typography variant="subheading" weight="600" style={{ marginBottom: 8, color: '#EF4444' }}>
                     {t('scanner.whyNotCovered')}
                   </Typography>
-                  {product.category === "milk" && product.size_oz === 128 && (
-                    <Typography variant="body" style={{ marginBottom: 8 }}>
-                      {t('scanner.wicPolicyAllows')} <Typography variant="body" weight="600">{t('scanner.halfGallonMilkOnly')}</Typography> {t('scanner.milkContainers')}
-                    </Typography>
-                  )}
-                  {product.category === "bread" && product.size_oz !== 16 && (
-                    <Typography variant="body" style={{ marginBottom: 8 }}>
-                      {t('scanner.wicPolicyAllows')} <Typography variant="body" weight="600">{t('scanner.sixteenOunceOnly')}</Typography> {t('scanner.breadLoaves')}
-                    </Typography>
-                  )}
+                  
+                  {/* Package size not allowed */}
                   {product.reasons.includes("package_size_not_allowed") && (
-                    <Typography variant="caption" color="textSecondary">
-                      {t('scanner.packageSizeRequirements')}
+                    <>
+                      {product.category === "milk" && product.size_oz === 128 && (
+                        <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
+                          WIC policy only allows <Typography variant="body" weight="600">half-gallon (64 oz)</Typography> milk containers. 
+                          Gallon sizes are not covered to ensure proper portion control and freshness.
+                        </Typography>
+                      )}
+                      {product.category === "bread" && product.size_oz !== 16 && (
+                        <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
+                          WIC policy requires <Typography variant="body" weight="600">exactly 16 ounce</Typography> bread loaves. 
+                          This {product.size_oz} oz loaf does not meet the size requirement.
+                        </Typography>
+                      )}
+                      {product.category === "cereal" && (
+                        <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
+                          Your monthly cereal allowance is 72 oz total. You can mix different cereal sizes and brands as long as the total doesn't exceed 72 oz.
+                        </Typography>
+                      )}
+                    </>
+                  )}
+                  
+                  {/* Exceeds monthly limit */}
+                  {product.reasons.includes("exceeds_monthly_limit") && (
+                    <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
+                      This {product.size_oz} oz package would exceed your monthly benefit allowance. 
+                      Choose a smaller size or check your remaining balance.
                     </Typography>
                   )}
+                  
+                  {/* Brand not approved */}
+                  {product.reasons.includes("brand_or_product_not_approved") && (
+                    <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
+                      This specific brand or product is not on the WIC approved product list. 
+                      Only pre-approved brands and products are covered.
+                    </Typography>
+                  )}
+                  
+                  {/* Product not in WIC category */}
+                  {(product.reasons.includes("product_not_in_wic_category") || product.reasons.includes("notInWicCategory")) && (
+                    <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
+                      This product category is not covered by WIC benefits. 
+                      WIC covers specific food categories like milk, bread, cereal, eggs, cheese, fruits, and vegetables.
+                    </Typography>
+                  )}
+                  
+                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 4 }}>
+                    Check the approved alternatives below or scan a different product.
+                  </Typography>
                 </View>
               </View>
             </SectionCard>
@@ -286,10 +357,11 @@ export default function ScanResultModal({
               </View>
             </SectionCard>
           )}
+          </ScrollView>
 
           {/* Action Buttons */}
-          <Button
-            title={t('scanner.viewProductDetails')}
+          <TouchableOpacity
+            style={styles.viewDetailsButton}
             onPress={() => {
               onClose();
               (navigation as any).navigate('ProductDetail', { 
@@ -297,10 +369,11 @@ export default function ScanResultModal({
                 categoryName: (aplData.categories as any)[product.category]?.name || 'Unknown'
               });
             }}
-            fullWidth
-            size="medium"
-            style={{ marginBottom: 12 }}
-          />
+          >
+            <Typography variant="body" weight="600" style={{ color: 'white' }}>
+              {t('scanner.viewProductDetails')}
+            </Typography>
+          </TouchableOpacity>
 
           <Button
             title={t('scanner.scanAnotherItem')}
@@ -397,5 +470,14 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
+  },
+  viewDetailsButton: {
+    backgroundColor: '#10B981',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 50,
+    alignItems: 'center',
+    marginBottom: 12,
+    marginTop: 10,
   },
 });

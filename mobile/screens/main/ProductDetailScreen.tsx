@@ -69,14 +69,7 @@ export default function ProductDetailScreen({ route }: any) {
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <ArrowLeft size={24} color={theme.text} stroke={theme.text} />
-        </TouchableOpacity>
         
-        <Typography variant="heading" style={{ flex: 1, marginHorizontal: 16 }}>
-          Product Details
-        </Typography>
-
         <TouchableOpacity 
           onPress={() => setLanguage(lang => lang === 'en' ? 'ht' : 'en')}
           style={[styles.langButton, { backgroundColor: theme.primary + '15' }]}

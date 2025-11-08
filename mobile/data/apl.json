@@ -201,6 +201,10 @@
       "allowed_sizes": [64],
       "size_rule": "only_half_gallons",
       "messages": {
+        "size_restriction": {
+          "en": "WIC only covers half-gallon (64 oz) milk containers. Gallon sizes are not approved.",
+          "ht": "WIC kouvri sèlman mwatye galon (64 oz) lèt. Galon pa apwouve."
+        },
         "gallon_not_allowed": {
           "en": "WIC covers half-gallons, not gallons. Try two half-gallons instead.",
           "ht": "WIC kouvri mwatye galon yo, pa galon antye. Eseye de mwatye galon olye de sa."
@@ -211,9 +215,13 @@
       "max_ounces": 72,
       "combinable": true,
       "messages": {
+        "size_restriction": {
+          "en": "This cereal size exceeds your monthly 72 oz allowance. Choose a smaller size that fits within your benefit.",
+          "ht": "Gwosè sereyal sa a depase alokasyon 72 oz pa mwa ou. Chwazi yon pi ti gwosè ki antre nan benefis ou."
+        },
         "ounce_limit": {
-          "en": "Cereal total cannot exceed 72 ounces per month.",
-          "ht": "Total sereyal la pa ka depase 72 ons nan yon mwa."
+          "en": "Cereal total cannot exceed 72 ounces per month. You can combine different sizes.",
+          "ht": "Total sereyal la pa ka depase 72 ons nan yon mwa. Ou ka konbine diferan gwosè."
         }
       }
     },
@@ -222,8 +230,28 @@
       "size_rule": "exactly_16oz",
       "messages": {
         "size_restriction": {
-          "en": "Only 16-ounce bread packages are covered by WIC.",
-          "ht": "Se sèlman pake pen 16 ons yo ki kouvri pa WIC."
+          "en": "Only 16-ounce bread loaves are covered by WIC. This loaf is the wrong size.",
+          "ht": "Se sèlman pen 16 ons yo ki kouvri pa WIC. Pen sa a pa bon gwosè."
+        }
+      }
+    },
+    "cheese": {
+      "max_ounces": 16,
+      "allowed_sizes": [8, 16],
+      "messages": {
+        "size_restriction": {
+          "en": "Cheese packages must be 8 oz or 16 oz. Other sizes are not covered.",
+          "ht": "Pakè fromaj yo dwe 8 oz oswa 16 oz. Lòt gwosè pa kouvri."
+        }
+      }
+    },
+    "eggs": {
+      "allowed_sizes": [12],
+      "size_rule": "dozen_only",
+      "messages": {
+        "size_restriction": {
+          "en": "Only 1-dozen (12 count) egg cartons are covered. 6-packs and 18-packs are not approved.",
+          "ht": "Sèlman katòn ze 1-douzèn (12 konte) yo kouvri. Pak 6 ak pak 18 pa apwouve."
         }
       }
     }

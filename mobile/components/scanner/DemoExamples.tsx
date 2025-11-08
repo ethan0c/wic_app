@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Typography from '../Typography';
 import SectionCard from '../home/SectionCard';
 import { useLanguage } from '../../context/LanguageContext';
+import { useWicCard } from '../../context/WicCardContext';
+import { getUserBenefits } from '../../services/wicApi';
 import aplData from '../../data/apl.json';
 
 type Product = {
@@ -14,12 +16,24 @@ type Product = {
   size_display: string;
   isApproved: boolean;
   image: string;
+  imageUrl?: string;
+  emoji?: string;
   reasons: string[];
   alternatives: Array<{
     upc: string;
     suggestion: string;
     reason: string;
+    imageUrl?: string;
+    emoji?: string;
   }>;
+  benefitCalculation?: {
+    category: string;
+    currentRemaining: number;
+    afterPurchase: number;
+    unit: string;
+    canAfford: boolean;
+    maxQuantity?: number;
+  } | null;
 };
 
 interface DemoExamplesProps {
@@ -28,9 +42,63 @@ interface DemoExamplesProps {
 
 export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
   const { t } = useLanguage();
+  const { cardNumber } = useWicCard();
+  const [benefits, setBenefits] = useState<any[]>([]);
+  
+  useEffect(() => {
+    if (cardNumber) {
+      loadBenefits();
+    }
+  }, [cardNumber]);
+
+  const loadBenefits = async () => {
+    if (!cardNumber) return;
+    try {
+      const benefitsData = await getUserBenefits(cardNumber);
+      setBenefits(benefitsData);
+    } catch (error) {
+      console.error('Error loading benefits:', error);
+    }
+  };
+
+  const calculateBenefitImpact = (product: any) => {
+    if (!cardNumber || !product.isApproved) return null;
+    
+    // Find matching benefit category
+    const benefit = benefits.find(b => 
+      b.category.toLowerCase().includes(product.category.toLowerCase()) || 
+      product.category.toLowerCase().includes(b.category.toLowerCase())
+    );
+
+    if (!benefit) return null;
+
+    const currentRemaining = Number(benefit.remainingAmount);
+    const productSize = product.size_oz;
+    const afterPurchase = currentRemaining - productSize;
+    const canAfford = afterPurchase >= 0;
+    const maxQuantity = canAfford ? Math.floor(currentRemaining / productSize) : 0;
+
+    return {
+      category: benefit.category,
+      currentRemaining,
+      afterPurchase,
+      unit: benefit.unit,
+      canAfford,
+      maxQuantity,
+    };
+  };
   
   const lookupProduct = (upc: string): Product | null => {
-    return aplData.products.find((p: Product) => p.upc === upc) || null;
+    const foundProduct = aplData.products.find((p: Product) => p.upc === upc);
+    if (!foundProduct) return null;
+
+    // Add benefit calculation
+    const benefitCalc = calculateBenefitImpact(foundProduct);
+    
+    return {
+      ...foundProduct,
+      benefitCalculation: benefitCalc,
+    };
   };
 
   const handleDemoPress = (upc: string) => {
@@ -40,58 +108,122 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
     }
   };
 
+  // 8 demo examples with variety
+  const demoProducts = [
+    { upc: "041303001806", emoji: "🥛", label: "½ Gal Milk", approved: true },
+    { upc: "041303001813", emoji: "🥛", label: "1 Gal Milk", approved: false },
+    { upc: "072250015137", emoji: "🍞", label: "16oz Bread", approved: true },
+    { upc: "072250015144", emoji: "🍞", label: "20oz Bread", approved: false },
+    { upc: "016000275218", emoji: "🥣", label: "Cheerios 18oz", approved: true },
+    { upc: "016000275225", emoji: "🥣", label: "Cheerios 36oz", approved: true },
+    { upc: "016000275232", emoji: "🥣", label: "Cheerios 48oz", approved: false },
+    { upc: "072250015137", emoji: "🧀", label: "Cheese 16oz", approved: true }, // Reusing UPC as placeholder
+  ];
+
   return (
     <SectionCard title={`🎯 ${t('scanner.demoExamples') || 'Try Demo Examples'}`}>
+      {/* Row 1 */}
       <View style={styles.demoGrid}>
-        <TouchableOpacity
-          style={[styles.demoButton, styles.notCoveredButton]}
-          onPress={() => handleDemoPress("041303001813")} // Gallon milk
-        >
-          <Typography variant="caption" weight="600" style={{ color: '#EF4444', textAlign: 'center', marginBottom: 4 }}>
-            🥛 {t('scanner.demoGallonMilk') || 'Gallon Milk'}
-          </Typography>
-          <Typography variant="caption" style={{ color: '#EF4444', textAlign: 'center', fontSize: 10 }}>
-            {t('scanner.notApproved')} ❌
-          </Typography>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.demoButton, styles.approvedButton]}
-          onPress={() => handleDemoPress("041303001806")} // Half-gallon milk
-        >
-          <Typography variant="caption" weight="600" style={{ color: '#10B981', textAlign: 'center', marginBottom: 4 }}>
-            🥛 {t('scanner.demoHalfGallonMilk') || '½ Gallon Milk'}
-          </Typography>
-          <Typography variant="caption" style={{ color: '#10B981', textAlign: 'center', fontSize: 10 }}>
-            {t('scanner.approved')} ✓
-          </Typography>
-        </TouchableOpacity>
+        {demoProducts.slice(0, 2).map((demo, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[styles.demoButton, demo.approved ? styles.approvedButton : styles.notCoveredButton]}
+            onPress={() => handleDemoPress(demo.upc)}
+          >
+            <Typography variant="caption" weight="600" style={{ 
+              color: demo.approved ? '#10B981' : '#EF4444', 
+              textAlign: 'center', 
+              marginBottom: 4 
+            }}>
+              {demo.emoji} {demo.label}
+            </Typography>
+            <Typography variant="caption" style={{ 
+              color: demo.approved ? '#10B981' : '#EF4444', 
+              textAlign: 'center', 
+              fontSize: 10 
+            }}>
+              {demo.approved ? '✓' : '❌'}
+            </Typography>
+          </TouchableOpacity>
+        ))}
       </View>
 
+      {/* Row 2 */}
       <View style={styles.demoGrid}>
-        <TouchableOpacity
-          style={[styles.demoButton, styles.notCoveredButton]}
-          onPress={() => handleDemoPress("072250015144")} // 20oz bread
-        >
-          <Typography variant="caption" weight="600" style={{ color: '#EF4444', textAlign: 'center', marginBottom: 4 }}>
-            🍞 {t('scanner.demo20ozBread') || '20oz Bread'}
-          </Typography>
-          <Typography variant="caption" style={{ color: '#EF4444', textAlign: 'center', fontSize: 10 }}>
-            {t('scanner.wrongSize')} ❌
-          </Typography>
-        </TouchableOpacity>
+        {demoProducts.slice(2, 4).map((demo, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[styles.demoButton, demo.approved ? styles.approvedButton : styles.notCoveredButton]}
+            onPress={() => handleDemoPress(demo.upc)}
+          >
+            <Typography variant="caption" weight="600" style={{ 
+              color: demo.approved ? '#10B981' : '#EF4444', 
+              textAlign: 'center', 
+              marginBottom: 4 
+            }}>
+              {demo.emoji} {demo.label}
+            </Typography>
+            <Typography variant="caption" style={{ 
+              color: demo.approved ? '#10B981' : '#EF4444', 
+              textAlign: 'center', 
+              fontSize: 10 
+            }}>
+              {demo.approved ? '✓' : '❌'}
+            </Typography>
+          </TouchableOpacity>
+        ))}
+      </View>
 
-        <TouchableOpacity
-          style={[styles.demoButton, styles.approvedButton]}
-          onPress={() => handleDemoPress("072250015137")} // 16oz bread
-        >
-          <Typography variant="caption" weight="600" style={{ color: '#10B981', textAlign: 'center', marginBottom: 4 }}>
-            🍞 {t('scanner.demo16ozBread') || '16oz Bread'}
-          </Typography>
-          <Typography variant="caption" style={{ color: '#10B981', textAlign: 'center', fontSize: 10 }}>
-            {t('scanner.approved')} ✓
-          </Typography>
-        </TouchableOpacity>
+      {/* Row 3 */}
+      <View style={styles.demoGrid}>
+        {demoProducts.slice(4, 6).map((demo, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[styles.demoButton, demo.approved ? styles.approvedButton : styles.notCoveredButton]}
+            onPress={() => handleDemoPress(demo.upc)}
+          >
+            <Typography variant="caption" weight="600" style={{ 
+              color: demo.approved ? '#10B981' : '#EF4444', 
+              textAlign: 'center', 
+              marginBottom: 4 
+            }}>
+              {demo.emoji} {demo.label}
+            </Typography>
+            <Typography variant="caption" style={{ 
+              color: demo.approved ? '#10B981' : '#EF4444', 
+              textAlign: 'center', 
+              fontSize: 10 
+            }}>
+              {demo.approved ? '✓' : '❌'}
+            </Typography>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Row 4 */}
+      <View style={styles.demoGrid}>
+        {demoProducts.slice(6, 8).map((demo, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[styles.demoButton, demo.approved ? styles.approvedButton : styles.notCoveredButton]}
+            onPress={() => handleDemoPress(demo.upc)}
+          >
+            <Typography variant="caption" weight="600" style={{ 
+              color: demo.approved ? '#10B981' : '#EF4444', 
+              textAlign: 'center', 
+              marginBottom: 4 
+            }}>
+              {demo.emoji} {demo.label}
+            </Typography>
+            <Typography variant="caption" style={{ 
+              color: demo.approved ? '#10B981' : '#EF4444', 
+              textAlign: 'center', 
+              fontSize: 10 
+            }}>
+              {demo.approved ? '✓' : '❌'}
+            </Typography>
+          </TouchableOpacity>
+        ))}
       </View>
     </SectionCard>
   );
