@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Bell } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useLanguage } from '../../context/LanguageContext';
 import Typography from '../Typography';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 
@@ -12,13 +13,18 @@ interface HomeHeaderProps {
 
 type NavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
-export default function HomeHeader({ userName = 'Maria' }: HomeHeaderProps) {
+export default function HomeHeader({ userName }: HomeHeaderProps) {
   const navigation = useNavigation<NavigationProp>();
+  const { t } = useLanguage();
+  const greeting = userName 
+    ? `${t('home.welcome')} ${userName}!` 
+    : `${t('home.welcome')}!`;
+  
   return (
     <View style={styles.headerWrapper}>
       <View style={styles.headerRow}>
         <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
-          Welcome back, {userName}!
+          {greeting}
         </Typography>
         <TouchableOpacity 
           activeOpacity={0.7} 

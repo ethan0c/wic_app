@@ -6,6 +6,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useWIC } from '../../context/WICContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
 
@@ -23,6 +24,7 @@ export default function HomeScreen() {
   const { theme } = useTheme();
   const { user } = useAuth();
   const { benefits, monthPeriod, daysRemaining } = useWIC();
+  const { t } = useLanguage();
   const navigation = useNavigation<HomeScreenNavigationProp>();
   
   const [selectedBenefit, setSelectedBenefit] = useState<string | null>(null);
@@ -124,7 +126,7 @@ export default function HomeScreen() {
   const quickActions = [
     {
       key: 'list',
-      title: 'Shopping List',
+      title: t('home.shoppingList'),
       Icon: List,
       backgroundColor: '#FEF3C7',
       iconColor: '#F59E0B',
@@ -132,7 +134,7 @@ export default function HomeScreen() {
     },
     {
       key: 'stores',
-      title: 'WIC Stores',
+      title: t('home.wicStores'),
       Icon: MapPin,
       backgroundColor: '#DBEAFE',
       iconColor: '#3B82F6',
@@ -140,7 +142,7 @@ export default function HomeScreen() {
     },
     {
       key: 'receipt',
-      title: 'Cashier',
+      title: t('home.showCashier'),
       Icon: ReceiptText,
       backgroundColor: '#F3E8FF',
       iconColor: '#A855F7',
@@ -199,7 +201,7 @@ export default function HomeScreen() {
       {/* Recent Transactions */}
       <View style={styles.sectionNoPad}>
         <SectionCard 
-          title="Recent Transactions"
+          title={t('home.recentTransactions')}
           right={
             <TouchableOpacity 
               style={styles.addPurchaseButton}
@@ -208,7 +210,7 @@ export default function HomeScreen() {
             >
               <Plus size={18} color="#10B981" strokeWidth={2.5} />
               <Typography variant="caption" weight="600" style={{ color: '#10B981', marginLeft: 4 }}>
-                Add Purchase
+                {t('home.addPurchase')}
               </Typography>
             </TouchableOpacity>
           }

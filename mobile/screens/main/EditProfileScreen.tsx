@@ -30,7 +30,7 @@ export default function EditProfileScreen() {
   // Load stored data on mount
   useEffect(() => {
     loadStoredData();
-  }, []);
+  }, [user]);
 
   const loadStoredData = async () => {
     try {
@@ -40,7 +40,8 @@ export default function EditProfileScreen() {
         AsyncStorage.getItem(STORAGE_KEYS.NOTIFICATIONS_ENABLED),
       ]);
 
-      if (storedName) setFirstName(storedName);
+      // Use stored name if available, otherwise use user's firstName from auth, otherwise blank
+      setFirstName(storedName || user?.firstName || '');
       if (storedCard) setWicCardNumber(storedCard);
       if (storedNotifications) setNotificationsEnabled(JSON.parse(storedNotifications));
     } catch (error) {

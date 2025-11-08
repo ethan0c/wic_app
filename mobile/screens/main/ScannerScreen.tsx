@@ -254,7 +254,7 @@ export default function ScannerScreen({ route }: any) {
       <ScanResultModal
         visible={showResult}
         product={scanResult}
-        language={settings.language}
+        language={language}
         onClose={handleCloseResult}
         onSpeakResult={() => scanResult && speakResult(scanResult)}
       />

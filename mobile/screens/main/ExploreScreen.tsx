@@ -27,12 +27,13 @@ interface ExploreCard {
 export default function ExploreScreen() {
   const { theme } = useTheme();
   const { user, signOut } = useAuth();
+  const { t } = useLanguage();
   const navigation = useNavigation<ExploreScreenNavigationProp>();
 
   const cards: ExploreCard[] = [
     { 
       key: 'benefits', 
-      title: 'WIC Benefits', 
+      title: t('explore.wicBenefits'), 
       icon: Megaphone, 
       backgroundColor: '#FFB5B5', 
       iconColor: '#1A1A1A',
@@ -40,7 +41,7 @@ export default function ExploreScreen() {
     },
     { 
       key: 'scanner', 
-      title: 'Barcode Scanner', 
+      title: t('explore.barcodeScanner'), 
       icon: Briefcase, 
       backgroundColor: '#B5B5FF', 
       iconColor: '#1A1A1A',
@@ -48,7 +49,7 @@ export default function ExploreScreen() {
     },
     { 
       key: 'groceries', 
-      title: 'WIC Foods', 
+      title: t('explore.wicFoods'), 
       icon: ShoppingBasket, 
       backgroundColor: '#B5FFB5', 
       iconColor: '#1A1A1A',
@@ -56,21 +57,21 @@ export default function ExploreScreen() {
     },
     { 
       key: 'stores', 
-      title: 'Store Locator', 
+      title: t('explore.storeLocator'), 
       icon: MapPin, 
       backgroundColor: '#FFE5B5', 
       iconColor: '#1A1A1A'
     },
     { 
       key: 'recipes', 
-      title: 'Healthy Recipes', 
+      title: t('explore.healthyRecipes'), 
       icon: ChefHat, 
       backgroundColor: '#B5E5FF', 
       iconColor: '#1A1A1A'
     },
     { 
       key: 'education', 
-      title: 'Nutrition Tips', 
+      title: t('explore.nutritionTips'), 
       icon: GraduationCap, 
       backgroundColor: '#E5B5FF', 
       iconColor: '#1A1A1A'
@@ -79,9 +80,9 @@ export default function ExploreScreen() {
 
   // Bottom row utility items
   const utilities = [
-    { key: 'support', title: 'Support', icon: HelpCircle },
-    { key: 'share', title: 'Share', icon: Share2 },
-    { key: 'account', title: 'Account', icon: UserCircle },
+    { key: 'support', title: t('explore.support'), icon: HelpCircle },
+    { key: 'share', title: t('explore.share'), icon: Share2 },
+    { key: 'account', title: t('explore.account'), icon: UserCircle },
   ];
 
   return (
@@ -93,7 +94,7 @@ export default function ExploreScreen() {
       >
       {/* Main Cards Grid */}
       <View style={styles.sectionNoPad}>
-        <SectionCard title="Quick Access">
+        <SectionCard title={t('explore.quickAccess')}>
           <View style={styles.cardsContainer}>
             {cards.map(card => (
               <TouchableOpacity
@@ -125,7 +126,7 @@ export default function ExploreScreen() {
 
       {/* Account Section */}
       <View style={styles.sectionNoPad}>
-        <SectionCard title="Account">
+        <SectionCard title={t('explore.account')}>
           {/* User Info */}
           <View style={styles.userInfo}>
             <View style={styles.userAvatar}>
@@ -133,10 +134,10 @@ export default function ExploreScreen() {
             </View>
             <View style={styles.userDetails}>
               <Typography variant="subheading" weight="600">
-                {user?.firstName} {user?.lastName}
+                {user?.firstName || t('explore.guest')}
               </Typography>
               <Typography variant="body" color="textSecondary">
-                WIC Participant
+                {t('explore.wicParticipant')}
               </Typography>
             </View>
           </View>
@@ -149,7 +150,7 @@ export default function ExploreScreen() {
             >
               <UserPen size={20} color="#6B7280" stroke="#6B7280" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
-                Edit Profile
+                {t('profile.editProfile')}
               </Typography>
               <ChevronRight size={20} color="#6B7280" stroke="#6B7280" />
             </TouchableOpacity>
@@ -169,7 +170,7 @@ export default function ExploreScreen() {
             >
               <Settings size={20} color="#6B7280" stroke="#6B7280" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
-                Scanner Settings
+                {t('explore.scannerSettings')}
               </Typography>
               <ChevronRight size={20} color="#6B7280" stroke="#6B7280" />
             </TouchableOpacity>
@@ -179,7 +180,7 @@ export default function ExploreScreen() {
             <TouchableOpacity style={styles.accountOption}>
               <HelpCircle size={20} color="#6B7280" stroke="#6B7280" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
-                Help & Support
+                {t('explore.helpSupport')}
               </Typography>
               <ChevronRight size={20} color="#6B7280" stroke="#6B7280" />
             </TouchableOpacity>
@@ -189,7 +190,7 @@ export default function ExploreScreen() {
             <TouchableOpacity style={styles.accountOption}>
               <Info size={20} color="#6B7280" stroke="#6B7280" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
-                About WIC
+                {t('explore.aboutWic')}
               </Typography>
               <ChevronRight size={20} color="#6B7280" stroke="#6B7280" />
             </TouchableOpacity>
@@ -202,7 +203,7 @@ export default function ExploreScreen() {
             >
               <LogOut size={20} color="#EF4444" stroke="#EF4444" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1, color: '#EF4444' }}>
-                Sign Out
+                {t('explore.signOut')}
               </Typography>
             </TouchableOpacity>
           </View>

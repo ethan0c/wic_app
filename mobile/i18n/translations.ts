@@ -65,6 +65,7 @@ export const translations = {
     // Home
     home: {
       welcome: 'Welcome',
+      welcomeBack: 'Welcome back',
       yourBenefits: 'Your WIC Benefits',
       quickActions: 'Quick Actions',
       recentTransactions: 'Recent Transactions',
@@ -75,13 +76,27 @@ export const translations = {
       shoppingList: 'Shopping List',
       wicStores: 'WIC Stores',
       showCashier: 'Show Cashier',
+      leftThisMonth: 'Left This Month',
+      // Benefit tiles
+      milk: 'Milk',
+      fruitsVeg: 'Fruits & Veg',
+      wholeGrains: 'Whole Grains',
+      cereal: 'Cereal',
+      gallons: 'gallons',
+      dollars: 'dollars',
+      packages: 'packages',
+      ounces: 'ounces',
     },
     
     // Categories
     categories: {
       milk: 'Milk & Dairy',
+      dairy: 'Dairy',
       produce: 'Fruits & Vegetables',
       grains: 'Bread & Grains',
+      protein: 'Protein',
+      vegetables: 'Vegetables',
+      fruits: 'Fruits',
       cereal: 'Breakfast Cereal',
       juice: 'Juice',
       eggs: 'Eggs',
@@ -93,24 +108,44 @@ export const translations = {
     shoppingList: {
       title: 'Shopping List',
       addItem: 'Add Item',
+      addItemToList: 'Add Item to List',
+      enterItemName: 'Enter item name...',
+      add: 'Add',
+      toBuy: 'To Buy',
+      checkedOff: 'Checked Off',
       noItems: 'No items yet',
+      emptyTitle: 'Your shopping list is empty',
+      emptyMessage: 'Add items you need to buy on your next trip',
       startAdding: 'Start adding items to your shopping list',
       itemsLeft: 'items left',
       itemChecked: 'Item checked',
       itemDeleted: 'Item removed',
+      clearChecked: 'Clear Checked Item',
+      clearCheckedPlural: 'Clear Checked Items',
     },
     
     // Stores
     stores: {
       title: 'WIC Stores',
       nearby: 'Nearby Stores',
+      nearbyCount: 'WIC-Approved Stores Near You',
+      sortedByDistance: 'Sorted by distance',
       open: 'Open',
       closed: 'Closed',
+      closedToday: 'Closed today',
       opensAt: 'Opens at',
       openUntil: 'Open until',
       getDirections: 'Directions',
       call: 'Call',
       milesAway: 'mi away',
+      phoneNotAvailable: 'Phone not available',
+      hoursNotAvailable: 'Hours not available',
+      gettingLocation: 'Getting your location...',
+      showingNearYou: 'Showing stores near you',
+      locationUnavailable: 'Location unavailable • Showing sample stores',
+      retry: 'Retry',
+      shoppingTips: 'Shopping Tips',
+      tipsMessage: 'Call ahead to confirm WIC items are in stock. Bring your WIC eCard and approved items list. Ask customer service for help finding WIC-approved products.',
     },
     
     // Profile
@@ -136,6 +171,45 @@ export const translations = {
       cardUpdateFailed: 'Failed to update card number',
       cardModalDesc: 'Enter your WIC card number. This will be stored locally on your device.',
       cardNumber: 'Card Number',
+    },
+    
+    // Explore
+    explore: {
+      quickAccess: 'Quick Access',
+      account: 'Account',
+      wicParticipant: 'WIC Participant',
+      guest: 'Guest',
+      scannerSettings: 'Scanner Settings',
+      helpSupport: 'Help & Support',
+      aboutWic: 'About WIC',
+      signOut: 'Sign Out',
+      wicBenefits: 'WIC Benefits',
+      barcodeScanner: 'Barcode Scanner',
+      wicFoods: 'WIC Foods',
+      storeLocator: 'Store Locator',
+      healthyRecipes: 'Healthy Recipes',
+      nutritionTips: 'Nutrition Tips',
+      support: 'Support',
+      share: 'Share',
+    },
+    
+    // Benefits Screen
+    benefits: {
+      current: 'Current',
+      future: 'Future',
+      expiresMessage: 'Benefits expire in {days} days • Reset: {date}',
+      nextBenefitsMessage: 'Next benefits available: {date}',
+      items: 'items',
+      used: 'used',
+      itemsAvailable: 'items available',
+      remaining: 'remaining',
+      of: 'of',
+    },
+    
+    // Benefit Detail Modal
+    benefitDetail: {
+      smartPicks: 'Smart Picks for You',
+      yourBenefits: 'Your Benefits',
     },
   },
   
@@ -275,6 +349,26 @@ export const translations = {
       cardUpdateFailed: 'Nou pa te kapab mete ajou nimewo kat la',
       cardModalDesc: 'Antre nimewo kat WIC ou. Li ap sere sou aparèy ou an sèlman.',
       cardNumber: 'Nimewo Kat',
+    },
+    
+    // Explore
+    explore: {
+      quickAccess: 'Aksè Rapid',
+      account: 'Kont',
+      wicParticipant: 'Patisipan WIC',
+      guest: 'Envite',
+      scannerSettings: 'Paramèt Eskane',
+      helpSupport: 'Èd & Sipò',
+      aboutWic: 'Konsènan WIC',
+      signOut: 'Dekonekte',
+      wicBenefits: 'Benefis WIC',
+      barcodeScanner: 'Eskane Kòd Ba',
+      wicFoods: 'Manje WIC',
+      storeLocator: 'Jwenn Magazen',
+      healthyRecipes: 'Resèt Sante',
+      nutritionTips: 'Konsèy Nitrisyon',
+      support: 'Sipò',
+      share: 'Pataje',
     },
   },
 };

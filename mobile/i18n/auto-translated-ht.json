@@ -1,0 +1,43 @@
+{
+  "home": {
+    "welcome": "Welcome",
+    "yourBenefits": "Your WIC Benefits",
+    "quickActions": "Quick Actions",
+    "recentTransactions": "Recent Transactions",
+    "viewAll": "View All",
+    "scanItem": "Scan Item",
+    "shoppingList": "Shopping List",
+    "findStores": "Find Stores",
+    "noTransactions": "No transactions yet",
+    "startShopping": "Start shopping with WIC!"
+  },
+  "benefits": {
+    "title": "WIC Benefits",
+    "availableBenefits": "Available Benefits",
+    "expiresOn": "Expires on",
+    "daysRemaining": "days remaining",
+    "viewDetails": "View Details",
+    "noBenefits": "No benefits available",
+    "contactWic": "Contact your WIC office"
+  },
+  "categories": {
+    "title": "WIC Food Categories",
+    "milk": "Milk & Dairy",
+    "produce": "Fruits & Vegetables",
+    "grains": "Whole Grains",
+    "protein": "Protein Foods",
+    "cereal": "Cereal",
+    "juice": "100% Juice",
+    "bread": "Whole Wheat Bread",
+    "eggs": "Eggs"
+  },
+  "shoppingList": {
+    "title": "Shopping List",
+    "addItem": "Add Item",
+    "noItems": "Your shopping list is empty",
+    "startAdding": "Add items from the scanner or categories",
+    "clear": "Clear All",
+    "itemAdded": "Item added to list",
+    "itemDeleted": "Item removed"
+  }
+}
