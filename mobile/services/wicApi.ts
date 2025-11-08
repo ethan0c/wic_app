@@ -138,7 +138,7 @@ export const getNearbyStores = async (
   }
 
   const response = await api.get('/api/stores/nearby', {
-    params: { lat, lng, radius },
+    params: { latitude: lat, longitude: lng, radius },
   });
   return response.data;
 };
