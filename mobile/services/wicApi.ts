@@ -121,6 +121,12 @@ export const getNearbyStores = async (
   lng: number,
   radius: number = 10
 ): Promise<WicStore[]> => {
+  // Validate coordinates before making API call
+  if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
+    console.error('getNearbyStores: Invalid coordinates', { lat, lng });
+    return []; // Return empty array instead of making invalid API call
+  }
+
   const response = await api.get('/api/stores/nearby', {
     params: { lat, lng, radius },
   });

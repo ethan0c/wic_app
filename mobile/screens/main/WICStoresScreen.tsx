@@ -23,20 +23,25 @@ export default function WICStoresScreen() {
       setPermissionStatus(status);
       
       if (status === 'granted') {
-        const currentLocation = await Location.getCurrentPositionAsync({});
+        const currentLocation = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
         setLocation(currentLocation);
-        // Load nearby stores with real location
-        await loadNearbyStores(
-          currentLocation.coords.latitude,
-          currentLocation.coords.longitude
-        );
+        
+        // Validate coordinates before loading stores
+        const lat = currentLocation.coords.latitude;
+        const lng = currentLocation.coords.longitude;
+        
+        if (lat && lng && !isNaN(lat) && !isNaN(lng)) {
+          await loadNearbyStores(lat, lng);
+        } else {
+          console.error('Invalid location coordinates:', { lat, lng });
+          setLoading(false);
+        }
       } else {
         setLoading(false);
-        Alert.alert(
-          'Location Permission',
-          'Enable location access to find WIC stores near you.',
-          [{ text: 'OK' }]
-        );
+        // Don't show alert - just log permission denial
+        console.log('Location permission denied');
       }
     } catch (error) {
       console.error('Location error:', error);

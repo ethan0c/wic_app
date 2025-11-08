@@ -19,6 +19,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
 import CardRequiredOverlay from '../../components/CardRequiredOverlay';
+import BenefitsHeader from '../../components/benefits/BenefitsHeader';
 
 // Mock WIC benefits data with more realistic items
 const mockBenefits = {
@@ -99,28 +100,11 @@ export default function BenefitsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
-      {/* Header - Fixed at top */}
-      <View style={styles.headerSection}>
-        {/* WIC Card Banner */}
-        <TouchableOpacity 
-          style={[
-            styles.cardBanner,
-            { backgroundColor: cardNumber ? '#F0FDF4' : '#FEF3C7' }
-          ]}
-          onPress={() => navigation.navigate('WicCard')}
-        >
-          <CreditCard size={20} color={cardNumber ? '#22C55E' : '#F59E0B'} />
-          <Text style={[
-            styles.cardBannerText,
-            { color: cardNumber ? '#15803D' : '#B45309' }
-          ]}>
-            {cardNumber 
-              ? `Card: ${cardNumber.slice(-4).padStart(cardNumber.length, '•')}` 
-              : 'Tap to enter WIC card number'}
-          </Text>
-        </TouchableOpacity>
+      {/* Custom Header with Card Management */}
+      <BenefitsHeader />
 
-        {/* Toggle between Current and Future */}
+      {/* Toggle between Current and Future */}
+      <View style={styles.toggleSection}>
         <View style={styles.toggleContainer}>
           <TouchableOpacity
             style={[styles.toggleButton, viewMode === 'current' && styles.toggleButtonActive]}
@@ -302,6 +286,14 @@ export default function BenefitsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  toggleSection: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
   },
   headerSection: {
     backgroundColor: '#FFFFFF',
