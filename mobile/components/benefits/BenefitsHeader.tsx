@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Alert, Modal, Platform } from 'react-native';
 import { CreditCard, RefreshCw, Trash2, X } from 'lucide-react-native';
 import Typography from '../Typography';
 import Button from '../Button';
@@ -14,6 +14,12 @@ export default function BenefitsHeader() {
   const navigation = useNavigation<NavigationProp>();
   const { cardNumber, clearCardNumber } = useWicCard();
   const [showModal, setShowModal] = useState(false);
+
+  // Format card number with dots - last 4 digits only
+  const formatCardNumber = (card: string) => {
+    const lastFour = card.slice(-4);
+    return `•••• •••• •••• ${lastFour}`;
+  };
 
   const handleSwitchCard = () => {
     setShowModal(false);
@@ -57,8 +63,12 @@ export default function BenefitsHeader() {
               My Benefits
             </Typography>
             {cardNumber && (
-              <Typography variant="caption" color="textSecondary" style={{ marginTop: 4, textAlign: 'center' }}>
-                Card: {cardNumber.slice(-4).padStart(cardNumber.length, '•')}
+              <Typography 
+                variant="caption" 
+                color="textSecondary" 
+                style={styles.cardNumberText}
+              >
+                Card: •••• {cardNumber.slice(-4)}
               </Typography>
             )}
           </View>
@@ -106,8 +116,12 @@ export default function BenefitsHeader() {
                   <Typography variant="caption" color="textSecondary">
                     Active Card
                   </Typography>
-                  <Typography variant="body" weight="600" style={{ fontSize: 18, marginTop: 4 }}>
-                    {cardNumber.slice(-4).padStart(cardNumber.length, '•')}
+                  <Typography 
+                    variant="body" 
+                    weight="600" 
+                    style={[styles.modalCardNumber, { fontSize: 18, marginTop: 4 }]}
+                  >
+                    {formatCardNumber(cardNumber)}
                   </Typography>
                 </View>
               </View>
@@ -187,6 +201,16 @@ const styles = StyleSheet.create({
   centerContent: {
     flex: 1,
     alignItems: 'center',
+  },
+  cardNumberText: {
+    marginTop: 4,
+    textAlign: 'center',
+    fontFamily: Platform.OS === 'ios' ? 'Inter' : 'monospace',
+    letterSpacing: 0.5,
+  },
+  modalCardNumber: {
+    fontFamily: Platform.OS === 'ios' ? 'Inter' : 'monospace',
+    letterSpacing: 1,
   },
   modalOverlay: {
     flex: 1,

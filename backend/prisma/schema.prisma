@@ -12,16 +12,19 @@ model WicBenefit {
   id              String   @id @default(uuid())
   wicCardNumber   String   @map("wic_card_number") // The WIC eCard number
   firstName       String?  @map("first_name") // Optional profile info
-  category        String // 'milk', 'produce', 'grains', 'cereal'
+  lastName        String?  @map("last_name") // Optional profile info
+  category        String // 'dairy', 'grains', 'protein', 'fruits', 'vegetables'
   totalAmount     Decimal  @map("total_amount") @db.Decimal(10, 2)
   remainingAmount Decimal  @map("remaining_amount") @db.Decimal(10, 2)
-  unit            String // 'gallons', 'dollars', 'packages', 'ounces'
-  monthPeriod     String   @map("month_period")
-  expiresAt       DateTime @map("expires_at")
+  unit            String // 'gallons', 'dollars', 'oz', 'lbs', 'dozen'
+  monthPeriod     String   @map("month_period") // e.g., '2025-11' for November 2025
+  expiresAt       DateTime @map("expires_at") // Last day of the month
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   @@index([wicCardNumber])
+  @@index([monthPeriod])
+  @@unique([wicCardNumber, category, monthPeriod])
   @@map("wic_benefits")
 }
 
@@ -92,12 +95,14 @@ model ApprovedFood {
   @@map("approved_foods")
 }
 
-// Customer Transactions
+// Transaction record for WIC card purchases
 model Transaction {
   id              String   @id @default(uuid())
   wicCardNumber   String   @map("wic_card_number") // Link to WIC card instead of user
   storeId         String?  @map("store_id")
   transactionType String   @map("transaction_type") // 'purchase', 'reset'
+  totalItems      Int      @default(0) @map("total_items")
+  totalValue      Decimal  @default(0) @map("total_value") @db.Decimal(10, 2)
   transactionDate DateTime @default(now()) @map("transaction_date")
   createdAt       DateTime @default(now()) @map("created_at")
 

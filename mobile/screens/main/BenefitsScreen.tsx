@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { 
   Milk, Wheat, Egg, Apple, Carrot, AlertCircle, 
@@ -20,6 +21,7 @@ import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
 import CardRequiredOverlay from '../../components/CardRequiredOverlay';
 import BenefitsHeader from '../../components/benefits/BenefitsHeader';
+import { getUserBenefits, WicBenefit } from '../../services/wicApi';
 
 // Mock WIC benefits data with more realistic items
 const mockBenefits = {
@@ -70,15 +72,61 @@ const mockBenefits = {
   },
 };
 
-type CategoryKey = keyof typeof mockBenefits;
 type NavigationProp = StackNavigationProp<MainNavigatorParamList>;
+
+// Category icon mapping
+const categoryIcons: Record<string, any> = {
+  dairy: Milk,
+  grains: Wheat,
+  protein: Egg,
+  fruits: Apple,
+  vegetables: Carrot,
+};
+
+// Category color mapping
+const categoryColors: Record<string, string> = {
+  dairy: '#E3F2FD',
+  grains: '#FFF3E0',
+  protein: '#FCE4EC',
+  vegetables: '#E8F5E9',
+  fruits: '#FFEBEE',
+};
 
 export default function BenefitsScreen() {
   const { theme } = useTheme();
   const { t } = useLanguage();
   const { cardNumber } = useWicCard();
   const navigation = useNavigation<NavigationProp>();
-  const [expandedCategory, setExpandedCategory] = useState<CategoryKey | null>('dairy');
+  const [expandedCategory, setExpandedCategory] = useState<string | null>('dairy');
+  const [viewMode, setViewMode] = useState<'current' | 'future'>('current');
+  const [benefits, setBenefits] = useState<WicBenefit[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch benefits when card number changes
+  useEffect(() => {
+    const fetchBenefits = async () => {
+      if (!cardNumber) {
+        setBenefits([]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getUserBenefits(cardNumber);
+        setBenefits(data);
+      } catch (err) {
+        console.error('Error fetching benefits:', err);
+        setError('Failed to load benefits');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBenefits();
+  }, [cardNumber]);
   const [viewMode, setViewMode] = useState<'current' | 'future'>('current');
 
   // Calculate current month's expiration date (last day of current month)

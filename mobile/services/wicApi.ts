@@ -32,21 +32,28 @@ export interface WicStore {
 
 export interface WicBenefit {
   id: string;
-  userId: string;
+  wicCardNumber: string;
+  firstName?: string;
+  lastName?: string;
   category: string;
   totalAmount: number;
   remainingAmount: number;
   unit: string;
   monthPeriod: string;
   expiresAt: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Transaction {
   id: string;
-  userId: string;
+  wicCardNumber: string;
   storeId?: string;
   transactionType: string;
+  totalItems: number;
+  totalValue: number;
   transactionDate: string;
+  createdAt: string;
   store?: WicStore;
   items?: TransactionItem[];
 }
@@ -141,21 +148,14 @@ export const getNearbyStores = async (
 // ===== USER BENEFITS =====
 
 export const getUserBenefits = async (wicCardNumber: string): Promise<WicBenefit[]> => {
-  const response = await api.get('/api/benefits', {
-    params: { wicCardNumber },
-  });
+  const response = await api.get(`/api/users/${wicCardNumber}/benefits`);
   return response.data;
 };
 
 // ===== TRANSACTIONS =====
 
-export const getUserTransactions = async (
-  wicCardNumber: string,
-  limit: number = 10
-): Promise<Transaction[]> => {
-  const response = await api.get('/api/transactions', {
-    params: { wicCardNumber, limit },
-  });
+export const getUserTransactions = async (wicCardNumber: string): Promise<Transaction[]> => {
+  const response = await api.get(`/api/users/${wicCardNumber}/transactions`);
   return response.data;
 };
 
@@ -172,10 +172,7 @@ export const createTransaction = async (
     }>;
   }
 ): Promise<Transaction> => {
-  const response = await api.post('/api/transactions', {
-    wicCardNumber,
-    ...data,
-  });
+  const response = await api.post(`/api/users/${wicCardNumber}/transactions`, data);
   return response.data;
 };
 
