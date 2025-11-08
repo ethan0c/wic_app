@@ -81,6 +81,36 @@ export default function BenefitsScreen() {
   const [expandedCategory, setExpandedCategory] = useState<CategoryKey | null>('dairy');
   const [viewMode, setViewMode] = useState<'current' | 'future'>('current');
 
+  // Calculate days until expiration
+  const expirationDate = new Date('2024-12-01'); // Mock expiration date
+  const today = new Date();
+  const daysUntilExpiration = Math.ceil((expirationDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+  // Determine color based on days remaining
+  const getExpirationStyle = () => {
+    if (daysUntilExpiration < 10) {
+      return {
+        backgroundColor: '#FEE2E2',
+        textColor: '#DC2626',
+        iconColor: '#DC2626',
+      };
+    } else if (daysUntilExpiration < 20) {
+      return {
+        backgroundColor: '#FEF3C7',
+        textColor: '#D97706',
+        iconColor: '#D97706',
+      };
+    } else {
+      return {
+        backgroundColor: '#E0F2FE',
+        textColor: '#0369A1',
+        iconColor: '#0369A1',
+      };
+    }
+  };
+
+  const expirationStyle = getExpirationStyle();
+
   // No need for auto-prompt - overlay handles it now
 
   const toggleCategory = (category: CategoryKey) => {
@@ -125,12 +155,12 @@ export default function BenefitsScreen() {
         </View>
 
         {/* Expiration Notice */}
-        <View style={styles.expirationNotice}>
-          <AlertCircle size={18} color="#DC2626" />
-          <Text style={styles.expirationText}>
+        <View style={[styles.expirationNotice, { backgroundColor: expirationStyle.backgroundColor }]}>
+          <AlertCircle size={18} color={expirationStyle.iconColor} />
+          <Text style={[styles.expirationText, { color: expirationStyle.textColor }]}>
             {viewMode === 'current' 
-              ? t('benefits.expiresMessage').replace('{days}', '23').replace('{date}', 'Dec 1, 2025')
-              : t('benefits.nextBenefitsMessage').replace('{date}', 'Dec 1, 2025')}
+              ? t('benefits.expiresMessage').replace('{days}', daysUntilExpiration.toString()).replace('{date}', 'Dec 1, 2024')
+              : t('benefits.nextBenefitsMessage').replace('{date}', 'Dec 1, 2024')}
           </Text>
         </View>
       </View>
@@ -365,7 +395,6 @@ const styles = StyleSheet.create({
   expirationNotice: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEE2E2',
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 10,
@@ -374,7 +403,7 @@ const styles = StyleSheet.create({
   expirationText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#DC2626',
+    flex: 1,
   },
   categoryHeader: {
     flexDirection: 'row',
