@@ -304,7 +304,8 @@ export default function BenefitsScreen() {
                       const remaining = Number(benefit.remainingAmount);
                       const total = Number(benefit.totalAmount);
                       const used = total - remaining;
-                      const percentage = total > 0 ? (used / total) * 100 : 0;
+                      const usedPercentage = total > 0 ? (used / total) * 100 : 0;
+                      const remainingPercentage = total > 0 ? (remaining / total) * 100 : 0;
 
                       return (
                         <View key={benefit.id} style={styles.item}>
@@ -350,16 +351,27 @@ export default function BenefitsScreen() {
                             </View>
                           </View>
                           
-                          <View style={[styles.progressBar, { backgroundColor: '#F0F0F0' }]}>
+                          {/* Progress bar: red for used, blank for remaining */}
+                          <View style={styles.progressBarContainer}>
                             <View
                               style={[
-                                styles.progressFill,
+                                styles.progressFillRed,
                                 { 
-                                  width: `${percentage}%`,
-                                  backgroundColor: viewMode === 'future' ? '#CCC' : '#4CAF50'
+                                  width: `${usedPercentage}%`,
+                                  backgroundColor: viewMode === 'future' ? '#DDD' : '#EF4444'
                                 }
                               ]}
                             />
+                          </View>
+
+                          {/* Used amount in red */}
+                          <View style={styles.usedContainer}>
+                            <Text style={[
+                              styles.usedLabel,
+                              { color: viewMode === 'future' ? '#BBB' : '#EF4444' }
+                            ]}>
+                              Used: {formatValue(used, benefit.unit)}
+                            </Text>
                           </View>
                         </View>
                       );
@@ -596,6 +608,31 @@ const styles = StyleSheet.create({
   progressFill: {
     height: '100%',
     borderRadius: 2,
+  },
+  progressBarContainer: {
+    flexDirection: 'row',
+    height: 6,
+    borderRadius: 3,
+    overflow: 'hidden',
+    backgroundColor: '#F0F0F0',
+    marginBottom: 8,
+  },
+  progressFillGreen: {
+    height: '100%',
+    borderTopLeftRadius: 3,
+    borderBottomLeftRadius: 3,
+  },
+  progressFillRed: {
+    height: '100%',
+    borderTopLeftRadius: 3,
+    borderBottomLeftRadius: 3,
+  },
+  usedContainer: {
+    alignItems: 'flex-end',
+  },
+  usedLabel: {
+    fontSize: 12,
+    fontWeight: '500',
   },
   loadingContainer: {
     flex: 1,
