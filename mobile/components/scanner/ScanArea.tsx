@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { ScanLine, Keyboard, Camera, Focus } from 'lucide-react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { ScanLine, Keyboard, X } from 'lucide-react-native';
 import Typography from '../Typography';
 import Button from '../Button';
 
@@ -8,99 +9,108 @@ interface ScanAreaProps {
   isScanning: boolean;
   onStartScan: () => void;
   onManualEntry: () => void;
+  onBarCodeScanned?: (data: string) => void;
 }
 
-export default function ScanArea({ isScanning, onStartScan, onManualEntry }: ScanAreaProps) {
-  const scanLineAnim = useRef(new Animated.Value(0)).current;
+export default function ScanArea({ isScanning, onStartScan, onManualEntry, onBarCodeScanned }: ScanAreaProps) {
+  const [permission, requestPermission] = useCameraPermissions();
+  const [scanned, setScanned] = useState(false);
 
-  useEffect(() => {
-    if (isScanning) {
-      // Animate scanning line up and down
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(scanLineAnim, {
-            toValue: 1,
-            duration: 1500,
-            useNativeDriver: true,
-          }),
-          Animated.timing(scanLineAnim, {
-            toValue: 0,
-            duration: 1500,
-            useNativeDriver: true,
-          }),
-        ])
-      ).start();
-    } else {
-      scanLineAnim.setValue(0);
+  const handleBarCodeScanned = ({ data }: { data: string }) => {
+    if (!scanned && onBarCodeScanned) {
+      setScanned(true);
+      onBarCodeScanned(data);
+      // Reset after 2 seconds to allow scanning again
+      setTimeout(() => setScanned(false), 2000);
     }
-  }, [isScanning]);
+  };
 
-  const scanLinePosition = scanLineAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 170], // Scan area height minus scan line height
-  });
+  const handleStartScan = async () => {
+    if (!permission?.granted) {
+      const result = await requestPermission();
+      if (!result.granted) {
+        alert('Camera permission is required to scan barcodes');
+        return;
+      }
+    }
+    onStartScan();
+  };
+
+  if (isScanning && permission?.granted) {
+    return (
+      <View style={styles.cameraContainer}>
+        <CameraView
+          style={styles.camera}
+          facing="back"
+          onBarcodeScanned={handleBarCodeScanned}
+          barcodeScannerSettings={{
+            barcodeTypes: ['upc_a', 'upc_e', 'ean13', 'ean8', 'code128', 'code39'],
+          }}
+        >
+          <View style={styles.overlay}>
+            {/* Scanning frame */}
+            <View style={styles.scanFrame}>
+              <View style={[styles.corner, styles.topLeft]} />
+              <View style={[styles.corner, styles.topRight]} />
+              <View style={[styles.corner, styles.bottomLeft]} />
+              <View style={[styles.corner, styles.bottomRight]} />
+            </View>
+            
+            {/* Instructions */}
+            <View style={styles.instructionsContainer}>
+              <Typography variant="body" style={{ color: 'white', textAlign: 'center', marginBottom: 8 }}>
+                Position barcode within frame
+              </Typography>
+              <Typography variant="caption" style={{ color: 'rgba(255,255,255,0.8)', textAlign: 'center' }}>
+                Camera will scan automatically
+              </Typography>
+            </View>
+
+            {/* Close button */}
+            <TouchableOpacity 
+              style={styles.closeButton}
+              onPress={onStartScan}
+            >
+              <X size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+        </CameraView>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <View style={[
-        styles.scanArea, 
-        { 
-          borderColor: isScanning ? '#1A1A1A' : '#E5E7EB',
-          backgroundColor: isScanning ? 'rgba(0, 0, 0, 0.05)' : '#FFFFFF',
-        }
-      ]}>
+      <View style={styles.scanArea}>
         {/* Corner brackets */}
         <View style={[styles.corner, styles.topLeft]} />
         <View style={[styles.corner, styles.topRight]} />
         <View style={[styles.corner, styles.bottomLeft]} />
         <View style={[styles.corner, styles.bottomRight]} />
 
-        {!isScanning && (
-          <View style={styles.iconContainer}>
-            <ScanLine
-              size={60}
-              color="#9CA3AF"
-              stroke="#9CA3AF"
-            />
-            <Typography variant="caption" color="textSecondary" style={{ marginTop: 12, textAlign: 'center' }}>
-              Position barcode here
-            </Typography>
-          </View>
-        )}
-
-        {isScanning && (
-          <>
-            <Animated.View
-              style={[
-                styles.scanLine,
-                {
-                  transform: [{ translateY: scanLinePosition }],
-                },
-              ]}
-            >
-              <View style={styles.scanLineGlow} />
-            </Animated.View>
-            <View style={styles.scanningOverlay}>
-              <Focus size={40} color="#1A1A1A" stroke="#1A1A1A" strokeWidth={2.5} />
-            </View>
-          </>
-        )}
+        <View style={styles.iconContainer}>
+          <ScanLine
+            size={60}
+            color="#9CA3AF"
+            stroke="#9CA3AF"
+          />
+          <Typography variant="caption" color="textSecondary" style={{ marginTop: 12, textAlign: 'center' }}>
+            Position barcode here
+          </Typography>
+        </View>
       </View>
 
       <Typography variant="heading" style={{ marginTop: 24, marginBottom: 8, textAlign: 'center' }}>
-        {isScanning ? 'Scanning...' : 'Scan Product Barcode'}
+        Scan Product Barcode
       </Typography>
       
       <Typography variant="body" color="textSecondary" style={{ marginBottom: 24, textAlign: 'center', paddingHorizontal: 20 }}>
-        {isScanning 
-          ? 'Hold steady for instant eligibility check' 
-          : 'Point camera at barcode to instantly check if item is WIC-approved'}
+        Point camera at barcode to instantly check if item is WIC-approved
       </Typography>
 
       <Button
-        title={isScanning ? 'Scanning...' : 'Start Camera Scan'}
-        onPress={onStartScan}
-        loading={isScanning}
+        title="Start Camera Scan"
+        onPress={handleStartScan}
         fullWidth
         size="large"
         style={{ marginBottom: 12 }}
@@ -109,10 +119,9 @@ export default function ScanArea({ isScanning, onStartScan, onManualEntry }: Sca
       <TouchableOpacity
         style={styles.manualButton}
         onPress={onManualEntry}
-        disabled={isScanning}
       >
-        <Keyboard size={20} color={isScanning ? "#9CA3AF" : "#1A1A1A"} stroke={isScanning ? "#9CA3AF" : "#1A1A1A"} />
-        <Typography variant="body" style={{ color: isScanning ? "#9CA3AF" : "#1A1A1A", marginLeft: 8 }}>
+        <Keyboard size={20} color="#1A1A1A" stroke="#1A1A1A" />
+        <Typography variant="body" style={{ color: "#1A1A1A", marginLeft: 8 }}>
           Enter Barcode Manually
         </Typography>
       </TouchableOpacity>
@@ -125,11 +134,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
+  cameraContainer: {
+    width: '100%',
+    height: 500,
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginVertical: 20,
+  },
+  camera: {
+    flex: 1,
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scanFrame: {
+    width: 280,
+    height: 200,
+    position: 'relative',
+  },
   scanArea: {
     width: 200,
     height: 200,
     borderWidth: 2,
     borderRadius: 20,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
@@ -139,59 +171,57 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 30,
     height: 30,
-    borderColor: '#1A1A1A',
+    borderColor: '#22C55E',
   },
   topLeft: {
-    top: 10,
-    left: 10,
-    borderTopWidth: 3,
-    borderLeftWidth: 3,
+    top: 0,
+    left: 0,
+    borderTopWidth: 4,
+    borderLeftWidth: 4,
     borderTopLeftRadius: 8,
   },
   topRight: {
-    top: 10,
-    right: 10,
-    borderTopWidth: 3,
-    borderRightWidth: 3,
+    top: 0,
+    right: 0,
+    borderTopWidth: 4,
+    borderRightWidth: 4,
     borderTopRightRadius: 8,
   },
   bottomLeft: {
-    bottom: 10,
-    left: 10,
-    borderBottomWidth: 3,
-    borderLeftWidth: 3,
+    bottom: 0,
+    left: 0,
+    borderBottomWidth: 4,
+    borderLeftWidth: 4,
     borderBottomLeftRadius: 8,
   },
   bottomRight: {
-    bottom: 10,
-    right: 10,
-    borderBottomWidth: 3,
-    borderRightWidth: 3,
+    bottom: 0,
+    right: 0,
+    borderBottomWidth: 4,
+    borderRightWidth: 4,
     borderBottomRightRadius: 8,
   },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  scanLine: {
+  instructionsContainer: {
     position: 'absolute',
-    width: '90%',
-    height: 3,
-    top: 15,
+    bottom: 100,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 20,
   },
-  scanLineGlow: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#22C55E',
-    shadowColor: '#22C55E',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 10,
-  },
-  scanningOverlay: {
-    alignItems: 'center',
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   manualButton: {
     flexDirection: 'row',

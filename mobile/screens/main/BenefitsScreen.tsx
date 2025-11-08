@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { 
   Milk, Wheat, Egg, Apple, Carrot, AlertCircle, 
-  Sandwich, Soup, Beef, Bean, Leaf, Package2, CupSoda
+  Sandwich, Soup, Beef, Bean, Leaf, Package2, CupSoda, CreditCard
 } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useWicCard } from '../../context/WicCardContext';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
+import CardRequiredOverlay from '../../components/CardRequiredOverlay';
 
 // Mock WIC benefits data with more realistic items
 const mockBenefits = {
@@ -64,12 +70,17 @@ const mockBenefits = {
 };
 
 type CategoryKey = keyof typeof mockBenefits;
+type NavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
 export default function BenefitsScreen() {
   const { theme } = useTheme();
   const { t } = useLanguage();
+  const { cardNumber } = useWicCard();
+  const navigation = useNavigation<NavigationProp>();
   const [expandedCategory, setExpandedCategory] = useState<CategoryKey | null>('dairy');
   const [viewMode, setViewMode] = useState<'current' | 'future'>('current');
+
+  // No need for auto-prompt - overlay handles it now
 
   const toggleCategory = (category: CategoryKey) => {
     setExpandedCategory(expandedCategory === category ? null : category);
@@ -90,6 +101,25 @@ export default function BenefitsScreen() {
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
       {/* Header - Fixed at top */}
       <View style={styles.headerSection}>
+        {/* WIC Card Banner */}
+        <TouchableOpacity 
+          style={[
+            styles.cardBanner,
+            { backgroundColor: cardNumber ? '#F0FDF4' : '#FEF3C7' }
+          ]}
+          onPress={() => navigation.navigate('WicCard')}
+        >
+          <CreditCard size={20} color={cardNumber ? '#22C55E' : '#F59E0B'} />
+          <Text style={[
+            styles.cardBannerText,
+            { color: cardNumber ? '#15803D' : '#B45309' }
+          ]}>
+            {cardNumber 
+              ? `Card: ${cardNumber.slice(-4).padStart(cardNumber.length, '•')}` 
+              : 'Tap to enter WIC card number'}
+          </Text>
+        </TouchableOpacity>
+
         {/* Toggle between Current and Future */}
         <View style={styles.toggleContainer}>
           <TouchableOpacity
@@ -260,6 +290,11 @@ export default function BenefitsScreen() {
 
       <View style={styles.bottomPadding} />
       </ScrollView>
+
+      {/* Card Required Overlay - shown when no card number - rendered LAST so it's on top */}
+      {!cardNumber && (
+        <CardRequiredOverlay message="Enter your WIC card number to view your personalized benefits, remaining balances, and purchase history" />
+      )}
     </View>
   );
 }
@@ -273,6 +308,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 16,
+  },
+  cardBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  cardBannerText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   headerContent: {
     marginBottom: 12,

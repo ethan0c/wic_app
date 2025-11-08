@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { Plus, Check, Trash2, ShoppingBag, ChevronDown } from 'lucide-react-native';
 import { useLanguage } from '../../context/LanguageContext';
+import { useWicCard } from '../../context/WicCardContext';
 import Typography from '../../components/Typography';
 import Button from '../../components/Button';
+import CardRequiredOverlay from '../../components/CardRequiredOverlay';
 
 interface ShoppingItem {
   id: string;
@@ -57,6 +59,7 @@ const SUGGESTED_ITEMS = [
 
 export default function ShoppingListScreen() {
   const { t } = useLanguage();
+  const { cardNumber } = useWicCard();
   const [items, setItems] = useState<ShoppingItem[]>([
     { id: '1', name: 'Whole milk (½ gallon)', checked: false },
     { id: '2', name: 'Whole wheat bread', checked: false },
@@ -298,6 +301,11 @@ export default function ShoppingListScreen() {
 
         <View style={{ height: 20 }} />
       </ScrollView>
+
+      {/* Card Required Overlay - shown when no card number - rendered LAST so it's on top */}
+      {!cardNumber && (
+        <CardRequiredOverlay message="Enter your WIC card number to access your personalized shopping list and sync across devices" />
+      )}
     </View>
   );
 }

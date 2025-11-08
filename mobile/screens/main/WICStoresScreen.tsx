@@ -47,16 +47,20 @@ export default function WICStoresScreen() {
   // Fetch nearby stores from backend API
   const loadNearbyStores = async (latitude: number, longitude: number) => {
     try {
+      // Validate coordinates
+      if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
+        console.error('Invalid coordinates:', { latitude, longitude });
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
+      console.log('Fetching stores for location:', { latitude, longitude });
       const nearbyStores = await getNearbyStores(latitude, longitude, 10); // 10 mile radius
       setStores(nearbyStores);
     } catch (error) {
       console.error('Error loading nearby stores:', error);
-      Alert.alert(
-        'Error',
-        'Could not load nearby stores. Please try again later.',
-        [{ text: 'OK' }]
-      );
+      // Don't show alert, just log error and show empty state
       setStores([]); // Clear stores on error
     } finally {
       setLoading(false);

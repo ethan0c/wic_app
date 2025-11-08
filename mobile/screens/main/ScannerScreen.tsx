@@ -247,53 +247,67 @@ export default function ScannerScreen({ route }: any) {
     await audioFeedback.speak(message, language);
   };
 
-  const handleScan = async () => {
-    setIsScanning(true);
+  const handleScan = () => {
+    setIsScanning(!isScanning);
+  };
+
+  const handleBarCodeScanned = async (upc: string) => {
+    console.log('📷 Scanned UPC:', upc);
     
-    // Simulate camera scanning - Demo with predefined UPCs
-    setTimeout(async () => {
-      const testUPCs = [
-        "041303001813", // Gallon milk (not approved)
-        "041303001806", // Half-gallon milk (approved)  
-        "016000275218", // Cheerios 18oz (approved)
-        "072250015144", // Wonder 20oz bread (not approved)
-        "072250015137", // Wonder 16oz bread (approved)
-      ];
-      const randomUPC = testUPCs[Math.floor(Math.random() * testUPCs.length)];
+    const product = await lookupProduct(upc);
+    
+    if (product) {
+      // Calculate benefit impact
+      const benefitCalc = await calculateBenefitImpact(product);
+      const productWithBenefits = {
+        ...product,
+        benefitCalculation: benefitCalc,
+      };
       
-      const product = await lookupProduct(randomUPC);
-      
-      if (product) {
-        // Calculate benefit impact
-        const benefitCalc = await calculateBenefitImpact(product);
-        const productWithBenefits = {
-          ...product,
-          benefitCalculation: benefitCalc,
-        };
-        
-        // Vibrate for feedback
-        if (product.isApproved) {
-          Vibration.vibrate([0, 200]); // Success vibration
-        } else {
-          Vibration.vibrate([0, 100, 100, 100]); // Error vibration
-        }
-        
-        setScanResult(productWithBenefits);
-        setIsScanning(false);
-        
-        // Show quick flash first
-        setShowQuickFlash(true);
-        
-        // Then show full modal after 1.5 seconds
-        setTimeout(() => {
-          setShowQuickFlash(false);
-          setShowResult(true);
-          speakResult(productWithBenefits);
-        }, 1500);
+      // Vibrate for feedback
+      if (product.isApproved) {
+        Vibration.vibrate([0, 200]); // Success vibration
       } else {
-        setIsScanning(false);
+        Vibration.vibrate([0, 100, 100, 100]); // Error vibration
       }
-    }, 2000);
+      
+      setScanResult(productWithBenefits);
+      setIsScanning(false);
+      
+      // Show quick flash first
+      setShowQuickFlash(true);
+      
+      // Then show full modal after 1.5 seconds
+      setTimeout(() => {
+        setShowQuickFlash(false);
+        setShowResult(true);
+        speakResult(productWithBenefits);
+      }, 1500);
+    } else {
+      // Create a "not found" product
+      const notFound: Product = {
+        upc,
+        name: "Unknown Product",
+        brand: "Unknown",
+        category: "unknown",
+        size_oz: 0,
+        size_display: "Unknown",
+        isApproved: false,
+        image: "",
+        reasons: ["product_not_found"],
+        alternatives: []
+      };
+      setScanResult(notFound);
+      setIsScanning(false);
+      
+      setShowQuickFlash(true);
+      setTimeout(() => {
+        setShowQuickFlash(false);
+        setShowResult(true);
+      }, 1500);
+      
+      Vibration.vibrate([0, 100, 100, 100]);
+    }
   };
 
   const handleManualScan = async (barcode: string) => {
@@ -440,6 +454,7 @@ export default function ScannerScreen({ route }: any) {
           isScanning={isScanning}
           onStartScan={handleScan}
           onManualEntry={() => setShowManualEntry(true)}
+          onBarCodeScanned={handleBarCodeScanned}
         />
         
         <ScanInstructions />

@@ -6,9 +6,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useWIC } from '../../context/WICContext';
+import { useWicCard } from '../../context/WicCardContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
+import CardRequiredOverlay from '../../components/CardRequiredOverlay';
 
 // Home Components
 import HomeHeader from '../../components/home/HomeHeader';
@@ -24,6 +26,7 @@ export default function HomeScreen() {
   const { theme } = useTheme();
   const { user } = useAuth();
   const { benefits, monthPeriod, daysRemaining } = useWIC();
+  const { cardNumber } = useWicCard();
   const { t } = useLanguage();
   const navigation = useNavigation<HomeScreenNavigationProp>();
   
@@ -295,6 +298,11 @@ export default function HomeScreen() {
           items={benefitDetails[selectedBenefit as keyof typeof benefitDetails].items}
           smartPicks={benefitDetails[selectedBenefit as keyof typeof benefitDetails].smartPicks}
         />
+      )}
+
+      {/* Card Required Overlay - shown when no card number - rendered LAST so it's on top */}
+      {!cardNumber && (
+        <CardRequiredOverlay message="Enter your WIC card number to view your dashboard, benefits, and personalized information" />
       )}
     </View>
   );

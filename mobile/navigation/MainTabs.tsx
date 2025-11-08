@@ -120,7 +120,7 @@ export default function MainTabs() {
       <Tab.Screen 
         name="Benefits" 
         component={BenefitsScreen}
-        options={{ title: 'My Benefits' }}
+        options={{ headerShown: false }}
       />
       <Tab.Screen 
         name="Explore" 

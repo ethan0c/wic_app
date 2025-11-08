@@ -9,6 +9,7 @@ import { TransitionPresets } from '@react-navigation/stack';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { WICProvider } from './context/WICContext';
+import { WicCardProvider } from './context/WicCardContext';
 import { ScannerSettingsProvider } from './context/ScannerSettingsContext';
 import { LanguageProvider } from './context/LanguageContext';
 
@@ -112,11 +113,13 @@ export default function App() {
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
-          <WICProvider>
-            <ScannerSettingsProvider>
-              <AppNavigator />
-            </ScannerSettingsProvider>
-          </WICProvider>
+          <WicCardProvider>
+            <WICProvider>
+              <ScannerSettingsProvider>
+                <AppNavigator />
+              </ScannerSettingsProvider>
+            </WICProvider>
+          </WicCardProvider>
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>

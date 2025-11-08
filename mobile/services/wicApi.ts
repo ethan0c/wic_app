@@ -129,25 +129,27 @@ export const getNearbyStores = async (
 
 // ===== USER BENEFITS =====
 
-export const getUserBenefits = async (userId: string): Promise<WicBenefit[]> => {
-  const response = await api.get(`/api/users/${userId}/benefits`);
+export const getUserBenefits = async (wicCardNumber: string): Promise<WicBenefit[]> => {
+  const response = await api.get('/api/benefits', {
+    params: { wicCardNumber },
+  });
   return response.data;
 };
 
 // ===== TRANSACTIONS =====
 
 export const getUserTransactions = async (
-  userId: string,
+  wicCardNumber: string,
   limit: number = 10
 ): Promise<Transaction[]> => {
-  const response = await api.get(`/api/users/${userId}/transactions`, {
-    params: { limit },
+  const response = await api.get('/api/transactions', {
+    params: { wicCardNumber, limit },
   });
   return response.data;
 };
 
 export const createTransaction = async (
-  userId: string,
+  wicCardNumber: string,
   data: {
     storeId?: string;
     items: Array<{
@@ -159,23 +161,29 @@ export const createTransaction = async (
     }>;
   }
 ): Promise<Transaction> => {
-  const response = await api.post(`/api/users/${userId}/transactions`, data);
+  const response = await api.post('/api/transactions', {
+    wicCardNumber,
+    ...data,
+  });
   return response.data;
 };
 
 // ===== SHOPPING LIST =====
 
-export const getShoppingList = async (userId: string): Promise<ShoppingListItem[]> => {
-  const response = await api.get(`/api/users/${userId}/shopping-list`);
+export const getShoppingList = async (wicCardNumber: string): Promise<ShoppingListItem[]> => {
+  const response = await api.get('/api/shopping-list', {
+    params: { wicCardNumber },
+  });
   return response.data;
 };
 
 export const addShoppingListItem = async (
-  userId: string,
+  wicCardNumber: string,
   itemName: string,
   category?: string
 ): Promise<ShoppingListItem> => {
-  const response = await api.post(`/api/users/${userId}/shopping-list`, {
+  const response = await api.post('/api/shopping-list', {
+    wicCardNumber,
     itemName,
     category,
   });

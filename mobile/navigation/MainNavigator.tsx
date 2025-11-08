@@ -17,6 +17,7 @@ import ShoppingListScreen from '../screens/main/ShoppingListScreen';
 import WICStoresScreen from '../screens/main/WICStoresScreen';
 import PurchaseConfirmationScreen from '../screens/PurchaseConfirmationScreen';
 import EditProfileScreen from '../screens/main/EditProfileScreen';
+import WicCardScreen from '../screens/profile/WicCardScreen';
 
 export type MainNavigatorParamList = {
   MainTabs: undefined;
@@ -36,6 +37,7 @@ export type MainNavigatorParamList = {
   WICStores: undefined;
   PurchaseConfirmation: undefined;
   EditProfile: undefined;
+  WicCard: undefined;
 };
 
 const Stack = createStackNavigator<MainNavigatorParamList>();
@@ -198,6 +200,14 @@ export default function MainNavigator() {
         options={{
           title: 'Edit Profile',
           headerShown: true,
+        }}
+      />
+      <Stack.Screen 
+        name="WicCard" 
+        component={WicCardScreen}
+        options={{
+          title: 'WIC Card Number',
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
