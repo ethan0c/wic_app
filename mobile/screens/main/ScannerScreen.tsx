@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,6 +8,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useScannerSettings } from '../../context/ScannerSettingsContext';
+import { useLanguage } from '../../context/LanguageContext';
+import audioFeedback from '../../services/audioFeedback';
 import aplData from '../../data/apl.json';
 import * as Speech from 'expo-speech';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
@@ -42,6 +44,7 @@ type NavigationProp = StackNavigationProp<MainNavigatorParamList>;
 export default function ScannerScreen({ route }: any) {
   const navigation = useNavigation<NavigationProp>();
   const { settings } = useScannerSettings();
+  const { language, t } = useLanguage();
   const [isScanning, setIsScanning] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [showQuickFlash, setShowQuickFlash] = useState(false);
@@ -58,18 +61,25 @@ export default function ScannerScreen({ route }: any) {
     ) || null;
   };
 
-  const speakResult = (product: Product) => {
+  const speakResult = async (product: Product) => {
     if (!settings.audioEnabled) return;
     
-    const status = product.isApproved ? "approved" : "not covered";
-    let message = `${product.name} by ${product.brand} is ${status} by WIC.`;
+    // Play sound effect first
+    if (product.isApproved) {
+      await audioFeedback.playApproved();
+    } else {
+      await audioFeedback.playNotApproved();
+    }
+    
+    // Then speak the result
+    const status = product.isApproved ? t('scanner.approved') : t('scanner.notApproved');
+    let message = `${product.name} ${status}`;
     
     if (!product.isApproved && product.alternatives.length > 0) {
       message += ` ${product.alternatives[0].reason}. ${product.alternatives[0].suggestion}.`;
     }
     
-    const voice = settings.language === 'ht' ? 'ht-HT' : 'en-US';
-    Speech.speak(message, { language: voice, rate: 0.8 });
+    await audioFeedback.speak(message, language);
   };
 
   const handleScan = () => {
@@ -190,11 +200,11 @@ export default function ScannerScreen({ route }: any) {
 
   const getResultMessage = (product: Product): string => {
     if (product.isApproved) {
-      return `${product.name} by ${product.brand} (${product.size_display}) is WIC approved!`;
+      return `${product.name} ${t('scanner.byBrand')} ${product.brand} (${product.size_display}) ${t('scanner.isApproved')}`;
     } else {
       // Handle specific reasons why the product is not covered
       if (product.reasons.includes("product_not_found")) {
-        return "This product was not found in our WIC database. Please check the barcode or try a different product.";
+        return t('scanner.productNotFound');
       }
       
       if (product.reasons.includes("package_size_not_allowed")) {
@@ -202,22 +212,22 @@ export default function ScannerScreen({ route }: any) {
         
         // Provide specific messaging based on category
         if (product.category === "milk" && product.size_oz === 128) {
-          return `${product.name} (${product.size_display}) is not covered. WIC only covers half-gallon milk containers, not full gallons.`;
+          return `${product.name} (${product.size_display}) ${t('scanner.wrongSize')}. ${t('scanner.milkSizeRule')}`;
         }
         
         if (product.category === "bread" && product.size_oz !== 16) {
-          return `${product.name} (${product.size_display}) is not covered. WIC only covers 16-ounce bread loaves.`;
+          return `${product.name} (${product.size_display}) ${t('scanner.wrongSize')}. ${t('scanner.breadSizeRule')}`;
         }
         
         if (product.category === "cereal") {
-          return `${product.name} (${product.size_display}) may exceed your monthly cereal allowance. Check if this fits within your 72-ounce monthly limit.`;
+          return `${product.name} (${product.size_display}) ${t('scanner.cerealSizeRule')}`;
         }
         
         // Generic size restriction message
-        return categoryRules?.messages?.size_restriction?.en || `${product.name} (${product.size_display}) package size is not allowed by WIC.`;
+        return categoryRules?.messages?.size_restriction?.en || `${product.name} (${product.size_display}) ${t('scanner.wrongSize')}`;
       }
       
-      return `${product.name} by ${product.brand} (${product.size_display}) is not covered by WIC.`;
+      return `${product.name} ${t('scanner.byBrand')} ${product.brand} (${product.size_display}) ${t('scanner.notCovered')}`;
     }
   };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Typography from '../Typography';
 import SectionCard from '../home/SectionCard';
+import { useLanguage } from '../../context/LanguageContext';
 import aplData from '../../data/apl.json';
 
 type Product = {

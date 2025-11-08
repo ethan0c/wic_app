@@ -10,6 +10,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { WICProvider } from './context/WICContext';
 import { ScannerSettingsProvider } from './context/ScannerSettingsContext';
+import { LanguageProvider } from './context/LanguageContext';
 
 // Auth Screens
 import IntroScreen from './screens/auth/IntroScreen';
@@ -109,13 +110,15 @@ function AppNavigator() {
 export default function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <WICProvider>
-          <ScannerSettingsProvider>
-            <AppNavigator />
-          </ScannerSettingsProvider>
-        </WICProvider>
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <WICProvider>
+            <ScannerSettingsProvider>
+              <AppNavigator />
+            </ScannerSettingsProvider>
+          </WICProvider>
+        </AuthProvider>
+      </LanguageProvider>
     </ThemeProvider>
   );
 }

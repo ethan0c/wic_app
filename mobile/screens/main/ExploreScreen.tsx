@@ -2,14 +2,16 @@ import React from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Megaphone, Briefcase, ShoppingBasket, MapPin, ChefHat, GraduationCap, 
          HelpCircle, Share2, UserCircle, User, UserPen, ChevronRight, 
-         Settings, Info, LogOut } from 'lucide-react-native';
+         Settings, Info, LogOut, Languages } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
 import SectionCard from '../../components/home/SectionCard';
+import LanguageToggle from '../../components/LanguageToggle';
 
 type ExploreScreenNavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
@@ -148,6 +150,13 @@ export default function ExploreScreen() {
               </Typography>
               <ChevronRight size={20} color="#6B7280" stroke="#6B7280" />
             </TouchableOpacity>
+
+            <View style={styles.optionDivider} />
+
+            {/* Language Toggle - Inline */}
+            <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+              <LanguageToggle />
+            </View>
 
             <View style={styles.optionDivider} />
 
