@@ -1,43 +1,30 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   View,
-  Text,
-  TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../../context/AuthContext";
-import { createSharedAuthStyles } from "../../../assets/styles/sharedAuth.styles";
-import { createSharedStyles } from "../../../assets/styles/shared.styles";
 import { useTheme } from "../../../context/ThemeContext";
+import { Button, Input, Typography } from "../../../components";
+import { SPACING } from "../../../assets/styles/shared.styles";
 
 const SignInScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
   const { signIn, isLoading } = useAuth();
-  
-  const styles = useMemo(() => createSharedAuthStyles(theme), [theme]);
-  const sharedStyles = useMemo(() => createSharedStyles(theme), [theme]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [generalError, setGeneralError] = useState("");
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
 
   const handleSignIn = async () => {
     setEmailError("");
     setPasswordError("");
-    setGeneralError("");
 
     // For now, allow any input to sign in
     if (!email.trim()) {
@@ -51,12 +38,7 @@ const SignInScreen = ({ navigation }: any) => {
     }
 
     // Allow sign in with any credentials for prototype
-    const result = await signIn(email.trim().toLowerCase(), password);
-
-    if (!result.success) {
-      // Still allow sign in even if credentials don't match
-      setGeneralError("");
-    }
+    await signIn(email.trim().toLowerCase(), password);
   };
 
   const handleForgotPassword = () => {
@@ -68,158 +50,75 @@ const SignInScreen = ({ navigation }: any) => {
   };
 
   return (
-    <SafeAreaView style={[sharedStyles.screenContainer, { backgroundColor: theme.background }]}>
-      <View style={sharedStyles.headerRow}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          activeOpacity={0.7}
-        >
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', padding: SPACING.lg }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.7}>
           <Ionicons name="arrow-back" size={24} color={theme.text} />
         </TouchableOpacity>
       </View>
 
       <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
+        style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={{ flexGrow: 1, paddingHorizontal: SPACING.lg, paddingBottom: 40 }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.formSection}>
-            <Text style={[sharedStyles.heading, sharedStyles.centerText, { marginBottom: 32 }]}>
+          <View style={{ marginTop: SPACING.xl }}>
+            <Typography variant="heading" align="center" style={{ marginBottom: 32 }}>
               Welcome Back
-            </Text>
+            </Typography>
 
-            {generalError ? (
-              <View style={[styles.errorContainer, { marginBottom: 16 }]}>
-                <Ionicons name="alert-circle" size={16} color="#EF4444" />
-                <Text style={styles.errorText}>{generalError}</Text>
-              </View>
-            ) : null}
+            <Input
+              label="Email"
+              icon="mail-outline"
+              placeholder="Enter your email"
+              value={email}
+              onChangeText={setEmail}
+              error={emailError}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Email</Text>
-              <View
-                style={[
-                  styles.inputContainer,
-                  emailError ? styles.inputContainerError : null,
-                ]}
-              >
-                <Ionicons
-                  name="mail-outline"
-                  size={20}
-                  color={emailError ? "#EF4444" : theme.textSecondary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Enter your email"
-                  placeholderTextColor={theme.textSecondary}
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    if (emailError) setEmailError("");
-                    if (generalError) setGeneralError("");
-                  }}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  returnKeyType="next"
-                />
-              </View>
-              {emailError ? (
-                <View style={styles.errorContainer}>
-                  <Ionicons name="alert-circle" size={14} color="#EF4444" />
-                  <Text style={styles.errorText}>{emailError}</Text>
-                </View>
-              ) : null}
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Password</Text>
-              <View
-                style={[
-                  styles.inputContainer,
-                  passwordError ? styles.inputContainerError : null,
-                ]}
-              >
-                <Ionicons
-                  name="lock-closed-outline"
-                  size={20}
-                  color={passwordError ? "#EF4444" : theme.textSecondary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Enter your password"
-                  placeholderTextColor={theme.textSecondary}
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    if (passwordError) setPasswordError("");
-                    if (generalError) setGeneralError("");
-                  }}
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
-                  returnKeyType="done"
-                  onSubmitEditing={handleSignIn}
-                />
-                <TouchableOpacity
-                  style={styles.eyeButton}
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <Ionicons
-                    name={showPassword ? "eye-off-outline" : "eye-outline"}
-                    size={20}
-                    color={theme.textSecondary}
-                  />
-                </TouchableOpacity>
-              </View>
-              {passwordError ? (
-                <View style={styles.errorContainer}>
-                  <Ionicons name="alert-circle" size={14} color="#EF4444" />
-                  <Text style={styles.errorText}>{passwordError}</Text>
-                </View>
-              ) : null}
-            </View>
+            <Input
+              label="Password"
+              icon="lock-closed-outline"
+              placeholder="Enter your password"
+              value={password}
+              onChangeText={setPassword}
+              error={passwordError}
+              isPassword
+              autoCapitalize="none"
+            />
 
             <TouchableOpacity
-              style={styles.linkButton}
               onPress={handleForgotPassword}
-              activeOpacity={0.7}
+              style={{ alignSelf: 'flex-start', marginBottom: SPACING.lg }}
             >
-              <Text style={styles.linkButtonText}>Forgot Password?</Text>
+              <Typography color="primary">Forgot Password?</Typography>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[
-                styles.primaryButton,
-                {
-                  backgroundColor:
-                    email && password ? theme.buttonBackground : theme.border,
-                  opacity: isLoading ? 0.7 : 1,
-                },
-              ]}
-              disabled={!email || !password || isLoading}
+            <Button
+              title={isLoading ? "Signing In..." : "Sign In"}
               onPress={handleSignIn}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.primaryButtonText, { color: email && password ? theme.buttonText : theme.textSecondary }]}>
-                {isLoading ? "Signing In..." : "Sign In"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+              loading={isLoading}
+              disabled={!email.trim() || !password.trim()}
+              fullWidth
+              size="large"
+              style={{ marginTop: SPACING.md }}
+            />
 
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              Don't have an account?{" "}
-              <Text style={styles.footerLink} onPress={navigateToSignUp}>
-                Sign Up
-              </Text>
-            </Text>
+            <View style={{ marginTop: SPACING.xl, alignItems: 'center' }}>
+              <Typography color="textSecondary">
+                Don't have an account?{' '}
+              </Typography>
+              <TouchableOpacity onPress={navigateToSignUp}>
+                <Typography color="primary">Sign Up</Typography>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

@@ -1,24 +1,19 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   View,
-  Text,
-  TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { createSharedAuthStyles } from "../../../assets/styles/sharedAuth.styles";
-import { createSharedStyles } from "../../../assets/styles/shared.styles";
 import { useTheme } from "../../../context/ThemeContext";
+import { Button, Input, Typography } from "../../../components";
+import { SPACING } from "../../../assets/styles/shared.styles";
 
 const SignUpNameScreen = ({ navigation }: any) => {
   const { theme } = useTheme();
-  
-  const styles = useMemo(() => createSharedAuthStyles(theme), [theme]);
-  const sharedStyles = useMemo(() => createSharedStyles(theme), [theme]);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -39,110 +34,59 @@ const SignUpNameScreen = ({ navigation }: any) => {
   };
 
   return (
-    <SafeAreaView style={[sharedStyles.screenContainer, { backgroundColor: theme.background }]}>
-      <View style={sharedStyles.headerRow}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          activeOpacity={0.7}
-        >
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', padding: SPACING.lg }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.7}>
           <Ionicons name="arrow-back" size={24} color={theme.text} />
         </TouchableOpacity>
       </View>
 
       <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
+        style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={{ flexGrow: 1, paddingHorizontal: SPACING.lg, paddingBottom: 40 }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.formSection}>
-            <Text style={[sharedStyles.heading, sharedStyles.centerText]}>
+          <View style={{ marginTop: SPACING.xl }}>
+            <Typography variant="heading" align="center">
               What's your name?
-            </Text>
-            <Text style={[sharedStyles.secondaryText, sharedStyles.centerText, { marginBottom: 32 }]}>
+            </Typography>
+            <Typography variant="body" color="textSecondary" align="center" style={{ marginBottom: 32 }}>
               Let's get started with your WIC account
-            </Text>
+            </Typography>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>First Name</Text>
-              <View
-                style={[
-                  styles.inputContainer,
-                  firstNameError ? styles.inputContainerError : null,
-                ]}
-              >
-                <Ionicons
-                  name="person-outline"
-                  size={20}
-                  color={firstNameError ? "#EF4444" : theme.textSecondary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="First name"
-                  placeholderTextColor={theme.textSecondary}
-                  value={firstName}
-                  onChangeText={(text) => {
-                    setFirstName(text);
-                    if (firstNameError) setFirstNameError("");
-                  }}
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                  autoFocus={true}
-                  returnKeyType="next"
-                />
-              </View>
-              {firstNameError ? (
-                <View style={styles.errorContainer}>
-                  <Ionicons name="alert-circle" size={14} color="#EF4444" />
-                  <Text style={styles.errorText}>{firstNameError}</Text>
-                </View>
-              ) : null}
-            </View>
+            <Input
+              label="First Name"
+              icon="person-outline"
+              placeholder="First name"
+              value={firstName}
+              onChangeText={setFirstName}
+              error={firstNameError}
+              autoCapitalize="words"
+              autoFocus
+            />
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Last Name (Optional)</Text>
-              <View style={styles.inputContainer}>
-                <Ionicons
-                  name="person-outline"
-                  size={20}
-                  color={theme.textSecondary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Last name"
-                  placeholderTextColor={theme.textSecondary}
-                  value={lastName}
-                  onChangeText={setLastName}
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                  returnKeyType="done"
-                  onSubmitEditing={handleContinue}
-                />
-              </View>
-            </View>
+            <Input
+              label="Last Name (Optional)"
+              icon="person-outline"
+              placeholder="Last name"
+              value={lastName}
+              onChangeText={setLastName}
+              autoCapitalize="words"
+            />
 
-            <TouchableOpacity
-              style={[
-                styles.primaryButton,
-                {
-                  backgroundColor: firstName.trim() ? theme.buttonBackground : theme.border,
-                  marginTop: 40,
-                },
-              ]}
-              disabled={!firstName.trim()}
+            <Button
+              title="Continue"
               onPress={handleContinue}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.primaryButtonText, { color: firstName.trim() ? theme.buttonText : theme.textSecondary }]}>
-                Continue
-              </Text>
-            </TouchableOpacity>
+              disabled={!firstName.trim()}
+              fullWidth
+              size="large"
+              style={{ marginTop: SPACING.xl }}
+            />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
