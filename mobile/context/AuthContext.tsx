@@ -23,12 +23,15 @@ interface AuthContextType {
   // Guest/skip sign in for prototype
   signInGuest: () => Promise<void>;
   signOut: () => Promise<void>;
+  // Update user profile
+  updateUser: (updates: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const STORAGE_KEY = '@wic_user';
 const USERS_KEY = '@wic_users';
+const FIRST_NAME_KEY = '@first_name'; // Shared key with EditProfileScreen
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -38,9 +41,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const restoreSession = async () => {
       try {
-        const storedUser = await AsyncStorage.getItem(STORAGE_KEY);
+        const [storedUser, storedFirstName] = await Promise.all([
+          AsyncStorage.getItem(STORAGE_KEY),
+          AsyncStorage.getItem(FIRST_NAME_KEY),
+        ]);
+        
         if (storedUser) {
           const userData = JSON.parse(storedUser);
+          // Override with stored first name if available
+          if (storedFirstName) {
+            userData.firstName = storedFirstName;
+          }
           setUser(userData);
         }
       } catch (error) {
@@ -226,6 +237,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateUser = async (updates: Partial<User>) => {
+    try {
+      if (!user) return;
+      
+      const updatedUser = { ...user, ...updates };
+      setUser(updatedUser);
+      
+      // Save to AsyncStorage
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUser));
+      
+      // Also save firstName separately for consistency with EditProfileScreen
+      if (updates.firstName) {
+        await AsyncStorage.setItem(FIRST_NAME_KEY, updates.firstName);
+      }
+    } catch (error) {
+      console.error('Failed to update user:', error);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -238,6 +268,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         resetPassword,
         signInCard,
         signInGuest,
+        updateUser,
       }}
     >
       {children}

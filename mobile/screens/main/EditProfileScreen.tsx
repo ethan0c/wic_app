@@ -17,7 +17,7 @@ const STORAGE_KEYS = {
 
 export default function EditProfileScreen() {
   const navigation = useNavigation();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { t } = useLanguage();
   
   const [firstName, setFirstName] = useState('');
@@ -54,6 +54,9 @@ export default function EditProfileScreen() {
       // Save to AsyncStorage
       await AsyncStorage.setItem(STORAGE_KEYS.FIRST_NAME, firstName);
       await AsyncStorage.setItem(STORAGE_KEYS.NOTIFICATIONS_ENABLED, JSON.stringify(notificationsEnabled));
+
+      // Update auth context so name appears throughout app
+      await updateUser({ firstName });
 
       Alert.alert(
         t('common.success') || 'Success',
@@ -109,22 +112,14 @@ export default function EditProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Typography variant="heading" weight="700">
-            {t('profile.editProfile') || 'Edit Profile'}
-          </Typography>
-          <Typography variant="body" color="textSecondary" style={{ marginTop: 8 }}>
-            {t('profile.updateInfo') || 'Update your personal information'}
-          </Typography>
-        </View>
+    
 
-        {/* First Name */}
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+        {/* First Name Section */}
         <SectionCard style={styles.section}>
-          <View style={styles.fieldHeader}>
-            <User size={20} color="#6B7280" />
-            <Typography variant="subheading" weight="600" style={{ marginLeft: 12 }}>
+          <View style={styles.sectionHeader}>
+            <User size={22} color="#1A1A1A" />
+            <Typography variant="title" weight="600" style={{ marginLeft: 10 }}>
               {t('profile.firstName') || 'First Name'}
             </Typography>
           </View>
@@ -141,11 +136,11 @@ export default function EditProfileScreen() {
           </Typography>
         </SectionCard>
 
-        {/* WIC Card Number */}
+        {/* WIC Card Number Section */}
         <SectionCard style={styles.section}>
-          <View style={styles.fieldHeader}>
-            <CreditCard size={20} color="#6B7280" />
-            <Typography variant="subheading" weight="600" style={{ marginLeft: 12 }}>
+          <View style={styles.sectionHeader}>
+            <CreditCard size={22} color="#1A1A1A" />
+            <Typography variant="title" weight="600" style={{ marginLeft: 10 }}>
               {t('profile.wicCardNumber') || 'WIC Card Number'}
             </Typography>
           </View>
@@ -153,7 +148,7 @@ export default function EditProfileScreen() {
           {wicCardNumber ? (
             <View>
               <View style={styles.cardNumberDisplay}>
-                <Typography variant="body" style={{ fontFamily: 'monospace' }}>
+                <Typography variant="subheading" style={{ fontFamily: 'monospace', letterSpacing: 2 }}>
                   {formatCardNumber(wicCardNumber)}
                 </Typography>
               </View>
@@ -177,37 +172,46 @@ export default function EditProfileScreen() {
             />
           )}
           
-          <Typography variant="caption" color="textSecondary" style={{ marginTop: 8 }}>
-            🔒 {t('profile.cardPrivacy') || 'Your card number is stored securely on your device only'}
-          </Typography>
+          <View style={styles.privacyNote}>
+            <Typography variant="caption" color="textSecondary">
+              🔒 {t('profile.cardPrivacy') || 'Your card number is stored securely on your device only'}
+            </Typography>
+          </View>
         </SectionCard>
 
-        {/* Notifications */}
+        {/* Notifications Section */}
         <SectionCard style={styles.section}>
-          <View style={styles.fieldHeader}>
-            <Bell size={20} color="#6B7280" />
-            <Typography variant="subheading" weight="600" style={{ marginLeft: 12, flex: 1 }}>
-              {t('profile.notifications') || 'Notifications'}
-            </Typography>
+          <View style={styles.settingRow}>
+            <View style={styles.settingLeft}>
+              <Bell size={22} color="#1A1A1A" />
+              <View style={{ marginLeft: 10, flex: 1 }}>
+                <Typography variant="title" weight="600">
+                  {t('profile.notifications') || 'Notifications'}
+                </Typography>
+                <Typography variant="caption" color="textSecondary" style={{ marginTop: 4 }}>
+                  {t('profile.notificationsHelp') || 'Get reminders about benefit expiration'}
+                </Typography>
+              </View>
+            </View>
             <Switch
               value={notificationsEnabled}
               onValueChange={setNotificationsEnabled}
               trackColor={{ false: '#D1D5DB', true: '#10B981' }}
               thumbColor="#FFFFFF"
+              ios_backgroundColor="#D1D5DB"
             />
           </View>
-          <Typography variant="caption" color="textSecondary" style={{ marginTop: 12 }}>
-            {t('profile.notificationsHelp') || 'Get reminders about benefit expiration and WIC updates'}
-          </Typography>
         </SectionCard>
 
         {/* Save Button */}
-        <Button
-          title={t('common.save') || 'Save Changes'}
-          onPress={handleSaveProfile}
-          loading={isLoading}
-          style={styles.saveButton}
-        />
+        <View style={styles.buttonContainer}>
+          <Button
+            title={t('common.save') || 'Save Changes'}
+            onPress={handleSaveProfile}
+            loading={isLoading}
+            fullWidth
+          />
+        </View>
       </ScrollView>
 
       {/* Card Number Modal */}
@@ -228,6 +232,7 @@ export default function EditProfileScreen() {
                   setShowCardModal(false);
                   setTempCardNumber('');
                 }}
+                style={styles.closeButton}
               >
                 <X size={24} color="#6B7280" />
               </TouchableOpacity>
@@ -238,7 +243,7 @@ export default function EditProfileScreen() {
             </Typography>
 
             <View style={styles.modalField}>
-              <Typography variant="subheading" weight="600" style={{ marginBottom: 8 }}>
+              <Typography variant="title" weight="600" style={{ marginBottom: 8 }}>
                 {t('profile.cardNumber') || 'Card Number'}
               </Typography>
               <TextInput
@@ -278,25 +283,30 @@ export default function EditProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
+  },
+  headerSection: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
   },
   scrollView: {
     flex: 1,
+    backgroundColor: '#F5F5F5',
   },
   content: {
-    padding: 16,
-  },
-  header: {
-    marginBottom: 24,
-    marginTop: 8,
+    paddingTop: 16,
   },
   section: {
-    marginBottom: 16,
+    marginBottom: 3,
   },
-  fieldHeader: {
+  sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   input: {
     backgroundColor: '#F9FAFB',
@@ -314,10 +324,29 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginTop: 8,
+    alignItems: 'center',
   },
-  saveButton: {
-    marginTop: 24,
+  privacyNote: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+  },
+  settingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  settingLeft: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    flex: 1,
+    marginRight: 16,
+  },
+  buttonContainer: {
+    marginTop: 16,
     marginBottom: 32,
+    paddingHorizontal: 16,
   },
   modalOverlay: {
     flex: 1,
@@ -337,6 +366,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+  closeButton: {
+    padding: 4,
+  },
   modalField: {
     marginBottom: 24,
   },
@@ -346,9 +378,11 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
     borderRadius: 12,
     padding: 16,
-    fontSize: 16,
+    fontSize: 18,
     color: '#1F2937',
     fontFamily: 'monospace',
+    letterSpacing: 2,
+    textAlign: 'center',
   },
   modalButtons: {
     flexDirection: 'row',
