@@ -1,0 +1,22 @@
+-- Seed WIC Stores (Boston area)
+INSERT INTO "wic_stores" (name, chain, address, city, state, zip_code, latitude, longitude, phone, hours_json) VALUES
+('Walmart Supercenter', 'Walmart', '180 Somerville Ave', 'Somerville', 'MA', '02143', 42.3875, -71.0995, '(617) 629-0403', 
+'{"monday": "6:00 AM - 11:00 PM", "tuesday": "6:00 AM - 11:00 PM", "wednesday": "6:00 AM - 11:00 PM", "thursday": "6:00 AM - 11:00 PM", "friday": "6:00 AM - 11:00 PM", "saturday": "6:00 AM - 11:00 PM", "sunday": "6:00 AM - 11:00 PM"}'),
+
+('Target', 'Target', '1341 Boylston St', 'Boston', 'MA', '02215', 42.3461, -71.0956, '(617) 267-5600',
+'{"monday": "8:00 AM - 10:00 PM", "tuesday": "8:00 AM - 10:00 PM", "wednesday": "8:00 AM - 10:00 PM", "thursday": "8:00 AM - 10:00 PM", "friday": "8:00 AM - 10:00 PM", "saturday": "8:00 AM - 10:00 PM", "sunday": "8:00 AM - 10:00 PM"}'),
+
+('Stop & Shop', 'Stop & Shop', '400 Western Ave', 'Boston', 'MA', '02135', 42.3634, -71.1380, '(617) 782-5221',
+'{"monday": "7:00 AM - 9:00 PM", "tuesday": "7:00 AM - 9:00 PM", "wednesday": "7:00 AM - 9:00 PM", "thursday": "7:00 AM - 9:00 PM", "friday": "7:00 AM - 9:00 PM", "saturday": "7:00 AM - 9:00 PM", "sunday": "7:00 AM - 8:00 PM"}'),
+
+('Market Basket', 'Market Basket', '400 Somerville Ave', 'Somerville', 'MA', '02143', 42.3802, -71.0920, '(617) 623-4600',
+'{"monday": "7:00 AM - 9:00 PM", "tuesday": "7:00 AM - 9:00 PM", "wednesday": "7:00 AM - 9:00 PM", "thursday": "7:00 AM - 9:00 PM", "friday": "7:00 AM - 9:00 PM", "saturday": "7:00 AM - 9:00 PM", "sunday": "7:00 AM - 8:00 PM"}'),
+
+('Whole Foods Market', 'Whole Foods', '15 Westland Ave', 'Boston', 'MA', '02115', 42.3442, -71.0887, '(617) 375-6975',
+'{"monday": "8:00 AM - 10:00 PM", "tuesday": "8:00 AM - 10:00 PM", "wednesday": "8:00 AM - 10:00 PM", "thursday": "8:00 AM - 10:00 PM", "friday": "8:00 AM - 10:00 PM", "saturday": "8:00 AM - 10:00 PM", "sunday": "8:00 AM - 9:00 PM"}'),
+
+('Trader Joe''s', 'Trader Joes', '748 Memorial Dr', 'Cambridge', 'MA', '02139', 42.3625, -71.1005, '(617) 491-8582',
+'{"monday": "8:00 AM - 9:00 PM", "tuesday": "8:00 AM - 9:00 PM", "wednesday": "8:00 AM - 9:00 PM", "thursday": "8:00 AM - 9:00 PM", "friday": "8:00 AM - 9:00 PM", "saturday": "8:00 AM - 9:00 PM", "sunday": "8:00 AM - 9:00 PM"}'),
+
+('Shaw''s Supermarket', 'Shaws', '53 Huntington Ave', 'Boston', 'MA', '02116', 42.3469, -71.0822, '(617) 262-4588',
+'{"monday": "6:00 AM - 10:00 PM", "tuesday": "6:00 AM - 10:00 PM", "wednesday": "6:00 AM - 10:00 PM", "thursday": "6:00 AM - 10:00 PM", "friday": "6:00 AM - 10:00 PM", "saturday": "6:00 AM - 10:00 PM", "sunday": "7:00 AM - 9:00 PM"}');

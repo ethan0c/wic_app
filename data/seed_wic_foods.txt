@@ -1,0 +1,99 @@
+-- WIC-Approved Foods (General Foods + Approved Foods)
+-- These use REAL UPC codes that exist in USDA FoodData Central
+
+-- MILK & DAIRY (category: milk)
+-- Whole Milk
+INSERT INTO "general_foods" (id, name, brand, category, subcategory, upc_code, unit_size) VALUES
+('a0000000-0000-0000-0000-000000000001', 'Whole Milk', 'Generic', 'dairy', 'milk', '041220988020', '1 gallon'),
+('a0000000-0000-0000-0000-000000000002', 'Whole Milk', 'Hood', 'dairy', 'milk', '041700028003', '1 gallon'),
+('a0000000-0000-0000-0000-000000000003', '2% Reduced Fat Milk', 'Generic', 'dairy', 'milk', '041220987900', '1 gallon'),
+('a0000000-0000-0000-0000-000000000004', 'Low Fat Milk 1%', 'Generic', 'dairy', 'milk', '041220988006', '1 gallon');
+
+INSERT INTO "approved_foods" (general_food_id, wic_category, is_approved, notes) VALUES
+('a0000000-0000-0000-0000-000000000001', 'milk', true, 'Whole milk approved for children 1-2 years'),
+('a0000000-0000-0000-0000-000000000002', 'milk', true, 'Whole milk approved for children 1-2 years'),
+('a0000000-0000-0000-0000-000000000003', 'milk', true, 'Reduced fat milk approved for children 2+'),
+('a0000000-0000-0000-0000-000000000004', 'milk', true, 'Low fat milk approved for children 2+');
+
+-- Yogurt
+INSERT INTO "general_foods" (id, name, brand, category, subcategory, upc_code, unit_size) VALUES
+('a0000000-0000-0000-0000-000000000005', 'Plain Greek Yogurt', 'Chobani', 'dairy', 'yogurt', '051500255001', '32 oz'),
+('a0000000-0000-0000-0000-000000000006', 'Plain Yogurt', 'Dannon', 'dairy', 'yogurt', '036632000019', '32 oz'),
+('a0000000-0000-0000-0000-000000000007', 'Vanilla Yogurt', 'Yoplait', 'dairy', 'yogurt', '070470001074', '32 oz');
+
+INSERT INTO "approved_foods" (general_food_id, wic_category, is_approved, notes) VALUES
+('a0000000-0000-0000-0000-000000000005', 'milk', true, 'Plain yogurt only'),
+('a0000000-0000-0000-0000-000000000006', 'milk', true, 'Plain yogurt only'),
+('a0000000-0000-0000-0000-000000000007', 'milk', false, 'Flavored yogurt not WIC-approved');
+
+-- Cheese
+INSERT INTO "general_foods" (id, name, brand, category, subcategory, upc_code, unit_size) VALUES
+('a0000000-0000-0000-0000-000000000008', 'Cheddar Cheese', 'Cabot', 'dairy', 'cheese', '041390001086', '1 lb'),
+('a0000000-0000-0000-0000-000000000009', 'Mozzarella Cheese Shredded', 'Kraft', 'dairy', 'cheese', '021000615551', '16 oz');
+
+INSERT INTO "approved_foods" (general_food_id, wic_category, is_approved) VALUES
+('a0000000-0000-0000-0000-000000000008', 'milk', true),
+('a0000000-0000-0000-0000-000000000009', 'milk', true);
+
+-- PRODUCE (category: produce)
+-- Note: Fresh produce often uses PLU codes instead of UPC codes
+INSERT INTO "general_foods" (id, name, brand, category, subcategory, plu_code, unit_size) VALUES
+('a0000000-0000-0000-0000-000000000010', 'Apples - Red Delicious', 'Fresh', 'produce', 'fruit', '4131', 'per lb'),
+('a0000000-0000-0000-0000-000000000011', 'Bananas', 'Fresh', 'produce', 'fruit', '4011', 'per lb'),
+('a0000000-0000-0000-0000-000000000012', 'Oranges', 'Fresh', 'produce', 'fruit', '4012', 'per lb'),
+('a0000000-0000-0000-0000-000000000013', 'Strawberries', 'Fresh', 'produce', 'fruit', '4306', 'per lb'),
+('a0000000-0000-0000-0000-000000000014', 'Carrots', 'Fresh', 'produce', 'vegetable', '4562', 'per lb'),
+('a0000000-0000-0000-0000-000000000015', 'Broccoli', 'Fresh', 'produce', 'vegetable', '4060', 'per lb'),
+('a0000000-0000-0000-0000-000000000016', 'Spinach', 'Fresh', 'produce', 'vegetable', '4090', 'per lb');
+
+-- Baby Carrots (packaged, has UPC)
+INSERT INTO "general_foods" (id, name, brand, category, subcategory, upc_code, unit_size) VALUES
+('a0000000-0000-0000-0000-000000000017', 'Baby Carrots', 'Grimmway Farms', 'produce', 'vegetable', '071072001016', '1 lb bag');
+
+INSERT INTO "approved_foods" (general_food_id, wic_category, is_approved) VALUES
+('a0000000-0000-0000-0000-000000000010', 'produce', true),
+('a0000000-0000-0000-0000-000000000011', 'produce', true),
+('a0000000-0000-0000-0000-000000000012', 'produce', true),
+('a0000000-0000-0000-0000-000000000013', 'produce', true),
+('a0000000-0000-0000-0000-000000000014', 'produce', true),
+('a0000000-0000-0000-0000-000000000015', 'produce', true),
+('a0000000-0000-0000-0000-000000000016', 'produce', true),
+('a0000000-0000-0000-0000-000000000017', 'produce', true);
+
+-- WHOLE GRAINS (category: grains)
+INSERT INTO "general_foods" (id, name, brand, category, subcategory, upc_code, unit_size) VALUES
+('a0000000-0000-0000-0000-000000000018', 'Whole Wheat Bread', 'Natures Own', 'grains', 'bread', '072250001441', '20 oz'),
+('a0000000-0000-0000-0000-000000000019', '100% Whole Wheat Bread', 'Arnold', 'grains', 'bread', '073410011508', '24 oz'),
+('a0000000-0000-0000-0000-000000000020', 'Brown Rice', 'Uncle Bens', 'grains', 'rice', '054800220410', '2 lb'),
+('a0000000-0000-0000-0000-000000000021', 'Whole Wheat Pasta', 'Barilla', 'grains', 'pasta', '076808501070', '16 oz'),
+('a0000000-0000-0000-0000-000000000022', 'Whole Grain Tortillas', 'Mission', 'grains', 'tortilla', '073731000051', '8 ct');
+
+INSERT INTO "approved_foods" (general_food_id, wic_category, is_approved, notes) VALUES
+('a0000000-0000-0000-0000-000000000018', 'grains', true, '100% whole wheat only'),
+('a0000000-0000-0000-0000-000000000019', 'grains', true, '100% whole wheat only'),
+('a0000000-0000-0000-0000-000000000020', 'grains', true, 'Brown rice only'),
+('a0000000-0000-0000-0000-000000000021', 'grains', true, 'Whole wheat pasta only'),
+('a0000000-0000-0000-0000-000000000022', 'grains', true, 'Whole grain tortillas only');
+
+-- CEREAL (category: cereal)
+INSERT INTO "general_foods" (id, name, brand, category, subcategory, upc_code, unit_size) VALUES
+('a0000000-0000-0000-0000-000000000023', 'Cheerios', 'General Mills', 'grains', 'cereal', '016000275461', '18 oz'),
+('a0000000-0000-0000-0000-000000000024', 'Wheaties', 'General Mills', 'grains', 'cereal', '016000139107', '15.6 oz'),
+('a0000000-0000-0000-0000-000000000025', 'Raisin Bran', 'Kelloggs', 'grains', 'cereal', '038000311208', '18.7 oz'),
+('a0000000-0000-0000-0000-000000000026', 'Shredded Wheat', 'Post', 'grains', 'cereal', '884912111494', '18 oz'),
+('a0000000-0000-0000-0000-000000000027', 'Old Fashioned Oats', 'Quaker', 'grains', 'cereal', '030000011508', '42 oz');
+
+INSERT INTO "approved_foods" (general_food_id, wic_category, is_approved, notes) VALUES
+('a0000000-0000-0000-0000-000000000023', 'cereal', true, 'Low sugar cereal'),
+('a0000000-0000-0000-0000-000000000024', 'cereal', true, 'Low sugar cereal'),
+('a0000000-0000-0000-0000-000000000025', 'cereal', true, 'Whole grain cereal'),
+('a0000000-0000-0000-0000-000000000026', 'cereal', true, 'Whole grain cereal'),
+('a0000000-0000-0000-0000-000000000027', 'cereal', true, 'Oatmeal approved');
+
+-- NON-WIC APPROVED EXAMPLES (for testing rejection)
+INSERT INTO "general_foods" (id, name, brand, category, subcategory, upc_code, unit_size) VALUES
+('a0000000-0000-0000-0000-000000000028', 'Coca-Cola', 'Coca-Cola', 'beverages', 'soda', '049000042566', '2 liter'),
+('a0000000-0000-0000-0000-000000000029', 'Lays Potato Chips', 'Lays', 'snacks', 'chips', '028400047272', '10 oz'),
+('a0000000-0000-0000-0000-000000000030', 'White Bread', 'Wonder', 'grains', 'bread', '004127900080', '20 oz');
+
+-- These are NOT approved (no entry in approved_foods table means not WIC-eligible)
