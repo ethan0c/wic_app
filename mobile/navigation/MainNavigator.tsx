@@ -15,6 +15,7 @@ import ScannerSettingsScreen from '../screens/settings/ScannerSettingsScreen';
 import ShowCashierScreen from '../screens/main/ShowCashierScreen';
 import ShoppingListScreen from '../screens/main/ShoppingListScreen';
 import WICStoresScreen from '../screens/main/WICStoresScreen';
+import PurchaseConfirmationScreen from '../screens/PurchaseConfirmationScreen';
 
 export type MainNavigatorParamList = {
   MainTabs: undefined;
@@ -32,6 +33,7 @@ export type MainNavigatorParamList = {
   ShowCashier: undefined;
   ShoppingList: undefined;
   WICStores: undefined;
+  PurchaseConfirmation: undefined;
 };
 
 const Stack = createStackNavigator<MainNavigatorParamList>();
@@ -177,6 +179,14 @@ export default function MainNavigator() {
         component={WICStoresScreen}
         options={{
           title: 'WIC Stores Near You',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen 
+        name="PurchaseConfirmation" 
+        component={PurchaseConfirmationScreen}
+        options={{
+          title: 'Record Purchase',
           headerShown: true,
         }}
       />

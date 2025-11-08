@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { Milk, Apple, Wheat, Zap, List, MapPin, ReceiptText } from 'lucide-react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Milk, Apple, Wheat, Zap, List, MapPin, ReceiptText, Plus } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../../context/ThemeContext';
@@ -198,7 +198,21 @@ export default function HomeScreen() {
 
       {/* Recent Transactions */}
       <View style={styles.sectionNoPad}>
-        <SectionCard title="Recent Transactions">
+        <SectionCard 
+          title="Recent Transactions"
+          right={
+            <TouchableOpacity 
+              style={styles.addPurchaseButton}
+              onPress={() => navigation.navigate('PurchaseConfirmation')}
+              activeOpacity={0.7}
+            >
+              <Plus size={18} color="#10B981" strokeWidth={2.5} />
+              <Typography variant="caption" weight="600" style={{ color: '#10B981', marginLeft: 4 }}>
+                Add Purchase
+              </Typography>
+            </TouchableOpacity>
+          }
+        >
           <View style={styles.transactionsList}>
             <View style={styles.transactionItem}>
               <View style={styles.transactionLeft}>
@@ -209,18 +223,13 @@ export default function HomeScreen() {
                   <Typography variant="body" weight="600">
                     Walmart Supercenter
                   </Typography>
-                  <Typography variant="caption" color="textSecondary">
+                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 2 }}>
                     Nov 6, 2025 • 3:42 PM
                   </Typography>
+                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 4, lineHeight: 16 }}>
+                    2 gal whole milk, 1 lb cheese, 2 lbs apples
+                  </Typography>
                 </View>
-              </View>
-              <View style={styles.transactionRight}>
-                <Typography variant="body" weight="700" style={{ color: '#EF4444' }}>
-                  -$24.50
-                </Typography>
-                <Typography variant="caption" color="textSecondary" style={{ textAlign: 'right' }}>
-                  WIC Card
-                </Typography>
               </View>
             </View>
 
@@ -235,18 +244,13 @@ export default function HomeScreen() {
                   <Typography variant="body" weight="600">
                     Target
                   </Typography>
-                  <Typography variant="caption" color="textSecondary">
+                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 2 }}>
                     Nov 3, 2025 • 10:15 AM
                   </Typography>
+                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 4, lineHeight: 16 }}>
+                    1 gal milk, 32 oz yogurt, 3 lbs strawberries
+                  </Typography>
                 </View>
-              </View>
-              <View style={styles.transactionRight}>
-                <Typography variant="body" weight="700" style={{ color: '#EF4444' }}>
-                  -$18.32
-                </Typography>
-                <Typography variant="caption" color="textSecondary" style={{ textAlign: 'right' }}>
-                  WIC Card
-                </Typography>
               </View>
             </View>
 
@@ -261,18 +265,13 @@ export default function HomeScreen() {
                   <Typography variant="body" weight="600">
                     Monthly Benefits Reset
                   </Typography>
-                  <Typography variant="caption" color="textSecondary">
+                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 2 }}>
                     Nov 1, 2025 • 12:00 AM
                   </Typography>
+                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 4, lineHeight: 16 }}>
+                    All benefits renewed for November
+                  </Typography>
                 </View>
-              </View>
-              <View style={styles.transactionRight}>
-                <Typography variant="body" weight="700" style={{ color: '#10B981' }}>
-                  +$115.00
-                </Typography>
-                <Typography variant="caption" color="textSecondary" style={{ textAlign: 'right' }}>
-                  Balance
-                </Typography>
               </View>
             </View>
           </View>
@@ -369,5 +368,14 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#F3F4F6',
     marginVertical: 4,
+  },
+  addPurchaseButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: '#F0FDF4',
+    gap: 4,
   },
 });
