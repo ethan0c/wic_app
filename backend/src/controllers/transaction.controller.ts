@@ -40,58 +40,43 @@ export const createTransaction = async (req: Request, res: Response) => {
         data: {
           userId,
           storeId,
-          totalAmount: new Prisma.Decimal(0),
+          transactionType: 'purchase',
         },
       });
 
-      let totalAmount = new Prisma.Decimal(0);
-
       // Create transaction items and update benefits
       for (const item of items) {
-        const { approvedFoodId, quantity, amount } = item;
+        const { approvedFoodId, category, quantity, unit, productName } = item;
 
         // Create transaction item
         await tx.transactionItem.create({
           data: {
             transactionId: transaction.id,
             approvedFoodId,
-            quantity,
-            amount: new Prisma.Decimal(amount),
+            category,
+            quantity: new Prisma.Decimal(quantity),
+            unit,
+            productName,
           },
         });
 
-        totalAmount = totalAmount.add(new Prisma.Decimal(amount));
-
-        // Get the approved food to find the category
-        const approvedFood = await tx.approvedFood.findUnique({
-          where: { id: approvedFoodId },
+        // Find and update the corresponding benefit
+        const benefit = await tx.wicBenefit.findFirst({
+          where: {
+            userId,
+            category,
+          },
         });
 
-        if (approvedFood) {
-          // Find and update the corresponding benefit
-          const benefit = await tx.wicBenefit.findFirst({
-            where: {
-              userId,
-              category: approvedFood.category,
+        if (benefit) {
+          await tx.wicBenefit.update({
+            where: { id: benefit.id },
+            data: {
+              remainingAmount: benefit.remainingAmount.sub(new Prisma.Decimal(quantity)),
             },
           });
-
-          if (benefit) {
-            await tx.wicBenefit.update({
-              where: { id: benefit.id },
-              data: {
-                remainingAmount: benefit.remainingAmount.sub(new Prisma.Decimal(amount)),
-              },
-            });
-          }
         }
       }
-
-      // Update transaction total
-      await tx.transaction.update({
-        where: { id: transaction.id },
-        data: { totalAmount },
-      });
 
       return transaction;
     });
