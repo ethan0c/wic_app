@@ -4,7 +4,7 @@ import { translations, Language } from '../i18n/translations';
 
 interface LanguageContextType {
   language: Language;
-  setLanguage: (lang: Language) => void;
+  setLanguage: (lang: Language) => Promise<void>;
   t: (key: string) => string;
 }
 
@@ -32,7 +32,26 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const setLanguage = async (lang: Language) => {
     try {
-      await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
+      // Save to both storage locations for consistency
+      await Promise.all([
+        AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, lang),
+        // Also update scanner settings language
+        (async () => {
+          const scannerSettings = await AsyncStorage.getItem('scannerSettings');
+          if (scannerSettings) {
+            const parsed = JSON.parse(scannerSettings);
+            parsed.language = lang;
+            await AsyncStorage.setItem('scannerSettings', JSON.stringify(parsed));
+          } else {
+            // Create scanner settings with the new language
+            await AsyncStorage.setItem('scannerSettings', JSON.stringify({ 
+              audioEnabled: true, 
+              language: lang 
+            }));
+          }
+        })()
+      ]);
+      
       setLanguageState(lang);
     } catch (error) {
       console.error('Error saving language:', error);
