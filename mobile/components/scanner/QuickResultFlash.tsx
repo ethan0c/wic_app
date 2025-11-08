@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 import { CheckCircle2, XCircle } from 'lucide-react-native';
 import Typography from '../Typography';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface QuickResultFlashProps {
   visible: boolean;
@@ -10,6 +11,7 @@ interface QuickResultFlashProps {
 }
 
 export default function QuickResultFlash({ visible, isApproved, productName }: QuickResultFlashProps) {
+  const { t } = useLanguage();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
@@ -59,7 +61,7 @@ export default function QuickResultFlash({ visible, isApproved, productName }: Q
           weight="700" 
           style={styles.statusText}
         >
-          {isApproved ? 'WIC Approved!' : 'Not Covered'}
+          {isApproved ? t('scanner.approved') : t('scanner.notApproved')}
         </Typography>
 
         <Typography 

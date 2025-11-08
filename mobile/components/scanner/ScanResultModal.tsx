@@ -268,10 +268,10 @@ export default function ScanResultModal({
                 <MaterialCommunityIcons name="information" size={24} color="#10B981" />
                 <View style={styles.explanationText}>
                   <Typography variant="subheading" weight="600" style={{ marginBottom: 8 }}>
-                    Category Allowance
+                    {t('scanner.categoryAllowance')}
                   </Typography>
                   <Typography variant="body" style={{ color: '#10B981' }}>
-                    {(aplData.categories as any)[product.category]?.monthly_allowance} {(aplData.categories as any)[product.category]?.unit} per month
+                    {(aplData.categories as any)[product.category]?.monthly_allowance} {(aplData.categories as any)[product.category]?.unit} {t('scanner.perMonth')}
                   </Typography>
                 </View>
               </View>
@@ -280,7 +280,7 @@ export default function ScanResultModal({
 
           {/* Action Buttons */}
           <Button
-            title="View Product Details"
+            title={t('scanner.viewProductDetails')}
             onPress={() => {
               onClose();
               (navigation as any).navigate('ProductDetail', { 
@@ -294,7 +294,7 @@ export default function ScanResultModal({
           />
 
           <Button
-            title="Scan Another Item"
+            title={t('scanner.scanAnotherItem')}
             onPress={onClose}
             fullWidth
             size="large"
@@ -304,7 +304,7 @@ export default function ScanResultModal({
 
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Typography variant="body" color="textSecondary" style={{ textAlign: 'center' }}>
-              Close
+              {t('common.close')}
             </Typography>
           </TouchableOpacity>
         </View>

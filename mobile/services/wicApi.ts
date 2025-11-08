@@ -13,6 +13,24 @@ export interface ScanResult {
     category: string;
     subcategory: string;
   };
+  alternatives?: Array<{
+    id: string;
+    upc: string;
+    name: string;
+    brand: string;
+    size: string;
+    imageUrl?: string;
+    category: string;
+  }>;
+  benefitCalculation?: {
+    category: string;
+    currentRemaining: number;
+    afterPurchase: number;
+    unit: string;
+    canAfford: boolean;
+    maxQuantity: number;
+    productSize: number;
+  };
 }
 
 export interface WicStore {
@@ -95,8 +113,9 @@ export interface ApprovedProduct {
 
 // ===== SCANNING =====
 
-export const scanProductByUPC = async (upc: string): Promise<ScanResult> => {
-  const response = await api.get(`/api/scan/upc/${upc}`);
+export const scanProductByUPC = async (upc: string, wicCardNumber?: string): Promise<ScanResult> => {
+  const params = wicCardNumber ? { wicCardNumber } : {};
+  const response = await api.get(`/api/scan/upc/${upc}`, { params });
   return response.data;
 };
 

@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useScannerSettings } from '../../context/ScannerSettingsContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useWicCard } from '../../context/WicCardContext';
 import audioFeedback from '../../services/audioFeedback';
 import aplData from '../../data/apl.json';
 import * as Speech from 'expo-speech';
@@ -59,6 +60,7 @@ export default function ScannerScreen({ route }: any) {
   const navigation = useNavigation<NavigationProp>();
   const { settings } = useScannerSettings();
   const { language, t } = useLanguage();
+  const { cardNumber: wicCardNumber } = useWicCard();
   const [isScanning, setIsScanning] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [showQuickFlash, setShowQuickFlash] = useState(false);
@@ -139,7 +141,7 @@ export default function ScannerScreen({ route }: any) {
     
     if (foundProduct) {
       // Add emoji fallback
-      const productWithEmoji = {
+      const productWithEmoji: Product = {
         ...foundProduct,
         emoji: getCategoryEmoji(foundProduct.category),
       };
@@ -152,13 +154,18 @@ export default function ScannerScreen({ route }: any) {
         }));
       }
       
+      // Add benefit calculation if card number available and approved
+      if (wicCardNumber && productWithEmoji.isApproved) {
+        productWithEmoji.benefitCalculation = await calculateBenefitImpact(productWithEmoji);
+      }
+      
       return productWithEmoji;
     }
     
     // Not in local database - call backend API (which uses USDA)
     try {
       console.log('🔍 Product not in local DB, checking backend API...', upcOrName);
-      const scanResult = await scanProductByUPC(upcOrName);
+      const scanResult = await scanProductByUPC(upcOrName, wicCardNumber || undefined);
       
       if (!scanResult.found) {
         console.log('❌ Not found in backend/USDA database');
@@ -171,33 +178,28 @@ export default function ScannerScreen({ route }: any) {
       const usdaProduct = scanResult.usdaProduct;
       const category = scanResult.wicCategory || 'unknown';
       
-      // Extract size from USDA data
+      // Extract size from USDA data or local product info
       let size = 0;
-      if (usdaProduct?.packageWeight) {
-        const weight = usdaProduct.packageWeight.toLowerCase();
-        const ozMatch = weight.match(/(\d+\.?\d*)\s*(oz|ounce)/i);
+      const sizeText = usdaProduct?.householdServingFullText || scanResult.localProduct?.subcategory || '';
+      if (sizeText) {
+        const ozMatch = sizeText.match(/(\d+\.?\d*)\s*(oz|ounce)/i);
         if (ozMatch) size = parseFloat(ozMatch[1]);
         
-        const gallonMatch = weight.match(/(\d+\.?\d*)\s*gallon/i);
+        const gallonMatch = sizeText.match(/(\d+\.?\d*)\s*gallon/i);
         if (gallonMatch) size = parseFloat(gallonMatch[1]) * 128;
         
-        const lbMatch = weight.match(/(\d+\.?\d*)\s*(lb|pound)/i);
+        const lbMatch = sizeText.match(/(\d+\.?\d*)\s*(lb|pound)/i);
         if (lbMatch) size = parseFloat(lbMatch[1]) * 16;
       }
       
-      // Find alternatives from local APL database based on category
-      const alternatives = aplData.products
-        .filter(p => p.category === category && p.isApproved)
-        .slice(0, 2)
-        .map(p => ({
-          upc: p.upc,
-          suggestion: `Try ${p.brand} ${p.name} (${p.size_display})`,
-          reason: scanResult.isWicApproved 
-            ? `Same category, WIC approved` 
-            : `This is a WIC-approved alternative`,
-          imageUrl: p.imageUrl,
-          emoji: getCategoryEmoji(p.category),
-        }));
+      // Map backend alternatives to frontend format
+      const alternatives = (scanResult.alternatives || []).map(alt => ({
+        upc: alt.upc || '',
+        suggestion: `Try ${alt.brand} ${alt.name} (${alt.size})`,
+        reason: `This is a WIC-approved alternative in the ${alt.category} category`,
+        imageUrl: alt.imageUrl,
+        emoji: getCategoryEmoji(alt.category),
+      }));
       
       // Convert backend result to Product type
       const product: Product = {
@@ -213,12 +215,16 @@ export default function ScannerScreen({ route }: any) {
         emoji: getCategoryEmoji(category),
         reasons: scanResult.isWicApproved ? [] : ['brand_or_product_not_approved'],
         alternatives,
+        benefitCalculation: scanResult.benefitCalculation || null,
       };
       
       console.log('📦 Processed product:', product.isApproved ? 'APPROVED ✅' : 'NOT APPROVED ❌');
       console.log('📏 Size:', product.size_display);
       console.log('🏷️ Category:', product.category);
       console.log('💡 Alternatives:', alternatives.length);
+      if (product.benefitCalculation) {
+        console.log('💰 Benefit Impact:', product.benefitCalculation);
+      }
       
       return product;
     } catch (error) {

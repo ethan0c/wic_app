@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { ScanLine, Keyboard, X } from 'lucide-react-native';
 import Typography from '../Typography';
 import Button from '../Button';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface ScanAreaProps {
   isScanning: boolean;
@@ -13,6 +14,7 @@ interface ScanAreaProps {
 }
 
 export default function ScanArea({ isScanning, onStartScan, onManualEntry, onBarCodeScanned }: ScanAreaProps) {
+  const { t } = useLanguage();
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
 
@@ -29,7 +31,7 @@ export default function ScanArea({ isScanning, onStartScan, onManualEntry, onBar
     if (!permission?.granted) {
       const result = await requestPermission();
       if (!result.granted) {
-        alert('Camera permission is required to scan barcodes');
+        Alert.alert('Permission Required', t('scanner.cameraPermissionRequired'));
         return;
       }
     }
@@ -59,10 +61,10 @@ export default function ScanArea({ isScanning, onStartScan, onManualEntry, onBar
             {/* Instructions */}
             <View style={styles.instructionsContainer}>
               <Typography variant="body" style={{ color: 'white', textAlign: 'center', marginBottom: 8 }}>
-                Position barcode within frame
+                {t('scanner.scanAreaPositionBarcode')}
               </Typography>
               <Typography variant="caption" style={{ color: 'rgba(255,255,255,0.8)', textAlign: 'center' }}>
-                Camera will scan automatically
+                {t('scanner.scanAreaAutoScan')}
               </Typography>
             </View>
 
@@ -95,21 +97,21 @@ export default function ScanArea({ isScanning, onStartScan, onManualEntry, onBar
             stroke="#9CA3AF"
           />
           <Typography variant="caption" color="textSecondary" style={{ marginTop: 12, textAlign: 'center' }}>
-            Position barcode here
+            {t('scanner.scanAreaHere')}
           </Typography>
         </View>
       </View>
 
       <Typography variant="heading" style={{ marginTop: 24, marginBottom: 8, textAlign: 'center' }}>
-        Scan Product Barcode
+        {t('scanner.scanAreaTitle')}
       </Typography>
       
       <Typography variant="body" color="textSecondary" style={{ marginBottom: 24, textAlign: 'center', paddingHorizontal: 20 }}>
-        Point camera at barcode to instantly check if item is WIC-approved
+        {t('scanner.scanAreaDescription')}
       </Typography>
 
       <Button
-        title="Start Camera Scan"
+        title={t('scanner.scanAreaStartCamera')}
         onPress={handleStartScan}
         fullWidth
         size="large"
@@ -122,7 +124,7 @@ export default function ScanArea({ isScanning, onStartScan, onManualEntry, onBar
       >
         <Keyboard size={20} color="#1A1A1A" stroke="#1A1A1A" />
         <Typography variant="body" style={{ color: "#1A1A1A", marginLeft: 8 }}>
-          Enter Barcode Manually
+          {t('scanner.scanAreaManualEntry')}
         </Typography>
       </TouchableOpacity>
     </View>

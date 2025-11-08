@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Modal, TextInput, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
+import { useLanguage } from '../../context/LanguageContext';
 import Typography from '../Typography';
 import Button from '../Button';
 import SectionCard from '../home/SectionCard';
@@ -13,6 +14,7 @@ interface ManualEntryProps {
 
 export default function ManualEntry({ visible, onClose, onSubmit }: ManualEntryProps) {
   const { theme } = useTheme();
+  const { t } = useLanguage();
   const [barcode, setBarcode] = useState('');
 
   const handleSubmit = () => {
@@ -38,11 +40,11 @@ export default function ManualEntry({ visible, onClose, onSubmit }: ManualEntryP
         <View style={styles.container}>
           <SectionCard>
             <Typography variant="heading" style={{ textAlign: 'center', marginBottom: 16 }}>
-              Enter Barcode
+              {t('scanner.manualEntryTitle')}
             </Typography>
 
             <Typography variant="body" color="textSecondary" style={{ textAlign: 'center', marginBottom: 16 }}>
-              For testing: try "milk", "CEREAL", "bread", "EGG", or "cheese"
+              {t('scanner.manualEntryInstructions')}
             </Typography>
 
             <TextInput
@@ -51,7 +53,7 @@ export default function ManualEntry({ visible, onClose, onSubmit }: ManualEntryP
                 color: theme.text,
                 borderColor: theme.border,
               }]}
-              placeholder="Enter product barcode or name"
+              placeholder={t('scanner.manualEntryPlaceholder')}
               placeholderTextColor={theme.textSecondary}
               value={barcode}
               onChangeText={setBarcode}
@@ -60,7 +62,7 @@ export default function ManualEntry({ visible, onClose, onSubmit }: ManualEntryP
             />
 
             <Button
-              title="Check Eligibility"
+              title={t('scanner.manualEntrySubmit')}
               onPress={handleSubmit}
               fullWidth
               size="large"
@@ -69,7 +71,7 @@ export default function ManualEntry({ visible, onClose, onSubmit }: ManualEntryP
 
             <TouchableOpacity onPress={handleClose} style={styles.cancelButton}>
               <Typography variant="body" color="textSecondary" style={{ textAlign: 'center' }}>
-                Cancel
+                {t('scanner.cancel')}
               </Typography>
             </TouchableOpacity>
           </SectionCard>

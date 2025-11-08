@@ -7,9 +7,10 @@ const prisma = new PrismaClient();
  * Scan a product by UPC barcode
  * 1. Check our local DB for WIC approval
  * 2. Fetch product details from USDA API
- * 3. Return combined result
+ * 3. Find approved alternatives if product is not approved
+ * 4. Return combined result
  */
-export async function scanProduct(upc: string): Promise<ScanResult> {
+export async function scanProduct(upc: string): Promise<ScanResult & { alternatives?: any[] }> {
   try {
     // Step 1: Check our local database for WIC approval
     const localProduct = await prisma.generalFood.findFirst({
@@ -22,7 +23,35 @@ export async function scanProduct(upc: string): Promise<ScanResult> {
     // Step 2: Fetch from USDA API for rich product details
     const usdaProduct = await searchByUPC(upc);
 
-    // Step 3: Combine results
+    // Step 3: If product is not approved, find alternatives in same category
+    let alternatives: any[] = [];
+    const category = localProduct?.category || localProduct?.approvedFood?.wicCategory;
+    
+    if (category && (!localProduct?.approvedFood?.isApproved || !localProduct)) {
+      // Find approved alternatives in the same category
+      const approvedAlternatives = await prisma.approvedFood.findMany({
+        where: {
+          wicCategory: category,
+          isApproved: true,
+        },
+        include: {
+          generalFood: true,
+        },
+        take: 3, // Limit to 3 alternatives
+      });
+
+      alternatives = approvedAlternatives.map(alt => ({
+        id: alt.generalFood.id,
+        upc: alt.generalFood.upcCode,
+        name: alt.generalFood.name,
+        brand: alt.generalFood.brand,
+        size: alt.generalFood.unitSize,
+        imageUrl: alt.generalFood.imageUrl,
+        category: alt.wicCategory,
+      }));
+    }
+
+    // Step 4: Combine results
     if (localProduct) {
       return {
         found: true,
@@ -37,6 +66,7 @@ export async function scanProduct(upc: string): Promise<ScanResult> {
           category: localProduct.category,
           subcategory: localProduct.subcategory || '',
         },
+        alternatives: alternatives.length > 0 ? alternatives : undefined,
       };
     }
 
@@ -47,6 +77,7 @@ export async function scanProduct(upc: string): Promise<ScanResult> {
         usdaProduct,
         isWicApproved: false,
         localProduct: undefined,
+        alternatives: alternatives.length > 0 ? alternatives : undefined,
       };
     }
 
@@ -54,6 +85,7 @@ export async function scanProduct(upc: string): Promise<ScanResult> {
     return {
       found: false,
       isWicApproved: false,
+      alternatives: [],
     };
   } catch (error) {
     console.error('Scan error:', error);

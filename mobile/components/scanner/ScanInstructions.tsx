@@ -3,8 +3,11 @@ import { View, StyleSheet } from 'react-native';
 import { Info, Volume2 } from 'lucide-react-native';
 import Typography from '../Typography';
 import SectionCard from '../home/SectionCard';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function ScanInstructions() {
+  const { t } = useLanguage();
+  
   return (
     <View style={styles.container}>
       <SectionCard>
@@ -12,13 +15,13 @@ export default function ScanInstructions() {
           <Info size={24} color="#1A1A1A" stroke="#1A1A1A" />
           <View style={styles.instructionText}>
             <Typography variant="subheading" weight="600" style={{ marginBottom: 8 }}>
-              How to scan
+              {t('scanner.instructionsHowToScan')}
             </Typography>
             <Typography variant="body" color="textSecondary">
-              • Make sure the barcode is clearly visible{'\n'}
-              • Hold your phone steady{'\n'}
-              • Ensure good lighting{'\n'}
-              • Wait for vibration feedback
+              {t('scanner.instructionsBarcodeVisible')}{'\n'}
+              {t('scanner.instructionsHoldSteady')}{'\n'}
+              {t('scanner.instructionsGoodLighting')}{'\n'}
+              {t('scanner.instructionsVibration')}
             </Typography>
           </View>
         </View>
@@ -31,10 +34,10 @@ export default function ScanInstructions() {
           <Volume2 size={24} color="#6B7280" stroke="#6B7280" />
           <View style={styles.instructionText}>
             <Typography variant="subheading" weight="600" style={{ marginBottom: 8 }}>
-              Audio Feedback
+              {t('scanner.instructionsAudioTitle')}
             </Typography>
             <Typography variant="body" color="textSecondary">
-              Listen for approval confirmation in English or Haitian-Creole
+              {t('scanner.instructionsAudioDesc')}
             </Typography>
           </View>
         </View>
