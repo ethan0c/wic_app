@@ -5,7 +5,7 @@ import Typography from '../Typography';
 import * as LucideIcons from 'lucide-react-native';
 
 interface BenefitCardProps {
-  icon: keyof typeof Ionicons.glyphMap;
+  Icon: React.ComponentType<any>;
   title: string;
   remaining: number;
   total: number;
@@ -28,7 +28,7 @@ const iconMapping: { [key: string]: keyof typeof LucideIcons } = {
 };
 
 export default function BenefitCard({
-  icon,
+  Icon,
   title,
   remaining,
   total,
@@ -91,24 +91,14 @@ export default function BenefitCard({
     >
       <View style={styles.benefitHeader}>
         {(() => {
-          const lucideIconName = iconMapping[icon as string] || 'Package';
-          const LucideIcon = LucideIcons[lucideIconName] as React.ComponentType<{
-            size?: number;
-            color?: string;
-            fill?: string;
-            stroke?: string;
-            strokeWidth?: number;
-          }>;
-          
-          return LucideIcon ? (
-            <LucideIcon 
+          // Icon is already a Lucide component, render directly
+          return (
+            <Icon 
               size={24} 
               stroke="#1A1A1A" 
               fill="#FFFFFF" 
               strokeWidth={2}
             />
-          ) : (
-            <Ionicons name={icon} size={24} color={iconColor} />
           );
         })()}
         <Typography variant="title" weight="600" style={{ color: iconColor, fontSize: 16 }}>

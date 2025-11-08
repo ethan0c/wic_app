@@ -5,7 +5,7 @@ import BenefitCard from './BenefitCard';
 
 type BenefitItem = {
   key: string;
-  icon: any; // keyof typeof Ionicons.glyphMap, but avoid direct dependency here
+  Icon: any; // React.ComponentType for Lucide icons
   title: string;
   remaining: number;
   total: number;
@@ -27,7 +27,7 @@ export default function BenefitTilesGroup({ items, onCardPress }: BenefitTilesGr
           {items.map((item, idx) => (
             <BenefitCard
               key={item.key}
-              icon={item.icon}
+              Icon={item.Icon}
               title={item.title}
               remaining={item.remaining}
               total={item.total}

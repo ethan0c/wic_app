@@ -30,7 +30,7 @@ export default function HomeScreen() {
   const wicBenefits = [
     {
       key: 'milk',
-      icon: Milk,
+      Icon: Milk,
       title: 'Milk',
       remaining: 3,
       total: 4,
@@ -38,7 +38,7 @@ export default function HomeScreen() {
     },
     {
       key: 'produce',
-      icon: Apple,
+      Icon: Apple,
       title: 'Fruits & Veg',
       remaining: 18.32,
       total: 32.00,
@@ -46,7 +46,7 @@ export default function HomeScreen() {
     },
     {
       key: 'grains',
-      icon: Wheat,
+      Icon: Wheat,
       title: 'Whole Grains',
       remaining: 2,
       total: 3,
@@ -54,7 +54,7 @@ export default function HomeScreen() {
     },
     {
       key: 'cereal',
-      icon: Zap,
+      Icon: Zap,
       title: 'Cereal',
       remaining: 45,
       total: 72,
@@ -67,7 +67,7 @@ export default function HomeScreen() {
     {
       key: 'scan',
       title: 'Scan Item',
-      icon: ScanLine,
+      Icon: ScanLine,
       backgroundColor: '#E8F5E8',
       iconColor: '#22C55E',
       action: () => navigation.navigate('MainTabs', { screen: 'Scanner' } as any),
@@ -75,14 +75,14 @@ export default function HomeScreen() {
     {
       key: 'list',
       title: 'Shopping List',
-      icon: List,
+      Icon: List,
       backgroundColor: '#FEF3C7',
       iconColor: '#F59E0B',
     },
     {
       key: 'stores',
       title: 'WIC Stores',
-      icon: MapPin,
+      Icon: MapPin,
       backgroundColor: '#DBEAFE',
       iconColor: '#3B82F6',
     },
@@ -147,7 +147,7 @@ export default function HomeScreen() {
           {quickActions.map((action) => (
             <QuickActionCard
               key={action.key}
-              icon={action.icon}
+              Icon={action.Icon}
               title={action.title}
               backgroundColor={action.backgroundColor}
               iconColor={action.iconColor}

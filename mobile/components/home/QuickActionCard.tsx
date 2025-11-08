@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Typography from '../Typography';
 
 interface QuickActionCardProps {
-  icon: React.ComponentType<any>;
+  Icon: React.ComponentType<any>;
   title: string;
   backgroundColor: string;
   iconColor: string;
@@ -11,7 +11,7 @@ interface QuickActionCardProps {
 }
 
 export default function QuickActionCard({
-  icon,
+  Icon,
   title,
   backgroundColor,
   iconColor,
@@ -23,7 +23,7 @@ export default function QuickActionCard({
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <icon size={28} color={iconColor} stroke={iconColor} />
+  <Icon size={28} color={iconColor} stroke={iconColor} />
       <Typography variant="caption" weight="600" style={{ color: '#1A1A1A', marginTop: 6 }}>
         {title}
       </Typography>

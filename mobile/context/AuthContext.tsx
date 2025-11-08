@@ -20,6 +20,8 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   // Card-based auth for WIC flow
   signInCard: (cardNumber: string, state: string) => Promise<{ success: boolean; error?: string }>;
+  // Guest/skip sign in for prototype
+  signInGuest: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -131,6 +133,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Guest sign-in for skip flows
+  const signInGuest = async (): Promise<void> => {
+    try {
+      const userData: User = {
+        id: `guest-${Date.now()}`,
+        firstName: 'Guest',
+      };
+      setUser(userData);
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+    } catch (e) {
+      // no-op for prototype
+    }
+  };
+
   const signUp = async (
     email: string,
     password: string,
@@ -221,6 +237,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signOut,
         resetPassword,
         signInCard,
+        signInGuest,
       }}
     >
       {children}
