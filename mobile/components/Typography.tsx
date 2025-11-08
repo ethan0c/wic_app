@@ -29,37 +29,44 @@ export default function Typography({
           fontSize: 28,
           fontWeight: weight || FONT_WEIGHTS.medium,
           letterSpacing: -0.5,
+          fontFamily: 'PlayfairDisplay-Regular',
         };
       case 'subheading':
         return {
           fontSize: 22,
           fontWeight: weight || FONT_WEIGHTS.medium,
+          fontFamily: 'PlayfairDisplay-Regular',
         };
       case 'title':
         return {
           fontSize: 20,
           fontWeight: weight || FONT_WEIGHTS.medium,
+          fontFamily: 'PlayfairDisplay-Regular',
         };
       case 'body':
         return {
           fontSize: 16,
           fontWeight: weight || FONT_WEIGHTS.light,
           lineHeight: 24,
+          fontFamily: 'SF Pro Text',
         };
       case 'label':
         return {
           fontSize: 14,
           fontWeight: weight || FONT_WEIGHTS.medium,
+          fontFamily: 'SF Pro Text',
         };
       case 'caption':
         return {
           fontSize: 12,
           fontWeight: weight || FONT_WEIGHTS.light,
+          fontFamily: 'SF Pro Text',
         };
       default:
         return {
           fontSize: 16,
           fontWeight: weight || FONT_WEIGHTS.light,
+          fontFamily: 'SF Pro Text',
         };
     }
   };

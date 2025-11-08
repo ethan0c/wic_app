@@ -9,6 +9,7 @@ import MainTabs from './MainTabs';
 import CategoriesScreen from '../screens/main/CategoriesScreen';
 import ProductGridScreen from '../screens/main/ProductGridScreen';
 import ProductDetailScreen from '../screens/main/ProductDetailScreen';
+import NotificationsScreen from '../screens/main/NotificationsScreen';
 
 export type MainNavigatorParamList = {
   MainTabs: undefined;
@@ -21,6 +22,7 @@ export type MainNavigatorParamList = {
     product: any;
     categoryName: string;
   };
+  Notifications: undefined;
 };
 
 const Stack = createStackNavigator<MainNavigatorParamList>();
@@ -70,6 +72,14 @@ export default function MainNavigator() {
         component={ProductDetailScreen}
         options={{
           title: 'Product Details',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen 
+        name="Notifications" 
+        component={NotificationsScreen}
+        options={{
+          title: 'Notifications',
           headerShown: true,
         }}
       />

@@ -1,20 +1,31 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import Typography from '../Typography';
+import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 
 interface HomeHeaderProps {
   userName?: string;
 }
 
+type NavigationProp = StackNavigationProp<MainNavigatorParamList>;
+
 export default function HomeHeader({ userName = 'Maria' }: HomeHeaderProps) {
+  const navigation = useNavigation<NavigationProp>();
   return (
     <View style={styles.headerWrapper}>
       <View style={styles.headerRow}>
         <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
           Welcome back, {userName}!
         </Typography>
-        <TouchableOpacity activeOpacity={0.7} accessibilityRole="button" accessibilityLabel="Notifications">
+        <TouchableOpacity 
+          activeOpacity={0.7} 
+          accessibilityRole="button" 
+          accessibilityLabel="Notifications"
+          onPress={() => navigation.navigate('Notifications')}
+        >
           <Ionicons name="notifications-outline" size={24} color="#1A1A1A" />
         </TouchableOpacity>
       </View>
@@ -25,7 +36,7 @@ export default function HomeHeader({ userName = 'Maria' }: HomeHeaderProps) {
 const styles = StyleSheet.create({
   headerWrapper: {
     paddingHorizontal: 0,
-    paddingBottom: 0,
+    paddingBottom: 12,
   },
   headerRow: {
     flexDirection: 'row',

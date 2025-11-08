@@ -24,6 +24,22 @@ export default function BenefitCard({
   iconColor,
   onPress,
 }: BenefitCardProps) {
+  // Generate darker border color from background color
+  const getDarkerBorderColor = (bgColor: string) => {
+    // Simple function to darken hex colors
+    const hex = bgColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Darken by reducing each component by 40
+    const newR = Math.max(0, r - 40);
+    const newG = Math.max(0, g - 40);
+    const newB = Math.max(0, b - 40);
+    
+    return `rgb(${newR}, ${newG}, ${newB})`;
+  };
+
   const renderProgressBar = () => {
     const usedPercentage = ((total - remaining) / total) * 100;
     const segments = Array.from({ length: 9 }, (_, i) => {
@@ -50,7 +66,13 @@ export default function BenefitCard({
 
   return (
     <TouchableOpacity
-      style={[styles.card, { backgroundColor }]}
+      style={[
+        styles.card, 
+        { 
+          backgroundColor,
+          borderColor: getDarkerBorderColor(backgroundColor)
+        }
+      ]}
       onPress={onPress}
       activeOpacity={0.8}
     >
@@ -81,7 +103,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#c0c0c1ff',
   },
   benefitHeader: {
     flexDirection: 'row',

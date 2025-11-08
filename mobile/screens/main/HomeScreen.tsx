@@ -16,6 +16,7 @@ import QuickActionCard from '../../components/home/QuickActionCard';
 import SmartPickItem from '../../components/home/SmartPickItem';
 import BottomUtilities from '../../components/home/BottomUtilities';
 import SectionCard from '../../components/home/SectionCard';
+import CardDisplay from '../../components/home/CardDisplay';
 
 type HomeScreenNavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
@@ -67,23 +68,23 @@ export default function HomeScreen() {
       key: 'scan',
       title: 'Scan Item',
       icon: 'scan-outline' as keyof typeof Ionicons.glyphMap,
-      backgroundColor: '#FFFFFF',
-      iconColor: '#1A1A1A',
+      backgroundColor: '#E8F5E8',
+      iconColor: '#22C55E',
       action: () => navigation.navigate('MainTabs', { screen: 'Scanner' } as any),
     },
     {
       key: 'list',
       title: 'Shopping List',
       icon: 'list-outline' as keyof typeof Ionicons.glyphMap,
-      backgroundColor: '#FFFFFF',
-      iconColor: '#1A1A1A',
+      backgroundColor: '#FEF3C7',
+      iconColor: '#F59E0B',
     },
     {
       key: 'stores',
       title: 'WIC Stores',
       icon: 'location-outline' as keyof typeof Ionicons.glyphMap,
-      backgroundColor: '#FFFFFF',
-      iconColor: '#1A1A1A',
+      backgroundColor: '#DBEAFE',
+      iconColor: '#3B82F6',
     },
   ];
 
@@ -116,6 +117,13 @@ export default function HomeScreen() {
         <HomeHeader userName={user?.firstName} />
       </View>
       
+      {/* Current Card - Right under header */}
+      <View style={styles.sectionNoPad}>
+        <SectionCard>
+          <CardDisplay cardNumber="4829" />
+        </SectionCard>
+      </View>
+
       <ScrollView 
         style={styles.scrollContainer}
         contentContainerStyle={styles.contentContainer}
@@ -187,7 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     paddingTop: 60,
-    paddingBottom: 12,
+    paddingBottom: 0,
   },
   scrollContainer: {
     flex: 1,
