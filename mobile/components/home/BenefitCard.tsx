@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: '#c0c0c1ff',
   },
   benefitHeader: {
     flexDirection: 'row',
