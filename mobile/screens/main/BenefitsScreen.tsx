@@ -23,55 +23,6 @@ import CardRequiredOverlay from '../../components/CardRequiredOverlay';
 import BenefitsHeader from '../../components/benefits/BenefitsHeader';
 import { getUserBenefits, WicBenefit } from '../../services/wicApi';
 
-// Mock WIC benefits data with more realistic items
-const mockBenefits = {
-  dairy: {
-    icon: Milk,
-    color: '#E3F2FD',
-    items: [
-      { id: '1', name: 'Milk (Whole)', quantity: 4, unit: 'gallons', used: 1, suggestion: '≈ three 1-gallon jugs', icon: Milk },
-      { id: '2', name: 'Cheese', quantity: 16, unit: 'oz', used: 0, suggestion: '≈ one 1-lb block', icon: Package2 },
-      { id: '3', name: 'Yogurt', quantity: 32, unit: 'oz', used: 16, suggestion: '≈ two 16-oz tubs', icon: CupSoda },
-    ],
-  },
-  grains: {
-    icon: Wheat,
-    color: '#FFF3E0',
-    items: [
-      { id: '4', name: 'Whole Wheat Bread', quantity: 2, unit: 'loaves', used: 1, suggestion: '≈ one 24-oz loaf', icon: Sandwich },
-      { id: '5', name: 'Cereal', quantity: 36, unit: 'oz', used: 18, suggestion: '≈ one 18-oz box', icon: Package2 },
-      { id: '6', name: 'Brown Rice', quantity: 32, unit: 'oz', used: 0, suggestion: '≈ one 2-lb bag', icon: Wheat },
-    ],
-  },
-  protein: {
-    icon: Egg,
-    color: '#FCE4EC',
-    items: [
-      { id: '7', name: 'Eggs', quantity: 2, unit: 'dozen', used: 1, suggestion: '≈ one 12-count carton', icon: Egg },
-      { id: '8', name: 'Peanut Butter', quantity: 18, unit: 'oz', used: 0, suggestion: '≈ one standard jar', icon: Package2 },
-      { id: '9', name: 'Dried Beans', quantity: 16, unit: 'oz', used: 0, suggestion: '≈ one 1-lb bag', icon: Bean },
-    ],
-  },
-  vegetables: {
-    icon: Carrot,
-    color: '#E8F5E9',
-    items: [
-      { id: '10', name: 'Fresh Vegetables', quantity: 12.00, unit: 'dollars', used: 4.50, suggestion: '≈ $7.50 to spend', icon: Leaf },
-      { id: '11', name: 'Carrots', quantity: 2, unit: 'lbs', used: 1, suggestion: '≈ one 1-lb bag', icon: Carrot },
-      { id: '12', name: 'Canned Vegetables', quantity: 4, unit: 'cans', used: 0, suggestion: '≈ four 15-oz cans', icon: Soup },
-    ],
-  },
-  fruits: {
-    icon: Apple,
-    color: '#FFEBEE',
-    items: [
-      { id: '13', name: 'Fresh Fruit', quantity: 11.00, unit: 'dollars', used: 3.50, suggestion: '≈ $7.50 to spend', icon: Apple },
-      { id: '14', name: 'Apples', quantity: 3, unit: 'lbs', used: 0, suggestion: '≈ 8-10 medium apples', icon: Apple },
-      { id: '15', name: '100% Juice', quantity: 128, unit: 'fl oz', used: 64, suggestion: '≈ one 64-oz bottle', icon: CupSoda },
-    ],
-  },
-};
-
 type NavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
 // Category icon mapping
@@ -127,7 +78,6 @@ export default function BenefitsScreen() {
 
     fetchBenefits();
   }, [cardNumber]);
-  const [viewMode, setViewMode] = useState<'current' | 'future'>('current');
 
   // Calculate current month's expiration date (last day of current month)
   const today = new Date();
