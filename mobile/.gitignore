@@ -1,0 +1,84 @@
+# OSX# Node
+
+.DS_Storenode_modules/
+
+node_modules/
+
+# Xcode# Expo
+
+build/.expo/
+
+*.pbxuser.expo-shared/
+
+!default.pbxuser
+
+*.mode1v3# Logs
+
+!default.mode1v3npm-debug.log*
+
+*.mode2v3yarn-debug.log*
+
+!default.mode2v3yarn-error.log*
+
+*.perspectivev3
+
+!default.perspectivev3# OS
+
+xcuserdata.DS_Store
+
+*.xccheckoutThumbs.db
+
+*.moved-aside
+
+DerivedData# TypeScript
+
+*.hmap*.tsbuildinfo
+
+*.ipa
+
+*.xcuserstate# Metro / Cache
+
+.cache/
+
+# Android/IntelliJ
+
+build/# Misc
+
+.idea.env.local
+
+.gradle.env.*.local
+
+local.properties.env
+
+*.iml
+*.hprof
+
+# node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# BUCK
+buck-out/
+\.buckd/
+*.keystore
+!debug.keystore
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Bundle artifacts
+*.jsbundle
+
+# CocoaPods
+/ios/Pods/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# TypeScript
+*.tsbuildinfo
