@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useWicCard } from '../../context/WicCardContext';
-import { useLanguage } from '../../context/LanguageContext';
 import { validateWicCard } from '../../services/wicApi';
 import Typography from '../../components/Typography';
 import Button from '../../components/Button';
@@ -11,7 +10,6 @@ import { CreditCard, X } from 'lucide-react-native';
 export default function WicCardScreen() {
   const navigation = useNavigation();
   const { cardNumber, setCardNumber, clearCardNumber } = useWicCard();
-  const { t } = useLanguage();
   const [inputValue, setInputValue] = useState(cardNumber || '');
   const [isSaving, setIsSaving] = useState(false);
 

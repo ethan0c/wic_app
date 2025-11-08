@@ -5,25 +5,17 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { 
-  Milk, Wheat, Egg, Apple, Carrot, AlertCircle, 
-  Sandwich, Soup, Beef, Bean, Leaf, Package2, CupSoda, CreditCard
+  Milk, Wheat, Egg, Apple, Carrot, AlertCircle, Package2
 } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useWicCard } from '../../context/WicCardContext';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { MainNavigatorParamList } from '../../navigation/MainNavigator';
-import Typography from '../../components/Typography';
 import CardRequiredOverlay from '../../components/CardRequiredOverlay';
 import BenefitsHeader from '../../components/benefits/BenefitsHeader';
 import { getUserBenefits, WicBenefit } from '../../services/wicApi';
-
-type NavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
 // Category icon mapping
 const categoryIcons: Record<string, any> = {
@@ -47,7 +39,6 @@ export default function BenefitsScreen() {
   const { theme } = useTheme();
   const { t } = useLanguage();
   const { cardNumber } = useWicCard();
-  const navigation = useNavigation<NavigationProp>();
   const [expandedCategory, setExpandedCategory] = useState<string | null>('dairy');
   const [viewMode, setViewMode] = useState<'current' | 'future'>('current');
   const [benefits, setBenefits] = useState<WicBenefit[]>([]);

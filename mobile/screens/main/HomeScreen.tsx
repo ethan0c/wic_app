@@ -4,8 +4,6 @@ import { Milk, Apple, Wheat, Zap, List, MapPin, ReceiptText, Plus } from 'lucide
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../../context/ThemeContext';
-import { useAuth } from '../../context/AuthContext';
-import { useWIC } from '../../context/WICContext';
 import { useWicCard } from '../../context/WicCardContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
@@ -24,8 +22,6 @@ type HomeScreenNavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
 export default function HomeScreen() {
   const { theme } = useTheme();
-  const { user } = useAuth();
-  const { benefits, monthPeriod, daysRemaining } = useWIC();
   const { cardNumber } = useWicCard();
   const { t } = useLanguage();
   const navigation = useNavigation<HomeScreenNavigationProp>();
@@ -157,7 +153,7 @@ export default function HomeScreen() {
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
       {/* Header - Fixed at top */}
       <View style={styles.headerSection}>
-        <HomeHeader userName={user?.firstName} />
+        <HomeHeader />
       </View>
       
       

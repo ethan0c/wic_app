@@ -7,25 +7,18 @@ import { useLanguage } from '../../context/LanguageContext';
 import Typography from '../Typography';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 
-interface HomeHeaderProps {
-  userName?: string;
-}
-
 type NavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
-export default function HomeHeader({ userName }: HomeHeaderProps) {
+export default function HomeHeader() {
   const navigation = useNavigation<NavigationProp>();
   const { t } = useLanguage();
-  const greeting = userName 
-    ? `${t('home.welcome')} ${userName}!` 
-    : `${t('home.welcome')}!`;
   
   return (
     <View style={styles.headerWrapper}>
       <View style={styles.headerRow}>
         <View style={{ width: 24 }} />
         <Typography variant="heading" weight="500" style={{ fontSize: 20, textAlign: 'center', flex: 1 }}>
-          {greeting}
+          {t('home.welcome')}
         </Typography>
         <TouchableOpacity 
           activeOpacity={0.7} 
@@ -49,10 +42,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#EDEDED',
-    marginTop: 12,
   },
 });
