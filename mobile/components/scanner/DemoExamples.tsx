@@ -97,7 +97,7 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
     
     return {
       ...foundProduct,
-      emoji: demoEmoji || foundProduct.emoji || undefined, // Use demo emoji if provided, otherwise use product emoji
+      emoji: demoEmoji, // Use demo emoji for visual display
       benefitCalculation: benefitCalc,
     };
   };
