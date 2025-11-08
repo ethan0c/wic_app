@@ -11,24 +11,48 @@ interface ShoppingItem {
   checked: boolean;
 }
 
-// Predefined WIC-approved items
+// PA WIC-approved items (from official PA WIC Food List Oct 2024-Sep 2025)
 const SUGGESTED_ITEMS = [
+  // Milk (½ gallon or gallon - but WIC only covers ½ gallon)
   'Whole milk (½ gallon)',
-  'Low-fat milk (½ gallon)',
-  'Whole wheat bread 16oz',
-  'Brown rice 1lb',
-  'Cheerios 18oz',
-  'Whole grain cereal',
+  'Low-fat 1% milk (½ gallon)',
+  'Skim milk (½ gallon)',
+  // Cheese (8 or 16 oz)
+  'Cheddar cheese 16oz block',
+  'Mozzarella cheese 16oz',
+  // Yogurt (32 oz only)
+  'Plain yogurt 32oz',
+  'Vanilla yogurt 32oz',
+  // Eggs
   'Eggs (1 dozen)',
-  'Peanut butter 18oz',
-  'Fresh strawberries',
+  // Juice (64 oz bottles - children)
+  'Orange juice 64oz',
+  'Apple juice 64oz',
+  // Peanut Butter (16-18 oz)
+  'Peanut butter 16oz',
+  // Whole Grains (16 oz only)
+  '100% whole wheat bread 16oz',
+  'Whole wheat tortillas 16oz',
+  'Brown rice 16oz',
+  'Whole wheat pasta 16oz',
+  // Cereals (12-36 oz)
+  'Cheerios 18oz',
+  'Corn Flakes 18oz',
+  // Fresh Fruits & Vegetables (any amount)
   'Fresh apples',
-  'Baby carrots 1lb',
   'Fresh bananas',
-  'Low-fat yogurt 32oz',
-  'Cheese 1lb block',
-  '100% orange juice 64oz',
-  'Canned beans 15oz',
+  'Fresh strawberries',
+  'Baby carrots',
+  'Fresh broccoli',
+  // Canned/Frozen Fruits & Vegetables
+  'Canned corn 15oz',
+  'Frozen mixed vegetables',
+  // Beans (15-16 oz cans or 1 lb dried)
+  'Pinto beans 15oz can',
+  'Black beans 15oz can',
+  // Canned Fish (3.75-6 oz)
+  'Chunk light tuna 5oz',
+  'Pink salmon 5oz',
 ];
 
 export default function ShoppingListScreen() {

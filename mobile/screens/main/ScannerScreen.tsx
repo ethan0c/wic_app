@@ -13,6 +13,8 @@ import audioFeedback from '../../services/audioFeedback';
 import aplData from '../../data/apl.json';
 import * as Speech from 'expo-speech';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
+import { lookupByUPC, extractSizeInOunces, categorizeProduct } from '../../services/usdaApi';
+import { matchProduct } from '../../services/productMatcher';
 
 // Scanner Components
 import ScanArea from '../../components/scanner/ScanArea';
@@ -31,12 +33,24 @@ type Product = {
   size_display: string;
   isApproved: boolean;
   image: string;
+  imageUrl?: string;  // Real product image URL
+  emoji?: string;     // Category emoji fallback
   reasons: string[];
   alternatives: Array<{
     upc: string;
     suggestion: string;
     reason: string;
+    imageUrl?: string;  // Alternative product image
+    emoji?: string;     // Alternative emoji
   }>;
+  benefitCalculation?: {  // NEW: Benefit balance info
+    category: string;
+    currentRemaining: number;
+    afterPurchase: number;
+    unit: string;
+    canAfford: boolean;
+    maxQuantity?: number;
+  } | null;
 };
 
 type NavigationProp = StackNavigationProp<MainNavigatorParamList>;
@@ -53,12 +67,136 @@ export default function ScannerScreen({ route }: any) {
 
   const categoryKey = route?.params?.categoryKey;
 
-  const lookupProduct = (upcOrName: string): Product | null => {
-    return aplData.products.find((p: Product) => 
+  // Helper: Get category emoji
+  const getCategoryEmoji = (category: string): string => {
+    const emojiMap: { [key: string]: string } = {
+      'milk': '🥛',
+      'dairy': '🧀',
+      'bread': '🍞',
+      'cereal': '🥣',
+      'eggs': '🥚',
+      'produce': '🍎',
+      'juice': '🧃',
+      'peanut_butter': '🥜',
+      'beans': '🫘',
+      'infant_formula': '🍼',
+      'baby_food': '👶',
+    };
+    return emojiMap[category] || '📦';
+  };
+
+  // Helper: Calculate benefit impact
+  const calculateBenefitImpact = async (product: any) => {
+    try {
+      // Mock benefit data for demo (no userId needed)
+      const mockBenefits = [
+        { category: 'Milk', totalAmount: 96, remainingAmount: 54, unit: 'oz' },
+        { category: 'Bread', totalAmount: 32, remainingAmount: 16, unit: 'oz' },
+        { category: 'Cereal', totalAmount: 36, remainingAmount: 36, unit: 'oz' },
+        { category: 'Eggs', totalAmount: 2, remainingAmount: 1, unit: 'dozen' },
+        { category: 'Produce', totalAmount: 32, remainingAmount: 18.50, unit: 'dollars' },
+      ];
+      
+      const productCategory = product.category;
+      
+      // Find matching benefit category
+      const benefit = mockBenefits.find(b => 
+        b.category.toLowerCase().includes(productCategory) || 
+        productCategory.includes(b.category.toLowerCase())
+      );
+
+      if (!benefit) {
+        return null; // No matching benefit found
+      }
+
+      const currentRemaining = benefit.remainingAmount;
+      const productSize = product.size_oz;
+      const afterPurchase = currentRemaining - productSize;
+      const canAfford = afterPurchase >= 0;
+      const maxQuantity = canAfford ? Math.floor(currentRemaining / productSize) : 0;
+
+      return {
+        category: benefit.category,
+        currentRemaining,
+        afterPurchase,
+        unit: benefit.unit,
+        canAfford,
+        maxQuantity,
+      };
+    } catch (error) {
+      console.error('Failed to calculate benefit impact:', error);
+      return null;
+    }
+  };
+
+  const lookupProduct = async (upcOrName: string): Promise<Product | null> => {
+    // First, check local APL database
+    const foundProduct = aplData.products.find((p: Product) => 
       p.upc === upcOrName || 
       p.name.toLowerCase().includes(upcOrName.toLowerCase()) ||
       p.brand.toLowerCase().includes(upcOrName.toLowerCase())
-    ) || null;
+    );
+    
+    if (foundProduct) {
+      // Add emoji fallback
+      const productWithEmoji = {
+        ...foundProduct,
+        emoji: getCategoryEmoji(foundProduct.category),
+      };
+      
+      // Add emoji to alternatives
+      if (productWithEmoji.alternatives) {
+        productWithEmoji.alternatives = productWithEmoji.alternatives.map(alt => ({
+          ...alt,
+          emoji: getCategoryEmoji(foundProduct.category),
+        }));
+      }
+      
+      return productWithEmoji;
+    }
+    
+    // Not in local database - try USDA lookup
+    try {
+      console.log('🔍 Product not in local DB, checking USDA...', upcOrName);
+      const usdaProduct = await lookupByUPC(upcOrName);
+      
+      if (!usdaProduct) {
+        console.log('❌ Not found in USDA database');
+        return null;
+      }
+      
+      console.log('✅ Found in USDA:', usdaProduct.description);
+      
+      // Match against WIC approved products
+      const matchResult = matchProduct(usdaProduct);
+      
+      // Convert to Product type
+      const size = matchResult.scannedSize || 0;
+      const product: Product = {
+        upc: usdaProduct.gtinUpc || upcOrName,
+        name: usdaProduct.description || 'Unknown Product',
+        brand: usdaProduct.brandOwner || usdaProduct.brandName || 'Unknown',
+        category: matchResult.category,
+        size_oz: size,
+        size_display: size > 0 ? `${size} oz` : 'Unknown',
+        isApproved: matchResult.isApproved,
+        image: '',
+        imageUrl: matchResult.matchedProduct?.imageUrl,
+        emoji: getCategoryEmoji(matchResult.category),
+        reasons: matchResult.reasons,
+        alternatives: matchResult.alternatives,
+      };
+      
+      console.log('📦 Matched product:', product.isApproved ? 'APPROVED ✅' : 'NOT APPROVED ❌');
+      console.log('📏 Size:', product.size_display);
+      console.log('🏷️ Category:', product.category);
+      console.log('💡 Alternatives:', matchResult.alternatives.length);
+      
+      return product;
+    } catch (error) {
+      console.error('Error looking up product:', error);
+      return null;
+    }
   };
 
   const speakResult = async (product: Product) => {
@@ -82,11 +220,11 @@ export default function ScannerScreen({ route }: any) {
     await audioFeedback.speak(message, language);
   };
 
-  const handleScan = () => {
+  const handleScan = async () => {
     setIsScanning(true);
     
     // Simulate camera scanning - Demo with predefined UPCs
-    setTimeout(() => {
+    setTimeout(async () => {
       const testUPCs = [
         "041303001813", // Gallon milk (not approved)
         "041303001806", // Half-gallon milk (approved)  
@@ -96,9 +234,16 @@ export default function ScannerScreen({ route }: any) {
       ];
       const randomUPC = testUPCs[Math.floor(Math.random() * testUPCs.length)];
       
-      const product = lookupProduct(randomUPC);
+      const product = await lookupProduct(randomUPC);
       
       if (product) {
+        // Calculate benefit impact
+        const benefitCalc = await calculateBenefitImpact(product);
+        const productWithBenefits = {
+          ...product,
+          benefitCalculation: benefitCalc,
+        };
+        
         // Vibrate for feedback
         if (product.isApproved) {
           Vibration.vibrate([0, 200]); // Success vibration
@@ -106,7 +251,7 @@ export default function ScannerScreen({ route }: any) {
           Vibration.vibrate([0, 100, 100, 100]); // Error vibration
         }
         
-        setScanResult(product);
+        setScanResult(productWithBenefits);
         setIsScanning(false);
         
         // Show quick flash first
@@ -116,7 +261,7 @@ export default function ScannerScreen({ route }: any) {
         setTimeout(() => {
           setShowQuickFlash(false);
           setShowResult(true);
-          speakResult(product);
+          speakResult(productWithBenefits);
         }, 1500);
       } else {
         setIsScanning(false);
@@ -124,17 +269,24 @@ export default function ScannerScreen({ route }: any) {
     }, 2000);
   };
 
-  const handleManualScan = (barcode: string) => {
-    const product = lookupProduct(barcode);
+  const handleManualScan = async (barcode: string) => {
+    const product = await lookupProduct(barcode);
     
     if (product) {
+      // Calculate benefit impact
+      const benefitCalc = await calculateBenefitImpact(product);
+      const productWithBenefits = {
+        ...product,
+        benefitCalculation: benefitCalc,
+      };
+      
       if (product.isApproved) {
         Vibration.vibrate([0, 200]);
       } else {
         Vibration.vibrate([0, 100, 100, 100]);
       }
       
-      setScanResult(product);
+      setScanResult(productWithBenefits);
       setShowManualEntry(false);
       
       // Show quick flash first
@@ -144,7 +296,7 @@ export default function ScannerScreen({ route }: any) {
       setTimeout(() => {
         setShowQuickFlash(false);
         setShowResult(true);
-        speakResult(product);
+        speakResult(productWithBenefits);
       }, 1500);
     } else {
       // Create a "not found" product for demo
@@ -173,14 +325,21 @@ export default function ScannerScreen({ route }: any) {
     }
   };
 
-  const handleProductSelect = (product: Product) => {
+  const handleProductSelect = async (product: Product) => {
+    // Calculate benefit impact
+    const benefitCalc = await calculateBenefitImpact(product);
+    const productWithBenefits = {
+      ...product,
+      benefitCalculation: benefitCalc,
+    };
+    
     if (product.isApproved) {
       Vibration.vibrate([0, 200]);
     } else {
       Vibration.vibrate([0, 100, 100, 100]);
     }
     
-    setScanResult(product);
+    setScanResult(productWithBenefits);
     
     // Show quick flash first
     setShowQuickFlash(true);
@@ -189,7 +348,7 @@ export default function ScannerScreen({ route }: any) {
     setTimeout(() => {
       setShowQuickFlash(false);
       setShowResult(true);
-      speakResult(product);
+      speakResult(productWithBenefits);
     }, 1500);
   };
 
@@ -205,6 +364,18 @@ export default function ScannerScreen({ route }: any) {
       // Handle specific reasons why the product is not covered
       if (product.reasons.includes("product_not_found")) {
         return t('scanner.productNotFound');
+      }
+      
+      if (product.reasons.includes("product_not_in_wic_category") || product.reasons.includes("notInWicCategory")) {
+        return t('scanner.notInWicCategory');
+      }
+      
+      if (product.reasons.includes("cannot_determine_size")) {
+        return t('scanner.cannotDetermineSize');
+      }
+      
+      if (product.reasons.includes("brand_or_product_not_approved")) {
+        return t('scanner.brandNotApproved');
       }
       
       if (product.reasons.includes("package_size_not_allowed")) {

@@ -53,6 +53,7 @@
       "size_display": "½ gallon",
       "isApproved": true,
       "image": "milk_half_gallon.jpg",
+      "imageUrl": "https://i5.walmartimages.com/seo/Great-Value-Whole-Milk-Half-Gallon-64-fl-oz_5bc2c14a-68c0-4e4b-8d97-f86731c27ff5.jpg",
       "reasons": [],
       "alternatives": []
     },
@@ -65,12 +66,14 @@
       "size_display": "1 gallon",
       "isApproved": false,
       "image": "milk_gallon.jpg",
+      "imageUrl": "https://i5.walmartimages.com/seo/Great-Value-Whole-Milk-Gallon-Plastic-Jug_8e4c564a-2e0b-45c0-be87-907a53d3b58d.jpg",
       "reasons": ["package_size_not_allowed"],
       "alternatives": [
         {
           "upc": "041303001806",
           "suggestion": "Try ½ gallon instead",
-          "reason": "WIC allows half-gallons, not gallons"
+          "reason": "WIC allows half-gallons, not gallons",
+          "imageUrl": "https://i5.walmartimages.com/seo/Great-Value-Whole-Milk-Half-Gallon-64-fl-oz_5bc2c14a-68c0-4e4b-8d97-f86731c27ff5.jpg"
         }
       ]
     },
@@ -83,6 +86,7 @@
       "size_display": "18 oz",
       "isApproved": true,
       "image": "cheerios_18oz.jpg",
+      "imageUrl": "https://i5.walmartimages.com/seo/Cheerios-Gluten-Free-Cereal-18-oz_e1155f0f-3c6e-4e0c-9f5a-0e0b68a50adb.jpg",
       "reasons": [],
       "alternatives": []
     },
@@ -95,6 +99,7 @@
       "size_display": "36 oz", 
       "isApproved": true,
       "image": "cheerios_36oz.jpg",
+      "imageUrl": "https://i5.walmartimages.com/seo/General-Mills-Cheerios-Gluten-Free-Cereal-Family-Size-36-oz_a74c9e6e-98e0-4e9e-b9a9-3d5e1c9e2c3b.jpg",
       "reasons": [],
       "alternatives": []
     },
@@ -106,13 +111,15 @@
       "size_oz": 20,
       "size_display": "20 oz loaf",
       "isApproved": false,
-      "image": "wonder_20oz.jpg", 
+      "image": "wonder_20oz.jpg",
+      "imageUrl": "https://i5.walmartimages.com/seo/Wonder-Bread-Classic-White-Sandwich-Bread-Sliced-White-Bread-20-oz_f4c8b8e6-5e8e-4e0e-8e0e-6e0e8e0e8e0e.jpg",
       "reasons": ["package_size_not_allowed"],
       "alternatives": [
         {
           "upc": "072250015137",
           "suggestion": "Try 16 oz loaf",
-          "reason": "WIC only covers 16 oz bread packages"
+          "reason": "WIC only covers 16 oz bread packages",
+          "imageUrl": "https://i5.walmartimages.com/seo/Wonder-Bread-Classic-White-Sandwich-Bread-Sliced-White-Bread-16-oz_c3d9e4f5-7e9e-4e0e-9e0e-7e0e9e0e9e0e.jpg"
         }
       ]
     },
@@ -125,6 +132,7 @@
       "size_display": "16 oz loaf",
       "isApproved": true,
       "image": "wonder_16oz.jpg",
+      "imageUrl": "https://i5.walmartimages.com/seo/Wonder-Bread-Classic-White-Sandwich-Bread-Sliced-White-Bread-16-oz_c3d9e4f5-7e9e-4e0e-9e0e-7e0e9e0e9e0e.jpg",
       "reasons": [],
       "alternatives": []
     },
@@ -137,17 +145,20 @@
       "size_display": "48 oz",
       "isApproved": false,
       "image": "cheerios_48oz.jpg",
+      "imageUrl": "https://i5.walmartimages.com/seo/General-Mills-Cheerios-Gluten-Free-Cereal-Mega-Size-48-oz_b5d0f1e7-9e0e-4e0e-ae0e-8e0e0e0e0e0e.jpg",
       "reasons": ["exceeds_monthly_limit"],
       "alternatives": [
         {
           "upc": "016000275225",
           "suggestion": "Try 36 oz size instead",
-          "reason": "Stays within your 72 oz monthly cereal allowance"
+          "reason": "Stays within your 72 oz monthly cereal allowance",
+          "imageUrl": "https://i5.walmartimages.com/seo/General-Mills-Cheerios-Gluten-Free-Cereal-Family-Size-36-oz_a74c9e6e-98e0-4e9e-b9a9-3d5e1c9e2c3b.jpg"
         },
         {
           "upc": "016000275218", 
           "suggestion": "Try regular 18 oz size",
-          "reason": "Perfect portion that leaves room for other cereals"
+          "reason": "Perfect portion that leaves room for other cereals",
+          "imageUrl": "https://i5.walmartimages.com/seo/Cheerios-Gluten-Free-Cereal-18-oz_e1155f0f-3c6e-4e0c-9f5a-0e0b68a50adb.jpg"
         }
       ]
     },
@@ -160,12 +171,14 @@
       "size_display": "1 gallon",
       "isApproved": false,
       "image": "milk_2percent_gallon.jpg",
+      "imageUrl": "https://i5.walmartimages.com/seo/Great-Value-2-Reduced-Fat-Milk-Gallon-Plastic-Jug_d4e5f6a7-8e9e-4e0e-be0e-9e0e0e0e0e0e.jpg",
       "reasons": ["package_size_not_allowed"],
       "alternatives": [
         {
           "upc": "041303002002",
           "suggestion": "Try 2% milk in ½ gallon size",
-          "reason": "WIC covers half-gallon milk containers"
+          "reason": "WIC covers half-gallon milk containers",
+          "imageUrl": "https://i5.walmartimages.com/seo/Great-Value-2-Reduced-Fat-Milk-Half-Gallon-64-fl-oz_e6f7a8b9-0e0e-4e0e-ce0e-0e0e0e0e0e0e.jpg"
         }
       ]
     },
@@ -178,6 +191,7 @@
       "size_display": "½ gallon", 
       "isApproved": true,
       "image": "milk_2percent_half.jpg",
+      "imageUrl": "https://i5.walmartimages.com/seo/Great-Value-2-Reduced-Fat-Milk-Half-Gallon-64-fl-oz_e6f7a8b9-0e0e-4e0e-ce0e-0e0e0e0e0e0e.jpg",
       "reasons": [],
       "alternatives": []
     }

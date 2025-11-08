@@ -40,6 +40,9 @@ export const translations = {
       milkSizeRule: 'WIC only covers half-gallon milk containers, not full gallons.',
       breadSizeRule: 'WIC only covers 16-ounce bread loaves.',
       cerealSizeRule: 'May exceed your monthly cereal allowance. Check if this fits within your 72-ounce monthly limit.',
+      cannotDetermineSize: 'Could not determine product size. Please try a different product or check with WIC staff.',
+      brandNotApproved: 'This brand is not WIC-approved. See suggested alternatives below.',
+      notInWicCategory: 'This product category is not covered by WIC benefits.',
       
       // Reasons
       wrongSize: 'Wrong size',
@@ -255,6 +258,9 @@ export const translations = {
       milkSizeRule: 'WIC sèlman kouvri demi-galon lèt, pa galon konple.',
       breadSizeRule: 'WIC sèlman kouvri pen 16 ons.',
       cerealSizeRule: 'Sa ka depase limit sereyal chak mwa ou. Verifye si sa kab antre nan limit 72 ons chak mwa ou.',
+      cannotDetermineSize: 'Nou pa kapab detèmine gwosè pwodwi a. Tanpri eseye yon lòt pwodwi oswa mande pèsonèl WIC.',
+      brandNotApproved: 'Mak sa a pa apwouve pa WIC. Gade altènativ nou sigjere yo anba a.',
+      notInWicCategory: 'Kategori pwodwi sa a pa kouvri pa benefis WIC.',
       
       // Reasons
       wrongSize: 'Move gwosè',

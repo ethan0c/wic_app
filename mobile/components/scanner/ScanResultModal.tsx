@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Modal, TouchableOpacity, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -19,12 +19,24 @@ type Product = {
   size_display: string;
   isApproved: boolean;
   image: string;
+  imageUrl?: string;
+  emoji?: string;
   reasons: string[];
   alternatives: Array<{
     upc: string;
     suggestion: string;
     reason: string;
+    imageUrl?: string;
+    emoji?: string;
   }>;
+  benefitCalculation?: {
+    category: string;
+    currentRemaining: number;
+    afterPurchase: number;
+    unit: string;
+    canAfford: boolean;
+    maxQuantity?: number;
+  } | null;
 };
 
 interface ScanResultModalProps {
@@ -105,15 +117,30 @@ export default function ScanResultModal({
           {/* Result Status */}
           <SectionCard style={{ marginBottom: 12 }}>
             <View style={styles.resultHeader}>
-              <View style={[
-                styles.resultIcon,
-                { backgroundColor: product.isApproved ? '#F0FDF4' : '#FEF2F2' }
-              ]}>
-                <MaterialCommunityIcons
-                  name={product.isApproved ? 'check-circle' : 'close-circle'}
-                  size={60}
-                  color={product.isApproved ? '#10B981' : '#EF4444'}
-                />
+              {/* Product Image or Emoji */}
+              <View style={styles.productImageContainer}>
+                {product.imageUrl ? (
+                  <Image 
+                    source={{ uri: product.imageUrl }} 
+                    style={styles.productImage}
+                    resizeMode="contain"
+                  />
+                ) : product.emoji ? (
+                  <Typography variant="heading" style={{ fontSize: 60 }}>
+                    {product.emoji}
+                  </Typography>
+                ) : (
+                  <View style={[
+                    styles.resultIcon,
+                    { backgroundColor: product.isApproved ? '#F0FDF4' : '#FEF2F2' }
+                  ]}>
+                    <MaterialCommunityIcons
+                      name={product.isApproved ? 'check-circle' : 'close-circle'}
+                      size={60}
+                      color={product.isApproved ? '#10B981' : '#EF4444'}
+                    />
+                  </View>
+                )}
               </View>
 
               <Typography variant="heading" style={{ textAlign: 'center', marginBottom: 16 }}>
@@ -125,6 +152,46 @@ export default function ScanResultModal({
               </Typography>
             </View>
           </SectionCard>
+
+          {/* Benefit Calculation - Before/After */}
+          {product.benefitCalculation && product.isApproved && (
+            <SectionCard style={{ marginBottom: 12, backgroundColor: '#EFF6FF', borderColor: '#BFDBFE' }}>
+              <View style={styles.benefitCalc}>
+                <MaterialCommunityIcons name="calculator" size={24} color="#3B82F6" />
+                <View style={styles.explanationText}>
+                  <Typography variant="subheading" weight="600" style={{ marginBottom: 8, color: '#3B82F6' }}>
+                    💰 Your Balance
+                  </Typography>
+                  
+                  {product.benefitCalculation.canAfford ? (
+                    <>
+                      <View style={styles.balanceRow}>
+                        <Typography variant="body" color="textSecondary">Before:</Typography>
+                        <Typography variant="body" weight="600">
+                          {product.benefitCalculation.currentRemaining} {product.benefitCalculation.unit}
+                        </Typography>
+                      </View>
+                      <View style={styles.balanceRow}>
+                        <Typography variant="body" color="textSecondary">After purchase:</Typography>
+                        <Typography variant="body" weight="600" style={{ color: '#10B981' }}>
+                          {product.benefitCalculation.afterPurchase} {product.benefitCalculation.unit} remaining
+                        </Typography>
+                      </View>
+                      {product.benefitCalculation.maxQuantity && product.benefitCalculation.maxQuantity > 1 && (
+                        <Typography variant="caption" style={{ marginTop: 8, color: '#3B82F6' }}>
+                          ✨ You can buy up to {product.benefitCalculation.maxQuantity} more this month
+                        </Typography>
+                      )}
+                    </>
+                  ) : (
+                    <Typography variant="body" style={{ color: '#EF4444' }}>
+                      ⚠️ Insufficient balance. You only have {product.benefitCalculation.currentRemaining} {product.benefitCalculation.unit} remaining.
+                    </Typography>
+                  )}
+                </View>
+              </View>
+            </SectionCard>
+          )}
 
           {/* Why Not Covered - Detailed Explanation */}
           {!product.isApproved && (
@@ -282,6 +349,20 @@ const styles = StyleSheet.create({
   resultHeader: {
     alignItems: 'center',
   },
+  productImageContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 12,
+    backgroundColor: '#F9FAFB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  productImage: {
+    width: 90,
+    height: 90,
+  },
   resultIcon: {
     width: 80,
     height: 80,
@@ -289,6 +370,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
+  },
+  benefitCalc: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  balanceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
   },
   explanationItem: {
     flexDirection: 'row',
