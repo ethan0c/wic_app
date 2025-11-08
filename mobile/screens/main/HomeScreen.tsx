@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Milk, Apple, Wheat, Zap, ScanLine, List, MapPin } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../../context/ThemeContext';
@@ -31,7 +30,7 @@ export default function HomeScreen() {
   const wicBenefits = [
     {
       key: 'milk',
-      icon: 'water-outline' as keyof typeof Ionicons.glyphMap,
+      icon: Milk,
       title: 'Milk',
       remaining: 3,
       total: 4,
@@ -39,7 +38,7 @@ export default function HomeScreen() {
     },
     {
       key: 'produce',
-      icon: 'nutrition-outline' as keyof typeof Ionicons.glyphMap,
+      icon: Apple,
       title: 'Fruits & Veg',
       remaining: 18.32,
       total: 32.00,
@@ -47,7 +46,7 @@ export default function HomeScreen() {
     },
     {
       key: 'grains',
-      icon: 'restaurant-outline' as keyof typeof Ionicons.glyphMap,
+      icon: Wheat,
       title: 'Whole Grains',
       remaining: 2,
       total: 3,
@@ -55,7 +54,7 @@ export default function HomeScreen() {
     },
     {
       key: 'cereal',
-      icon: 'cube-outline' as keyof typeof Ionicons.glyphMap,
+      icon: Zap,
       title: 'Cereal',
       remaining: 45,
       total: 72,
@@ -68,7 +67,7 @@ export default function HomeScreen() {
     {
       key: 'scan',
       title: 'Scan Item',
-      icon: 'barcode-scan' as keyof typeof MaterialCommunityIcons.glyphMap,
+      icon: ScanLine,
       backgroundColor: '#E8F5E8',
       iconColor: '#22C55E',
       action: () => navigation.navigate('MainTabs', { screen: 'Scanner' } as any),
@@ -76,14 +75,14 @@ export default function HomeScreen() {
     {
       key: 'list',
       title: 'Shopping List',
-      icon: 'format-list-bulleted' as keyof typeof MaterialCommunityIcons.glyphMap,
+      icon: List,
       backgroundColor: '#FEF3C7',
       iconColor: '#F59E0B',
     },
     {
       key: 'stores',
       title: 'WIC Stores',
-      icon: 'map-marker-outline' as keyof typeof MaterialCommunityIcons.glyphMap,
+      icon: MapPin,
       backgroundColor: '#DBEAFE',
       iconColor: '#3B82F6',
     },

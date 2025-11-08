@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image, Alert } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import { HelpCircle, CreditCard } from 'lucide-react-native';
 import { useTheme } from "../../context/ThemeContext";
 import WicLogo from "../../components/WicLogo";
 import { SPACING, BORDER_RADIUS } from "../../assets/styles/shared.styles";
@@ -22,7 +22,7 @@ const AuthIndexScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <TouchableOpacity style={styles.helpButton} onPress={handleHelp}>
-        <Ionicons name="help-circle-outline" size={28} color={theme.primary} />
+        <HelpCircle size={28} color={theme.primary} stroke={theme.primary} />
       </TouchableOpacity>
 
       <View style={styles.content}>
@@ -44,7 +44,7 @@ const AuthIndexScreen = ({ navigation }: any) => {
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.cardButton, { backgroundColor: theme.primary }]} onPress={handleCardLogin} activeOpacity={0.8}>
-            <Ionicons name="card-outline" size={24} color="white" />
+            <CreditCard size={24} color="white" stroke="white" />
             <Text style={styles.cardButtonText}>Login with WIC Card</Text>
           </TouchableOpacity>
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableOpacity, Animated } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Home, Scan, List, Grid, Settings } from 'lucide-react-native';
 import { useTheme } from '../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -26,25 +25,30 @@ export default function MainTabs() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap;
+          let IconComponent;
 
           if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
+            IconComponent = Home;
           } else if (route.name === 'Scanner') {
-            iconName = focused ? 'scan' : 'scan-outline';
+            IconComponent = Scan;
           } else if (route.name === 'Benefits') {
-            iconName = focused ? 'list' : 'list-outline';
+            IconComponent = List;
           } else if (route.name === 'Explore') {
-            iconName = focused ? 'grid' : 'grid-outline';
+            IconComponent = Grid;
           } else {
-            iconName = 'help-outline';
+            IconComponent = Home;
           }
 
           // Add scale animation for focused tab icons
           const scale = focused ? 1.1 : 1;
           return (
             <Animated.View style={{ transform: [{ scale }] }}>
-              <Ionicons name={iconName} size={size} color={color} />
+              <IconComponent 
+                size={size} 
+                color={color} 
+                stroke={color}
+                fill={focused ? color : 'transparent'}
+              />
             </Animated.View>
           );
         },
@@ -106,7 +110,7 @@ export default function MainTabs() {
               }}
               onPress={() => navigation.navigate('ScannerSettings')}
             >
-              <MaterialCommunityIcons name="cog" size={20} color="#1A1A1A" />
+              <Settings size={20} color="#1A1A1A" stroke="#1A1A1A" />
             </TouchableOpacity>
           )
         }}

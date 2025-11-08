@@ -7,14 +7,14 @@ import {
   TextInputProps,
   TouchableOpacity,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Eye, EyeOff, AlertCircle } from 'lucide-react-native';
 import { useTheme } from '../context/ThemeContext';
 import { BORDER_RADIUS, SPACING, FONT_WEIGHTS } from '../assets/styles/shared.styles';
 
 interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
-  icon?: keyof typeof Ionicons.glyphMap;
+  icon?: React.ComponentType<any>;
   isPassword?: boolean;
 }
 
@@ -43,13 +43,12 @@ export default function Input({
           },
         ]}
       >
-        {icon && (
-          <Ionicons
-            name={icon}
-            size={20}
-            color={error ? theme.error : theme.textSecondary}
-            style={styles.icon}
-          />
+        {icon && React.createElement(icon, {
+            size: 20,
+            color: error ? theme.error : theme.textSecondary,
+            stroke: error ? theme.error : theme.textSecondary,
+            style: styles.icon
+          }
         )}
         <TextInput
           style={[
@@ -68,17 +67,17 @@ export default function Input({
             onPress={() => setShowPassword(!showPassword)}
             style={styles.eyeButton}
           >
-            <Ionicons
-              name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-              size={20}
-              color={theme.textSecondary}
-            />
+            {showPassword ? (
+              <EyeOff size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
+            ) : (
+              <Eye size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
+            )}
           </TouchableOpacity>
         )}
       </View>
       {error && (
         <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle" size={14} color={theme.error} />
+          <AlertCircle size={14} color={theme.error} stroke={theme.error} />
           <Text style={[styles.errorText, { color: theme.error }]}>
             {error}
           </Text>

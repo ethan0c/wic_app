@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, Vibration, KeyboardAvoidingView, Platform } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, MapPin, Camera, CheckCircle, Keyboard, Shield, HelpCircle, AlertCircle } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
@@ -39,7 +39,7 @@ export default function CardScanScreen({ route }: any) {
           <Typography variant="heading" align="center" style={{ marginBottom: 8 }}>Enter Card Number</Typography>
           <Text style={[styles.modalSubtext, { color: theme.textSecondary }]}>Enter the number on your WIC EBT card</Text>
           <TextInput style={[styles.input, { backgroundColor: theme.background, color: theme.text, borderColor: error ? '#EF4444' : theme.border }]} placeholder="Card number" placeholderTextColor={theme.textSecondary} value={cardNumber} onChangeText={(text) => { setCardNumber(text); setError(''); }} keyboardType="number-pad" autoFocus maxLength={16} />
-          {error && (<View style={styles.errorContainer}><Ionicons name="alert-circle" size={16} color="#EF4444" /><Text style={styles.errorText}>{error}</Text></View>)}
+          {error && (<View style={styles.errorContainer}><AlertCircle size={16} color="#EF4444" stroke="#EF4444" /><Text style={styles.errorText}>{error}</Text></View>)}
           <Button title="Continue" onPress={handleManualSubmit} loading={loading} fullWidth size="large" />
           <TouchableOpacity onPress={() => { setShowManualEntry(false); setCardNumber(''); setError(''); }} style={{ marginTop: 16, padding: 8 }}><Text style={[styles.closeText, { color: theme.textSecondary }]}>Cancel</Text></TouchableOpacity>
         </View>
@@ -50,8 +50,8 @@ export default function CardScanScreen({ route }: any) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>      
       <View style={styles.header}>        
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}><Ionicons name="arrow-back" size={24} color={theme.text} /></TouchableOpacity>
-        <View style={styles.stateTag}><Ionicons name="location" size={16} color={theme.primary} /><Text style={[styles.stateText, { color: theme.text }]}>{selectedState}</Text></View>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}><ArrowLeft size={24} color={theme.text} stroke={theme.text} /></TouchableOpacity>
+        <View style={styles.stateTag}><MapPin size={16} color={theme.primary} stroke={theme.primary} /><Text style={[styles.stateText, { color: theme.text }]}>{selectedState}</Text></View>
       </View>
       <View style={styles.content}>        
         <Typography variant="heading" align="center" style={{ marginBottom: 8 }}>Scan Your WIC Card</Typography>
@@ -60,7 +60,7 @@ export default function CardScanScreen({ route }: any) {
           {/* Placeholder for regular React Native camera integration */}
           {!scanned && (
             <View style={{ alignItems: 'center' }}>
-              <Ionicons name="camera" size={48} color={theme.textSecondary} />
+              <Camera size={48} color={theme.textSecondary} stroke={theme.textSecondary} />
               <Typography variant="body" align="center" color="textSecondary" style={{ marginTop: 12 }}>
                 Camera scan coming soon. Use manual entry below.
               </Typography>
@@ -68,7 +68,7 @@ export default function CardScanScreen({ route }: any) {
           )}
           {scanned && (
             <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-              <Ionicons name="checkmark-circle" size={72} color="#10B981" />
+              <CheckCircle size={72} color="#10B981" stroke="#10B981" />
               <Typography variant="body" align="center" style={{ marginTop: 12 }}>Card scanned</Typography>
               <Button title="Scan Again" onPress={handleScanReset} size="small" style={{ marginTop: 16 }} />
             </View>
@@ -76,18 +76,18 @@ export default function CardScanScreen({ route }: any) {
         </View>
         <Typography variant="body" align="center" color="textSecondary" style={{ marginTop: 24, marginBottom: 32 }}>{scanned ? 'Scanned successfully' : 'Use your camera to scan (pending) or enter manually'}</Typography>
         <TouchableOpacity style={styles.manualButton} onPress={() => setShowManualEntry(true)}>
-          <Ionicons name="keypad-outline" size={20} color={theme.primary} />
+          <Keyboard size={20} color={theme.primary} stroke={theme.primary} />
           <Text style={[styles.manualButtonText, { color: theme.primary }]}>{scanned ? 'Or enter manually' : 'Enter card number manually'}</Text>
         </TouchableOpacity>
         <View style={[styles.infoCard, { backgroundColor: theme.card }]}>
-          <Ionicons name="shield-checkmark" size={24} color="#10B981" />
+          <Shield size={24} color="#10B981" stroke="#10B981" />
           <View style={{ flex: 1 }}>
             <Typography variant="label" style={{ marginBottom: 4 }}>Secure & Private</Typography>
             <Typography variant="body" color="textSecondary">Your card information stays on your device only</Typography>
           </View>
         </View>
         <View style={[styles.infoCard, { backgroundColor: theme.card }]}>
-          <Ionicons name="help-circle-outline" size={24} color={theme.primary} />
+          <HelpCircle size={24} color={theme.primary} stroke={theme.primary} />
           <View style={{ flex: 1 }}>
             <Typography variant="label" style={{ marginBottom: 4 }}>Need help finding your card?</Typography>
             <Typography variant="body" color="textSecondary">Contact your local WIC office at 1-800-WIC-HELP</Typography>

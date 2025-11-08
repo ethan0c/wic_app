@@ -17,14 +17,14 @@ interface BenefitCardProps {
 
 // Mapping from Ionicons to Lucide icons for better outline/fill control
 const iconMapping: { [key: string]: keyof typeof LucideIcons } = {
-  'water-outline': 'Droplets',
-  'nutrition-outline': 'Apple',
-  'restaurant-outline': 'Utensils',
-  'cube-outline': 'Package',
-  'egg': 'Egg',
-  'leaf': 'Wheat',
-  'fitness': 'Carrot',
-  'pizza': 'Cherry',
+  'water-outline': 'Droplets',      // Milk
+  'nutrition-outline': 'Apple',      // Fruits & Veg
+  'restaurant-outline': 'Wheat',     // Whole Grains (wheat icon)
+  'cube-outline': 'Zap',            // Cereal (energy/lightning icon - could also be 'Battery' or 'Flame')
+  'egg': 'Egg',                     // Protein
+  'leaf': 'Wheat',                  // Alternative grains
+  'fitness': 'Carrot',              // Vegetables
+  'pizza': 'Cherry',                // Fruits
 };
 
 export default function BenefitCard({

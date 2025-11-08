@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Search, XCircle, Check, MapPin, HelpCircle } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import { createSharedStyles, BORDER_RADIUS } from '../../assets/styles/shared.styles';
@@ -90,11 +90,11 @@ export default function StateProviderScreen() {
           Choose your state to connect with your WIC provider
         </Typography>
         <View style={[styles.searchContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
-          <Ionicons name="search" size={20} color={theme.textSecondary} />
+          <Search size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
             <TextInput style={[styles.searchInput, { color: theme.text }]} placeholder="Search states..." placeholderTextColor={theme.textSecondary} value={searchQuery} onChangeText={setSearchQuery} />
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Ionicons name="close-circle" size={20} color={theme.textSecondary} />
+              <XCircle size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
             </TouchableOpacity>
           )}
         </View>
@@ -111,7 +111,7 @@ export default function StateProviderScreen() {
                 </View>
                 {selectedState === state.name && (
                   <View style={[styles.checkmark, { backgroundColor: theme.primary }]}>
-                    <Ionicons name="checkmark" size={20} color="white" />
+                    <Check size={20} color="white" stroke="white" />
                   </View>
                 )}
               </View>
@@ -120,19 +120,19 @@ export default function StateProviderScreen() {
         </View>
         {filteredStates.length === 0 && (
           <View style={styles.emptyState}>
-            <Ionicons name="location-outline" size={64} color={theme.textSecondary} />
+            <MapPin size={64} color={theme.textSecondary} stroke={theme.textSecondary} />
             <Typography variant="body" align="center" color="textSecondary" style={{ marginTop: 16 }}>No states found matching "{searchQuery}"</Typography>
           </View>
         )}
         <TouchableOpacity style={styles.notFoundButton} onPress={handleStateNotFound}>
-          <Ionicons name="help-circle-outline" size={20} color="#EF4444" />
+          <HelpCircle size={20} color="#EF4444" stroke="#EF4444" />
           <Text style={styles.notFoundText}>State not found? Get help</Text>
         </TouchableOpacity>
       </ScrollView>
       {selectedState && (
         <View style={[styles.footer, { backgroundColor: theme.background, borderTopColor: theme.border }]}>
           <View style={styles.selectedStateInfo}>
-            <Ionicons name="location" size={20} color={theme.primary} />
+            <MapPin size={20} color={theme.primary} stroke={theme.primary} />
             <Text style={[styles.selectedStateText, { color: theme.text }]}>{selectedState}</Text>
           </View>
           <Button title="Continue" onPress={handleContinue} fullWidth size="large" />

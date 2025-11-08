@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Megaphone, Briefcase, ShoppingBasket, MapPin, ChefHat, GraduationCap, 
+         HelpCircle, Share2, UserCircle, User, UserPen, ChevronRight, 
+         Settings, Info, LogOut } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
@@ -15,7 +16,7 @@ type ExploreScreenNavigationProp = StackNavigationProp<MainNavigatorParamList>;
 interface ExploreCard {
   key: string;
   title: string;
-  icon: keyof typeof Ionicons.glyphMap;
+  icon: React.ComponentType<any>;
   backgroundColor: string;
   iconColor: string;
   action?: () => void;
@@ -30,7 +31,7 @@ export default function ExploreScreen() {
     { 
       key: 'benefits', 
       title: 'WIC Benefits', 
-      icon: 'megaphone-outline', 
+      icon: Megaphone, 
       backgroundColor: '#FFB5B5', 
       iconColor: '#1A1A1A',
       action: () => navigation.navigate('MainTabs', { screen: 'Benefits' } as any)
@@ -38,7 +39,7 @@ export default function ExploreScreen() {
     { 
       key: 'scanner', 
       title: 'Barcode Scanner', 
-      icon: 'briefcase-outline', 
+      icon: Briefcase, 
       backgroundColor: '#B5B5FF', 
       iconColor: '#1A1A1A',
       action: () => navigation.navigate('MainTabs', { screen: 'Scanner' } as any)
@@ -46,7 +47,7 @@ export default function ExploreScreen() {
     { 
       key: 'groceries', 
       title: 'WIC Foods', 
-      icon: 'basket-outline', 
+      icon: ShoppingBasket, 
       backgroundColor: '#B5FFB5', 
       iconColor: '#1A1A1A',
       action: () => navigation.navigate('Categories')
@@ -54,21 +55,21 @@ export default function ExploreScreen() {
     { 
       key: 'stores', 
       title: 'Store Locator', 
-      icon: 'location-outline', 
+      icon: MapPin, 
       backgroundColor: '#FFE5B5', 
       iconColor: '#1A1A1A'
     },
     { 
       key: 'recipes', 
       title: 'Healthy Recipes', 
-      icon: 'restaurant-outline', 
+      icon: ChefHat, 
       backgroundColor: '#B5E5FF', 
       iconColor: '#1A1A1A'
     },
     { 
       key: 'education', 
       title: 'Nutrition Tips', 
-      icon: 'school-outline', 
+      icon: GraduationCap, 
       backgroundColor: '#E5B5FF', 
       iconColor: '#1A1A1A'
     },
@@ -76,9 +77,9 @@ export default function ExploreScreen() {
 
   // Bottom row utility items
   const utilities = [
-    { key: 'support', title: 'Support', icon: 'help-circle-outline' as keyof typeof Ionicons.glyphMap },
-    { key: 'share', title: 'Share', icon: 'share-outline' as keyof typeof Ionicons.glyphMap },
-    { key: 'account', title: 'Account', icon: 'person-circle-outline' as keyof typeof Ionicons.glyphMap },
+    { key: 'support', title: 'Support', icon: HelpCircle },
+    { key: 'share', title: 'Share', icon: Share2 },
+    { key: 'account', title: 'Account', icon: UserCircle },
   ];
 
   return (
@@ -98,11 +99,10 @@ export default function ExploreScreen() {
                 activeOpacity={0.8}
               >
                 <View style={styles.iconContainer}>
-                  <Ionicons 
-                    name={card.icon} 
+                  <card.icon 
                     size={40} 
-                    color={card.iconColor} 
-                    style={styles.cardIcon}
+                    color={card.iconColor}
+                    stroke={card.iconColor}
                   />
                 </View>
                 <Typography 
@@ -124,7 +124,7 @@ export default function ExploreScreen() {
           {/* User Info */}
           <View style={styles.userInfo}>
             <View style={styles.userAvatar}>
-              <MaterialCommunityIcons name="account" size={32} color="#1A1A1A" />
+              <User size={32} color="#1A1A1A" stroke="#1A1A1A" />
             </View>
             <View style={styles.userDetails}>
               <Typography variant="subheading" weight="600">
@@ -139,11 +139,11 @@ export default function ExploreScreen() {
           {/* Account Options */}
           <View style={styles.accountOptions}>
             <TouchableOpacity style={styles.accountOption}>
-              <MaterialCommunityIcons name="account-edit" size={20} color="#6B7280" />
+              <UserPen size={20} color="#6B7280" stroke="#6B7280" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
                 Edit Profile
               </Typography>
-              <MaterialCommunityIcons name="chevron-right" size={20} color="#6B7280" />
+              <ChevronRight size={20} color="#6B7280" stroke="#6B7280" />
             </TouchableOpacity>
 
             <View style={styles.optionDivider} />
@@ -152,31 +152,31 @@ export default function ExploreScreen() {
               style={styles.accountOption}
               onPress={() => navigation.navigate('ScannerSettings')}
             >
-              <MaterialCommunityIcons name="cog" size={20} color="#6B7280" />
+              <Settings size={20} color="#6B7280" stroke="#6B7280" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
                 Scanner Settings
               </Typography>
-              <MaterialCommunityIcons name="chevron-right" size={20} color="#6B7280" />
+              <ChevronRight size={20} color="#6B7280" stroke="#6B7280" />
             </TouchableOpacity>
 
             <View style={styles.optionDivider} />
 
             <TouchableOpacity style={styles.accountOption}>
-              <MaterialCommunityIcons name="help-circle" size={20} color="#6B7280" />
+              <HelpCircle size={20} color="#6B7280" stroke="#6B7280" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
                 Help & Support
               </Typography>
-              <MaterialCommunityIcons name="chevron-right" size={20} color="#6B7280" />
+              <ChevronRight size={20} color="#6B7280" stroke="#6B7280" />
             </TouchableOpacity>
 
             <View style={styles.optionDivider} />
 
             <TouchableOpacity style={styles.accountOption}>
-              <MaterialCommunityIcons name="information" size={20} color="#6B7280" />
+              <Info size={20} color="#6B7280" stroke="#6B7280" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
                 About WIC
               </Typography>
-              <MaterialCommunityIcons name="chevron-right" size={20} color="#6B7280" />
+              <ChevronRight size={20} color="#6B7280" stroke="#6B7280" />
             </TouchableOpacity>
 
             <View style={styles.optionDivider} />
@@ -185,7 +185,7 @@ export default function ExploreScreen() {
               style={styles.accountOption}
               onPress={signOut}
             >
-              <MaterialCommunityIcons name="logout" size={20} color="#EF4444" />
+              <LogOut size={20} color="#EF4444" stroke="#EF4444" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1, color: '#EF4444' }}>
                 Sign Out
               </Typography>
@@ -205,10 +205,10 @@ export default function ExploreScreen() {
                 activeOpacity={0.6}
               >
                 <View style={[styles.utilityIcon, { backgroundColor: theme.card }]}>
-                  <Ionicons 
-                    name={util.icon} 
+                  <util.icon 
                     size={24} 
-                    color={theme.text} 
+                    color={theme.text}
+                    stroke={theme.text}
                   />
                 </View>
                 <Typography 
