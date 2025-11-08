@@ -83,40 +83,33 @@ export default function StateProviderScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
-      <View style={styles.header}>
+      {/* Header Card - Fixed at top like Home */}
+      <View style={styles.headerSection}>
         <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
           Select Your State
         </Typography>
       </View>
-      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <View style={styles.sectionNoPad}>
-          <SectionCard>
-            <Typography variant="heading" weight="500" style={{ fontSize: 20, marginBottom: 4 }}>
-              Select Your State
-            </Typography>
-            <Typography variant="body" color="textSecondary" style={{ marginBottom: 16 }}>
-              Choose your state to connect with your WIC provider
-            </Typography>
-            <View style={[styles.searchContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
-              <Search size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
-              <TextInput
-                style={[styles.searchInput, { color: theme.text }]}
-                placeholder="Search states..."
-                placeholderTextColor={theme.textSecondary}
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-              />
-              {searchQuery.length > 0 && (
-                <TouchableOpacity onPress={() => setSearchQuery('')}>
-                  <XCircle size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
-                </TouchableOpacity>
-              )}
-            </View>
-          </SectionCard>
-        </View>
 
-        <View style={styles.sectionNoPad}>
-          <SectionCard contentStyle={{ padding: 0 }}>
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+        <SectionCard contentStyle={{ padding: 0 }}>
+          <View style={[styles.searchContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
+            <Search size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
+            <TextInput
+              style={[styles.searchInput, { color: theme.text }]}
+              placeholder="Search states..."
+              placeholderTextColor={theme.textSecondary}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => setSearchQuery('')}>
+                <XCircle size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
+              </TouchableOpacity>
+            )}
+          </View>
+        </SectionCard>
+
+        <SectionCard title="Select Your State" contentStyle={{ padding: 0 }}>
             <View style={styles.stateList}>
               {filteredStates.map(state => (
                 <TouchableOpacity
@@ -164,7 +157,6 @@ export default function StateProviderScreen() {
               <Text style={styles.notFoundText}>State not found? Get help</Text>
             </TouchableOpacity>
           </SectionCard>
-        </View>
       </ScrollView>
       {selectedState && (
         <View style={[styles.footer, { backgroundColor: '#F5F5F5', borderTopColor: theme.border }]}>
@@ -181,14 +173,14 @@ export default function StateProviderScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: { paddingTop: 60, paddingHorizontal: 16, paddingBottom: 12 },
-  content: { flex: 1 },
-  contentContainer: { paddingHorizontal: 0, paddingBottom: 160, paddingTop: 0 },
+  headerSection: { backgroundColor: '#FFFFFF', paddingHorizontal: 16, paddingTop: 60, paddingBottom: 12 },
+  scrollContainer: { flex: 1 },
+  contentContainer: { paddingHorizontal: 0, paddingBottom: 160, paddingTop: 3 },
   sectionNoPad: { marginHorizontal: 16, marginBottom: 12 },
-  searchContainer: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 16, borderWidth: 1, marginBottom: 4, gap: 12 },
+  searchContainer: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 16, borderWidth: 1, gap: 12 },
   searchInput: { flex: 1, fontSize: 16, fontWeight: '300' },
-  stateList: { gap: 12 },
-  stateItem: { borderRadius: 24, padding: 20, borderWidth: 1, borderColor: '#E5E7EB' },
+  stateList: { gap: 0, paddingHorizontal: 0 },
+  stateItem: { borderRadius: 0, padding: 20, borderWidth: 0, borderBottomWidth: 1, borderColor: '#E5E7EB' },
   stateContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   stateLeftContent: { flexDirection: 'row', alignItems: 'center', gap: 16, flex: 1 },
   stateLogo: { width: 48, height: 48 },
