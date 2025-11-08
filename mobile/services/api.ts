@@ -1,9 +1,12 @@
 import axios from 'axios';
+import Constants from 'expo-constants';
 
-// Backend API URL - change this to your Railway deployment URL when deployed
-const API_URL = __DEV__ 
-  ? 'http://localhost:3000' // Local development
-  : 'https://your-app.railway.app'; // Production (update after deployment)
+// Backend API URL - uses Railway for production builds
+// Can be overridden via app.json extra config or environment variables
+const API_URL = Constants.expoConfig?.extra?.apiUrl 
+  || (__DEV__ 
+    ? 'http://localhost:3000' // Local development
+    : 'https://wic-food-production.up.railway.app'); // Production (Railway deployment)
 
 const api = axios.create({
   baseURL: API_URL,

@@ -8,12 +8,18 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "API_URL": "https://wic-food-production.up.railway.app"
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "API_URL": "https://wic-food-production.up.railway.app"
       }
     },
     "production": {
@@ -22,6 +28,9 @@
       },
       "ios": {
         "buildConfiguration": "Release"
+      },
+      "env": {
+        "API_URL": "https://wic-food-production.up.railway.app"
       }
     }
   },

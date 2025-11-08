@@ -43,6 +43,13 @@
           "cameraPermission": "Allow WicBuy to scan product barcodes to verify WIC eligibility."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "apiUrl": "https://wic-food-production.up.railway.app",
+      "eas": {
+        "projectId": "f5402211-e58e-47ba-b893-f6f7e279a0f1"
+      }
+    },
+    "owner": "ethanlma"
   }
 }
