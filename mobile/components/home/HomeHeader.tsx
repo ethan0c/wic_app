@@ -11,7 +11,7 @@ export default function HomeHeader({ userName = 'Maria' }: HomeHeaderProps) {
   return (
     <View style={styles.headerWrapper}>
       <View style={styles.headerRow}>
-        <Typography variant="heading" weight="500" style={{ fontSize: 26 }}>
+        <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
           Welcome back, {userName}!
         </Typography>
         <TouchableOpacity activeOpacity={0.7} accessibilityRole="button" accessibilityLabel="Notifications">

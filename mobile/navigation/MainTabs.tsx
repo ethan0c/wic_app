@@ -50,7 +50,7 @@ export default function MainTabs() {
       <Tab.Screen 
         name="Home" 
         component={HomeScreen}
-        options={{ title: 'My WIC' }}
+        options={{ headerShown: false }}
       />
       <Tab.Screen 
         name="Scanner" 

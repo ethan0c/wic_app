@@ -110,16 +110,16 @@ export default function HomeScreen() {
   ];
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: '#F5F5F5' }]}
-      contentContainerStyle={styles.contentContainer}
-    >
-      {/* Header */}
-      <View style={styles.sectionNoPad}>
-        <SectionCard>
-          <HomeHeader userName={user?.firstName} />
-        </SectionCard>
+    <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
+      {/* Header - Fixed at top */}
+      <View style={styles.headerSection}>
+        <HomeHeader userName={user?.firstName} />
       </View>
+      
+      <ScrollView 
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.contentContainer}
+      >
       {/* You Have Left This Month */}
       <View style={styles.sectionNoPad}>
         <BenefitTilesGroup
@@ -174,12 +174,24 @@ export default function HomeScreen() {
 
       {/* Bottom Spacing */}
       <View style={{ height: 100 }} />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  headerSection: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingTop: 50,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  scrollContainer: {
     flex: 1,
   },
   contentContainer: {
