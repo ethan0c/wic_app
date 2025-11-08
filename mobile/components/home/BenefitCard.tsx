@@ -54,16 +54,27 @@ export default function BenefitCard({
   };
 
   const renderProgressBar = () => {
-    const usedPercentage = ((total - remaining) / total) * 100;
+    const remainingPercentage = (remaining / total) * 100;
 
     return (
       <View style={styles.progressContainer}>
+        {/* Green portion - remaining/available */}
         <View
           style={[
             styles.progressFill,
             {
-              width: `${100 - usedPercentage}%`,
-              backgroundColor: '#1A1A1A',
+              width: `${remainingPercentage}%`,
+              backgroundColor: '#10B981',
+            },
+          ]}
+        />
+        {/* Red portion - used */}
+        <View
+          style={[
+            styles.progressFill,
+            {
+              width: `${100 - remainingPercentage}%`,
+              backgroundColor: '#EF4444',
             },
           ]}
         />
@@ -100,14 +111,17 @@ export default function BenefitCard({
         </Typography>
       </View>
       
-      <Typography variant="body" weight="700" style={{ color: iconColor, marginVertical: 8, fontSize: 20 }}>
+      <Typography variant="caption" style={{ color: iconColor, opacity: 0.8, marginTop: 12, marginBottom: 4 }}>
+        Available
+      </Typography>
+      <Typography variant="body" weight="700" style={{ color: iconColor, fontSize: 20 }}>
         {unit === 'dollars' ? `$${remaining.toFixed(2)}` : remaining} {unit === 'dollars' ? '' : unit}
       </Typography>
       
       {renderProgressBar()}
       
       <Typography variant="caption" style={{ color: iconColor, opacity: 0.8, marginTop: 4 }}>
-        of {unit === 'dollars' ? `$${total.toFixed(2)}` : `${total} ${unit}`}
+        of {unit === 'dollars' ? `$${total.toFixed(2)}` : `${total} ${unit}`} total
       </Typography>
     </TouchableOpacity>
   );
@@ -128,10 +142,11 @@ const styles = StyleSheet.create({
   },
   progressContainer: {
     height: 3,
-    backgroundColor: 'rgba(0,0,0,0.15)',
+    backgroundColor: 'transparent',
     borderRadius: 1.5,
     overflow: 'hidden',
     marginVertical: 8,
+    flexDirection: 'row',
   },
   progressFill: {
     height: '100%',
