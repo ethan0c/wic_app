@@ -18,7 +18,6 @@ export default function HomeHeader({ userName = 'Maria' }: HomeHeaderProps) {
           <Ionicons name="notifications-outline" size={24} color="#1A1A1A" />
         </TouchableOpacity>
       </View>
-      <View style={styles.divider} />
     </View>
   );
 }

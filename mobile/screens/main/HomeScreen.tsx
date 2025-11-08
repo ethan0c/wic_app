@@ -186,16 +186,14 @@ const styles = StyleSheet.create({
   headerSection: {
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    paddingTop: 60,
+    paddingBottom: 12,
   },
   scrollContainer: {
     flex: 1,
   },
   contentContainer: {
-    paddingTop: 5,
+    paddingTop: 0,
   },
   section: {
     paddingHorizontal: 24,
