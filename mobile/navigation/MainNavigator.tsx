@@ -10,6 +10,7 @@ import CategoriesScreen from '../screens/main/CategoriesScreen';
 import ProductGridScreen from '../screens/main/ProductGridScreen';
 import ProductDetailScreen from '../screens/main/ProductDetailScreen';
 import NotificationsScreen from '../screens/main/NotificationsScreen';
+import ScannerSettingsScreen from '../screens/settings/ScannerSettingsScreen';
 
 export type MainNavigatorParamList = {
   MainTabs: undefined;
@@ -23,6 +24,7 @@ export type MainNavigatorParamList = {
     categoryName: string;
   };
   Notifications: undefined;
+  ScannerSettings: undefined;
 };
 
 const Stack = createStackNavigator<MainNavigatorParamList>();
@@ -81,6 +83,14 @@ export default function MainNavigator() {
         component={NotificationsScreen}
         options={{
           title: 'Notifications',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen 
+        name="ScannerSettings" 
+        component={ScannerSettingsScreen}
+        options={{
+          title: 'Scanner Settings',
           headerShown: true,
         }}
       />

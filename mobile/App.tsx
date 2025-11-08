@@ -8,6 +8,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { WICProvider } from './context/WICContext';
+import { ScannerSettingsProvider } from './context/ScannerSettingsContext';
 
 // Auth Screens
 import IntroScreen from './screens/auth/IntroScreen';
@@ -66,7 +67,9 @@ export default function App() {
     <ThemeProvider>
       <AuthProvider>
         <WICProvider>
-          <AppNavigator />
+          <ScannerSettingsProvider>
+            <AppNavigator />
+          </ScannerSettingsProvider>
         </WICProvider>
       </AuthProvider>
     </ThemeProvider>

@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
+import Typography from '../../components/Typography';
+import SectionCard from '../../components/home/SectionCard';
 
 // Mock WIC benefits data
 const mockBenefits = {
@@ -62,13 +64,20 @@ export default function BenefitsScreen() {
     <ScrollView
       style={[styles.container, { backgroundColor: theme.background }]}
     >
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>
-          Your Monthly Benefits
-        </Text>
-        <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-          Tap categories to view approved items
-        </Text>
+      <View style={styles.headerSection}>
+        <SectionCard>
+          <View style={styles.headerRow}>
+            <View style={styles.headerContent}>
+              <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
+                Your Monthly Benefits
+              </Typography>
+              <Typography variant="body" color="textSecondary" style={{ marginTop: 4 }}>
+                Tap categories to view approved items
+              </Typography>
+            </View>
+            <View style={styles.headerSpacer} />
+          </View>
+        </SectionCard>
       </View>
 
       {(Object.keys(mockBenefits) as CategoryKey[]).map((category) => {
@@ -78,11 +87,12 @@ export default function BenefitsScreen() {
         const isExpanded = expandedCategory === category;
 
         return (
-          <View key={category} style={styles.categoryContainer}>
-            <TouchableOpacity
-              style={[styles.categoryHeader, { backgroundColor: theme.card }]}
-              onPress={() => toggleCategory(category)}
-            >
+          <View key={category} style={styles.sectionNoPad}>
+            <SectionCard>
+              <TouchableOpacity
+                style={styles.categoryHeader}
+                onPress={() => toggleCategory(category)}
+              >
               <View style={styles.categoryLeft}>
                 <View style={[styles.iconContainer, { backgroundColor: theme.primary + '20' }]}>
                   <Ionicons
@@ -107,43 +117,44 @@ export default function BenefitsScreen() {
               />
             </TouchableOpacity>
 
-            {isExpanded && (
-              <View style={[styles.itemsContainer, { backgroundColor: theme.card }]}>
-                {items.map((item) => {
-                  const remaining = item.quantity - item.used;
-                  const percentage = (item.used / item.quantity) * 100;
+              {isExpanded && (
+                <View style={styles.itemsContainer}>
+                  {items.map((item) => {
+                    const remaining = item.quantity - item.used;
+                    const percentage = (item.used / item.quantity) * 100;
 
-                  return (
-                    <View key={item.id} style={styles.item}>
-                      <View style={styles.itemHeader}>
-                        <Text style={[styles.itemName, { color: theme.text }]}>
-                          {item.name}
-                        </Text>
-                        <Text style={[styles.itemQuantity, { color: theme.primary }]}>
-                          {remaining} {item.unit}
+                    return (
+                      <View key={item.id} style={styles.item}>
+                        <View style={styles.itemHeader}>
+                          <Text style={[styles.itemName, { color: theme.text }]}>
+                            {item.name}
+                          </Text>
+                          <Text style={[styles.itemQuantity, { color: theme.primary }]}>
+                            {remaining} {item.unit}
+                          </Text>
+                        </View>
+                        <View style={[styles.progressBar, { backgroundColor: theme.border }]}>
+                          <View
+                            style={[
+                              styles.progressFill,
+                              {
+                                width: `${percentage}%`,
+                                backgroundColor: percentage >= 75 ? theme.error : theme.primary,
+                              },
+                            ]}
+                          />
+                        </View>
+                        <Text style={[styles.itemUsed, { color: theme.textSecondary }]}>
+                          {item.used > 0
+                            ? `Used ${item.used} of ${item.quantity} ${item.unit}`
+                            : 'Not yet used'}
                         </Text>
                       </View>
-                      <View style={[styles.progressBar, { backgroundColor: theme.border }]}>
-                        <View
-                          style={[
-                            styles.progressFill,
-                            {
-                              width: `${percentage}%`,
-                              backgroundColor: percentage >= 75 ? theme.error : theme.primary,
-                            },
-                          ]}
-                        />
-                      </View>
-                      <Text style={[styles.itemUsed, { color: theme.textSecondary }]}>
-                        {item.used > 0
-                          ? `Used ${item.used} of ${item.quantity} ${item.unit}`
-                          : 'Not yet used'}
-                      </Text>
-                    </View>
-                  );
-                })}
-              </View>
-            )}
+                    );
+                  })}
+                </View>
+              )}
+            </SectionCard>
           </View>
         );
       })}
@@ -157,19 +168,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    padding: 20,
-    paddingBottom: 10,
+  sectionNoPad: {
+    marginHorizontal: 16,
+    marginBottom: 12,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: '300',
-    marginBottom: 4,
-    letterSpacing: -0.5,
+  headerSection: {
+    paddingHorizontal: 16,
+    marginBottom: 3,
   },
-  subtitle: {
-    fontSize: 15,
-    fontWeight: '300',
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerContent: {
+    flex: 1,
+  },
+  headerSpacer: {
+    width: 20,
   },
   categoryContainer: {
     marginHorizontal: 20,

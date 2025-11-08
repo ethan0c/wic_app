@@ -33,19 +33,19 @@ export default function Button({
     if (disabled) return theme.border;
     switch (variant) {
       case 'primary':
-        return theme.primary;
+        return '#1A1A1A';
       case 'secondary':
         return theme.secondary;
       case 'outline':
         return 'transparent';
       default:
-        return theme.primary;
+        return '#1A1A1A';
     }
   };
 
   const getTextColor = () => {
     if (disabled) return theme.textSecondary;
-    if (variant === 'outline') return theme.primary;
+    if (variant === 'outline') return '#1A1A1A';
     return '#FFFFFF';
   };
 
@@ -81,7 +81,7 @@ export default function Button({
         styles.button,
         {
           backgroundColor: getBackgroundColor(),
-          borderColor: variant === 'outline' ? theme.primary : 'transparent',
+          borderColor: variant === 'outline' ? '#1A1A1A' : 'transparent',
           borderWidth: variant === 'outline' ? 1 : 0,
           ...getPadding(),
           width: fullWidth ? '100%' : undefined,

@@ -175,16 +175,9 @@ export default function HomeScreen() {
           </View>
         </SectionCard>
       </View>
-
-      {/* Bottom Utilities */}
-      <View style={styles.sectionNoPad}>
-        <SectionCard>
-          <BottomUtilities />
-        </SectionCard>
-      </View>
-
+      
       {/* Bottom Spacing */}
-      <View style={{ height: 100 }} />
+      <View style={{ height: 10 }} />
       </ScrollView>
     </View>
   );

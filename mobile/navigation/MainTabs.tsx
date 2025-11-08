@@ -1,7 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MainNavigatorParamList } from './MainNavigator';
 
 // Tab Screens
 import HomeScreen from '../screens/main/HomeScreen';
@@ -11,8 +16,11 @@ import ExploreScreen from '../screens/main/ExploreScreen';
 
 const Tab = createBottomTabNavigator();
 
+type NavigationProp = StackNavigationProp<MainNavigatorParamList>;
+
 export default function MainTabs() {
   const { theme } = useTheme();
+  const navigation = useNavigation<NavigationProp>();
 
   return (
     <Tab.Navigator
@@ -60,7 +68,25 @@ export default function MainTabs() {
       <Tab.Screen 
         name="Scanner" 
         component={ScannerScreen}
-        options={{ title: 'Scan Item' }}
+        options={{ 
+          title: 'Scan Item',
+          headerRight: () => (
+            <TouchableOpacity
+              style={{
+                marginRight: 16,
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+                backgroundColor: '#F3F4F6',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => navigation.navigate('ScannerSettings')}
+            >
+              <MaterialCommunityIcons name="cog" size={20} color="#1A1A1A" />
+            </TouchableOpacity>
+          )
+        }}
       />
       <Tab.Screen 
         name="Benefits" 

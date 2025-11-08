@@ -1,11 +1,14 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
+import SectionCard from '../../components/home/SectionCard';
 
 type ExploreScreenNavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
@@ -20,6 +23,7 @@ interface ExploreCard {
 
 export default function ExploreScreen() {
   const { theme } = useTheme();
+  const { user, signOut } = useAuth();
   const navigation = useNavigation<ExploreScreenNavigationProp>();
 
   const cards: ExploreCard[] = [
@@ -82,65 +86,142 @@ export default function ExploreScreen() {
       style={[styles.container, { backgroundColor: theme.background }]}
       contentContainerStyle={styles.contentContainer}
     >
-      {/* Header */}
-      <View style={styles.header}>
-        <Typography variant="heading" weight="700" style={{ fontSize: 32 }}>
-          More
-        </Typography>
+      {/* Main Cards Grid */}
+      <View style={styles.sectionNoPad}>
+        <SectionCard title="Quick Access">
+          <View style={styles.cardsContainer}>
+            {cards.map(card => (
+              <TouchableOpacity
+                key={card.key}
+                style={[styles.card, { backgroundColor: card.backgroundColor }]}
+                onPress={() => card.action ? card.action() : null}
+                activeOpacity={0.8}
+              >
+                <View style={styles.iconContainer}>
+                  <Ionicons 
+                    name={card.icon} 
+                    size={40} 
+                    color={card.iconColor} 
+                    style={styles.cardIcon}
+                  />
+                </View>
+                <Typography 
+                  variant="title" 
+                  weight="600" 
+                  style={[styles.cardTitle, { color: card.iconColor }]}
+                >
+                  {card.title}
+                </Typography>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </SectionCard>
       </View>
 
-      {/* Main Cards Grid */}
-      <View style={styles.cardsContainer}>
-        {cards.map(card => (
-          <TouchableOpacity
-            key={card.key}
-            style={[styles.card, { backgroundColor: card.backgroundColor }]}
-            onPress={() => card.action ? card.action() : null}
-            activeOpacity={0.8}
-          >
-            <View style={styles.iconContainer}>
-              <Ionicons 
-                name={card.icon} 
-                size={40} 
-                color={card.iconColor} 
-                style={styles.cardIcon}
-              />
+      {/* Account Section */}
+      <View style={styles.sectionNoPad}>
+        <SectionCard title="Account">
+          {/* User Info */}
+          <View style={styles.userInfo}>
+            <View style={styles.userAvatar}>
+              <MaterialCommunityIcons name="account" size={32} color="#1A1A1A" />
             </View>
-            <Typography 
-              variant="title" 
-              weight="600" 
-              style={[styles.cardTitle, { color: card.iconColor }]}
+            <View style={styles.userDetails}>
+              <Typography variant="subheading" weight="600">
+                {user?.firstName} {user?.lastName}
+              </Typography>
+              <Typography variant="body" color="textSecondary">
+                WIC Participant
+              </Typography>
+            </View>
+          </View>
+
+          {/* Account Options */}
+          <View style={styles.accountOptions}>
+            <TouchableOpacity style={styles.accountOption}>
+              <MaterialCommunityIcons name="account-edit" size={20} color="#6B7280" />
+              <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
+                Edit Profile
+              </Typography>
+              <MaterialCommunityIcons name="chevron-right" size={20} color="#6B7280" />
+            </TouchableOpacity>
+
+            <View style={styles.optionDivider} />
+
+            <TouchableOpacity 
+              style={styles.accountOption}
+              onPress={() => navigation.navigate('ScannerSettings')}
             >
-              {card.title}
-            </Typography>
-          </TouchableOpacity>
-        ))}
+              <MaterialCommunityIcons name="cog" size={20} color="#6B7280" />
+              <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
+                Scanner Settings
+              </Typography>
+              <MaterialCommunityIcons name="chevron-right" size={20} color="#6B7280" />
+            </TouchableOpacity>
+
+            <View style={styles.optionDivider} />
+
+            <TouchableOpacity style={styles.accountOption}>
+              <MaterialCommunityIcons name="help-circle" size={20} color="#6B7280" />
+              <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
+                Help & Support
+              </Typography>
+              <MaterialCommunityIcons name="chevron-right" size={20} color="#6B7280" />
+            </TouchableOpacity>
+
+            <View style={styles.optionDivider} />
+
+            <TouchableOpacity style={styles.accountOption}>
+              <MaterialCommunityIcons name="information" size={20} color="#6B7280" />
+              <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
+                About WIC
+              </Typography>
+              <MaterialCommunityIcons name="chevron-right" size={20} color="#6B7280" />
+            </TouchableOpacity>
+
+            <View style={styles.optionDivider} />
+
+            <TouchableOpacity 
+              style={styles.accountOption}
+              onPress={signOut}
+            >
+              <MaterialCommunityIcons name="logout" size={20} color="#EF4444" />
+              <Typography variant="body" style={{ marginLeft: 12, flex: 1, color: '#EF4444' }}>
+                Sign Out
+              </Typography>
+            </TouchableOpacity>
+          </View>
+        </SectionCard>
       </View>
 
       {/* Bottom Utilities */}
-      <View style={styles.utilitiesContainer}>
-        {utilities.map(util => (
-          <TouchableOpacity
-            key={util.key}
-            style={styles.utilityItem}
-            activeOpacity={0.6}
-          >
-            <View style={[styles.utilityIcon, { backgroundColor: theme.card }]}>
-              <Ionicons 
-                name={util.icon} 
-                size={24} 
-                color={theme.text} 
-              />
-            </View>
-            <Typography 
-              variant="body" 
-              weight="500" 
-              style={[styles.utilityText, { color: theme.text }]}
-            >
-              {util.title}
-            </Typography>
-          </TouchableOpacity>
-        ))}
+      <View style={styles.sectionNoPad}>
+        <SectionCard title="Help & Support">
+          <View style={styles.utilitiesContainer}>
+            {utilities.map(util => (
+              <TouchableOpacity
+                key={util.key}
+                style={styles.utilityItem}
+                activeOpacity={0.6}
+              >
+                <View style={[styles.utilityIcon, { backgroundColor: theme.card }]}>
+                  <Ionicons 
+                    name={util.icon} 
+                    size={24} 
+                    color={theme.text} 
+                  />
+                </View>
+                <Typography 
+                  variant="body" 
+                  weight="500" 
+                  style={[styles.utilityText, { color: theme.text }]}
+                >
+                  {util.title}
+                </Typography>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </SectionCard>
       </View>
 
       {/* Bottom Spacing */}
@@ -156,9 +237,21 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 20,
   },
-  header: { 
-    paddingHorizontal: 24,
-    paddingBottom: 32,
+  sectionNoPad: {
+    marginHorizontal: 16,
+    marginBottom: 12,
+  },
+  headerSection: { 
+    paddingHorizontal: 16,
+    marginBottom: 3,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerSpacer: {
+    width: 20,
   },
   cardsContainer: {
     paddingHorizontal: 16,
@@ -216,5 +309,39 @@ const styles = StyleSheet.create({
   utilityText: {
     fontSize: 14,
     textAlign: 'center',
+  },
+  accountSection: {
+    paddingHorizontal: 16,
+    marginTop: 24,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  userAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  userDetails: {
+    flex: 1,
+  },
+  accountOptions: {
+    marginTop: 8,
+  },
+  accountOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  optionDivider: {
+    height: 1,
+    backgroundColor: '#E5E7EB',
+    marginLeft: 32,
   },
 });
