@@ -11,8 +11,6 @@ datasource db {
 model WicBenefit {
   id              String   @id @default(uuid())
   wicCardNumber   String   @map("wic_card_number") // The WIC eCard number
-  firstName       String?  @map("first_name") // Optional profile info
-  lastName        String?  @map("last_name") // Optional profile info
   category        String // 'dairy', 'grains', 'protein', 'fruits', 'vegetables'
   totalAmount     Decimal  @map("total_amount") @db.Decimal(10, 2)
   remainingAmount Decimal  @map("remaining_amount") @db.Decimal(10, 2)

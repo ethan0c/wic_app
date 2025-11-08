@@ -45,11 +45,11 @@ async function main() {
   console.log('\n👤 Creating HEAVY USER card:', CARD_NUMBERS.HEAVY_USER);
   
   const heavyUserBenefits = [
-    { category: 'dairy', totalAmount: 4.0, remainingAmount: 0.5, unit: 'gallons', firstName: 'Sarah', lastName: 'Johnson' },
-    { category: 'grains', totalAmount: 16.0, remainingAmount: 2.0, unit: 'oz', firstName: 'Sarah', lastName: 'Johnson' },
-    { category: 'protein', totalAmount: 2.0, remainingAmount: 0.25, unit: 'lbs', firstName: 'Sarah', lastName: 'Johnson' },
-    { category: 'fruits', totalAmount: 12.0, remainingAmount: 1.5, unit: 'dollars', firstName: 'Sarah', lastName: 'Johnson' },
-    { category: 'vegetables', totalAmount: 12.0, remainingAmount: 2.0, unit: 'dollars', firstName: 'Sarah', lastName: 'Johnson' },
+    { category: 'dairy', totalAmount: 4.0, remainingAmount: 0.5, unit: 'gallons' },
+    { category: 'grains', totalAmount: 16.0, remainingAmount: 2.0, unit: 'oz' },
+    { category: 'protein', totalAmount: 2.0, remainingAmount: 0.25, unit: 'lbs' },
+    { category: 'fruits', totalAmount: 12.0, remainingAmount: 1.5, unit: 'dollars' },
+    { category: 'vegetables', totalAmount: 12.0, remainingAmount: 2.0, unit: 'dollars' },
   ];
 
   for (const benefit of heavyUserBenefits) {
@@ -60,8 +60,6 @@ async function main() {
         totalAmount: benefit.totalAmount,
         remainingAmount: benefit.remainingAmount,
         unit: benefit.unit,
-        firstName: benefit.firstName,
-        lastName: benefit.lastName,
         monthPeriod,
         expiresAt,
       },
@@ -72,11 +70,11 @@ async function main() {
   console.log('👤 Creating MODERATE USER card:', CARD_NUMBERS.MODERATE_USER);
   
   const moderateUserBenefits = [
-    { category: 'dairy', totalAmount: 4.0, remainingAmount: 2.0, unit: 'gallons', firstName: 'Maria', lastName: 'Garcia' },
-    { category: 'grains', totalAmount: 16.0, remainingAmount: 8.0, unit: 'oz', firstName: 'Maria', lastName: 'Garcia' },
-    { category: 'protein', totalAmount: 2.0, remainingAmount: 1.0, unit: 'lbs', firstName: 'Maria', lastName: 'Garcia' },
-    { category: 'fruits', totalAmount: 12.0, remainingAmount: 6.0, unit: 'dollars', firstName: 'Maria', lastName: 'Garcia' },
-    { category: 'vegetables', totalAmount: 12.0, remainingAmount: 6.0, unit: 'dollars', firstName: 'Maria', lastName: 'Garcia' },
+    { category: 'dairy', totalAmount: 4.0, remainingAmount: 2.0, unit: 'gallons' },
+    { category: 'grains', totalAmount: 16.0, remainingAmount: 8.0, unit: 'oz' },
+    { category: 'protein', totalAmount: 2.0, remainingAmount: 1.0, unit: 'lbs' },
+    { category: 'fruits', totalAmount: 12.0, remainingAmount: 6.0, unit: 'dollars' },
+    { category: 'vegetables', totalAmount: 12.0, remainingAmount: 6.0, unit: 'dollars' },
   ];
 
   for (const benefit of moderateUserBenefits) {
@@ -87,8 +85,6 @@ async function main() {
         totalAmount: benefit.totalAmount,
         remainingAmount: benefit.remainingAmount,
         unit: benefit.unit,
-        firstName: benefit.firstName,
-        lastName: benefit.lastName,
         monthPeriod,
         expiresAt,
       },
@@ -99,11 +95,11 @@ async function main() {
   console.log('👤 Creating LIGHT USER card:', CARD_NUMBERS.LIGHT_USER);
   
   const lightUserBenefits = [
-    { category: 'dairy', totalAmount: 4.0, remainingAmount: 3.5, unit: 'gallons', firstName: 'Emily', lastName: 'Chen' },
-    { category: 'grains', totalAmount: 16.0, remainingAmount: 14.0, unit: 'oz', firstName: 'Emily', lastName: 'Chen' },
-    { category: 'protein', totalAmount: 2.0, remainingAmount: 1.75, unit: 'lbs', firstName: 'Emily', lastName: 'Chen' },
-    { category: 'fruits', totalAmount: 12.0, remainingAmount: 10.5, unit: 'dollars', firstName: 'Emily', lastName: 'Chen' },
-    { category: 'vegetables', totalAmount: 12.0, remainingAmount: 11.0, unit: 'dollars', firstName: 'Emily', lastName: 'Chen' },
+    { category: 'dairy', totalAmount: 4.0, remainingAmount: 3.5, unit: 'gallons' },
+    { category: 'grains', totalAmount: 16.0, remainingAmount: 14.0, unit: 'oz' },
+    { category: 'protein', totalAmount: 2.0, remainingAmount: 1.75, unit: 'lbs' },
+    { category: 'fruits', totalAmount: 12.0, remainingAmount: 10.5, unit: 'dollars' },
+    { category: 'vegetables', totalAmount: 12.0, remainingAmount: 11.0, unit: 'dollars' },
   ];
 
   for (const benefit of lightUserBenefits) {
@@ -114,8 +110,6 @@ async function main() {
         totalAmount: benefit.totalAmount,
         remainingAmount: benefit.remainingAmount,
         unit: benefit.unit,
-        firstName: benefit.firstName,
-        lastName: benefit.lastName,
         monthPeriod,
         expiresAt,
       },

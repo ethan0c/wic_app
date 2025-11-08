@@ -10,15 +10,10 @@ export const validateWicCard = async (req: Request, res: Response) => {
     // Check if any benefits exist for this card number
     const benefit = await prisma.wicBenefit.findFirst({
       where: { wicCardNumber },
-      select: { firstName: true, lastName: true },
     });
 
     if (benefit) {
-      res.json({ 
-        valid: true, 
-        firstName: benefit.firstName,
-        lastName: benefit.lastName 
-      });
+      res.json({ valid: true });
     } else {
       res.json({ valid: false });
     }
@@ -58,23 +53,5 @@ export const updateBenefit = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error updating benefit:', error);
     res.status(500).json({ error: 'Failed to update benefit' });
-  }
-};
-
-export const updateProfile = async (req: Request, res: Response) => {
-  try {
-    const { wicCardNumber } = req.params;
-    const { firstName } = req.body;
-
-    // Update firstName on all benefits for this card number
-    await prisma.wicBenefit.updateMany({
-      where: { wicCardNumber },
-      data: { firstName },
-    });
-
-    res.json({ success: true, firstName });
-  } catch (error) {
-    console.error('Error updating profile:', error);
-    res.status(500).json({ error: 'Failed to update profile' });
   }
 };

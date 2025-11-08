@@ -42,11 +42,7 @@ export default function WicCardScreen() {
       // Card is valid, save it
       await setCardNumber(inputValue.trim());
       
-      const welcomeMessage = validation.firstName 
-        ? `Welcome back, ${validation.firstName}!`
-        : 'WIC card number saved successfully';
-      
-      Alert.alert('Success', welcomeMessage, [
+      Alert.alert('Success', 'WIC card number saved successfully', [
         {
           text: 'OK',
           onPress: () => navigation.goBack(),

@@ -33,8 +33,6 @@ export interface WicStore {
 export interface WicBenefit {
   id: string;
   wicCardNumber: string;
-  firstName?: string;
-  lastName?: string;
   category: string;
   totalAmount: number;
   remainingAmount: number;
@@ -147,7 +145,7 @@ export const getNearbyStores = async (
 
 // ===== USER BENEFITS =====
 
-export const validateWicCard = async (wicCardNumber: string): Promise<{ valid: boolean; firstName?: string }> => {
+export const validateWicCard = async (wicCardNumber: string): Promise<{ valid: boolean }> => {
   const response = await api.get(`/api/users/${wicCardNumber}/validate`);
   return response.data;
 };

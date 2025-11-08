@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getUserBenefits, updateBenefit, updateProfile, validateWicCard } from '../controllers/benefit.controller';
+import { getUserBenefits, updateBenefit, validateWicCard } from '../controllers/benefit.controller';
 
 const router = Router();
 
@@ -11,8 +11,5 @@ router.get('/:wicCardNumber/benefits', getUserBenefits);
 
 // Update a specific benefit
 router.patch('/benefits/:benefitId', updateBenefit);
-
-// Update profile (first name)
-router.patch('/:wicCardNumber/profile', updateProfile);
 
 export default router;
