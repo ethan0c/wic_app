@@ -3,7 +3,7 @@ import { View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import { useFonts, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
@@ -25,9 +25,16 @@ function AppNavigator() {
   const { isAuthenticated, isLoading } = useAuth();
   const { themeKey, theme } = useTheme();
 
-  // Load Google Fonts
+  // Load Custom Fonts
   const [fontsLoaded] = useFonts({
-    PlayfairDisplay_400Regular,
+    'Canela_400Regular': require('./assets/fonts/Canela_Collection/Canela Family/Canela-Regular-Trial.otf'),
+    'Canela_500Medium': require('./assets/fonts/Canela_Collection/Canela Family/Canela-Medium-Trial.otf'),
+    'Canela_700Bold': require('./assets/fonts/Canela_Collection/Canela Family/Canela-Bold-Trial.otf'),
+    'Inter_300Light': require('./assets/fonts/inter/Inter-Light-BETA.otf'),
+    'Inter_400Regular': require('./assets/fonts/inter/Inter-Regular.otf'),
+    'Inter_500Medium': require('./assets/fonts/inter/Inter-Medium.otf'),
+    'Inter_600SemiBold': require('./assets/fonts/inter/Inter-SemiBold.otf'),
+    'Inter_700Bold': require('./assets/fonts/inter/Inter-Bold.otf'),
   });
 
   // Show loading screen while checking for stored session or loading fonts

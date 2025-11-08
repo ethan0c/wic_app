@@ -85,8 +85,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userData: User = {
         id: Date.now().toString(),
         email: email.toLowerCase(),
-        firstName: 'Demo',
-        lastName: 'User',
+        firstName: 'Ethan',
+        lastName: 'Onyejesi',
       };
 
       setUser(userData);

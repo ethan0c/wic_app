@@ -133,10 +133,12 @@ export default function HomeScreen() {
       
       {/* You Have Left This Month */}
       <View style={styles.sectionNoPad}>
+        <SectionCard title="You Have Left This Month">
         <BenefitTilesGroup
           items={wicBenefits}
           onCardPress={() => navigation.navigate('MainTabs', { screen: 'Benefits' } as any)}
         />
+        </SectionCard>
       </View>
 
       {/* Quick Actions */}
@@ -175,7 +177,7 @@ export default function HomeScreen() {
           </View>
         </SectionCard>
       </View>
-      
+
       {/* Bottom Spacing */}
       <View style={{ height: 10 }} />
       </ScrollView>

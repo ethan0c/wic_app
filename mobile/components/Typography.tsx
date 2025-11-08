@@ -27,46 +27,46 @@ export default function Typography({
       case 'heading':
         return {
           fontSize: 28,
-          fontWeight: weight || FONT_WEIGHTS.bold,
+          fontWeight: 'normal' as const,
           letterSpacing: -0.5,
-          fontFamily: 'Canela_400Regular',
+          fontFamily: weight === '700' ? 'Canela_700Bold' : weight === '500' ? 'Canela_500Medium' : 'Canela_400Regular',
         };
       case 'subheading':
         return {
           fontSize: 22,
-          fontWeight: weight || FONT_WEIGHTS.bold,
-          fontFamily: 'Canela_400Regular',
+          fontWeight: 'normal' as const,
+          fontFamily: weight === '700' ? 'Canela_700Bold' : weight === '500' ? 'Canela_500Medium' : 'Canela_400Regular',
         };
       case 'title':
         return {
           fontSize: 20,
-          fontWeight: weight || FONT_WEIGHTS.bold,
-          fontFamily: 'Canela_400Regular',
+          fontWeight: 'normal' as const,
+          fontFamily: weight === '700' ? 'Canela_700Bold' : weight === '500' ? 'Canela_500Medium' : 'Canela_400Regular',
         };
       case 'body':
         return {
           fontSize: 16,
-          fontWeight: weight || FONT_WEIGHTS.light,
+          fontWeight: 'normal' as const,
           lineHeight: 24,
-          fontFamily: 'SF Pro Text',
+          fontFamily: weight === '700' ? 'Inter_700Bold' : weight === '600' ? 'Inter_600SemiBold' : weight === '500' ? 'Inter_500Medium' : weight === '300' ? 'Inter_300Light' : 'Inter_400Regular',
         };
       case 'label':
         return {
           fontSize: 14,
-          fontWeight: weight || FONT_WEIGHTS.medium,
-          fontFamily: 'SF Pro Text',
+          fontWeight: 'normal' as const,
+          fontFamily: weight === '700' ? 'Inter_700Bold' : weight === '600' ? 'Inter_600SemiBold' : weight === '500' ? 'Inter_500Medium' : weight === '300' ? 'Inter_300Light' : 'Inter_400Regular',
         };
       case 'caption':
         return {
           fontSize: 12,
-          fontWeight: weight || FONT_WEIGHTS.light,
-          fontFamily: 'SF Pro Text',
+          fontWeight: 'normal' as const,
+          fontFamily: weight === '700' ? 'Inter_700Bold' : weight === '600' ? 'Inter_600SemiBold' : weight === '500' ? 'Inter_500Medium' : weight === '300' ? 'Inter_300Light' : 'Inter_400Regular',
         };
       default:
         return {
           fontSize: 16,
-          fontWeight: weight || FONT_WEIGHTS.light,
-          fontFamily: 'SF Pro Text',
+          fontWeight: 'normal' as const,
+          fontFamily: weight === '700' ? 'Inter_700Bold' : weight === '600' ? 'Inter_600SemiBold' : weight === '500' ? 'Inter_500Medium' : weight === '300' ? 'Inter_300Light' : 'Inter_400Regular',
         };
     }
   };
