@@ -143,7 +143,10 @@ export default function ExploreScreen() {
 
           {/* Account Options */}
           <View style={styles.accountOptions}>
-            <TouchableOpacity style={styles.accountOption}>
+            <TouchableOpacity 
+              style={styles.accountOption}
+              onPress={() => navigation.navigate('EditProfile')}
+            >
               <UserPen size={20} color="#6B7280" stroke="#6B7280" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1 }}>
                 Edit Profile

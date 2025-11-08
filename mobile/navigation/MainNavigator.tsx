@@ -16,6 +16,7 @@ import ShowCashierScreen from '../screens/main/ShowCashierScreen';
 import ShoppingListScreen from '../screens/main/ShoppingListScreen';
 import WICStoresScreen from '../screens/main/WICStoresScreen';
 import PurchaseConfirmationScreen from '../screens/PurchaseConfirmationScreen';
+import EditProfileScreen from '../screens/main/EditProfileScreen';
 
 export type MainNavigatorParamList = {
   MainTabs: undefined;
@@ -34,6 +35,7 @@ export type MainNavigatorParamList = {
   ShoppingList: undefined;
   WICStores: undefined;
   PurchaseConfirmation: undefined;
+  EditProfile: undefined;
 };
 
 const Stack = createStackNavigator<MainNavigatorParamList>();
@@ -187,6 +189,14 @@ export default function MainNavigator() {
         component={PurchaseConfirmationScreen}
         options={{
           title: 'Record Purchase',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen 
+        name="EditProfile" 
+        component={EditProfileScreen}
+        options={{
+          title: 'Edit Profile',
           headerShown: true,
         }}
       />

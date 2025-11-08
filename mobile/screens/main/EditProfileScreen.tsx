@@ -17,7 +17,7 @@ const STORAGE_KEYS = {
 
 export default function EditProfileScreen() {
   const navigation = useNavigation();
-  const { user, updateUser } = useAuth();
+  const { user } = useAuth();
   const { t } = useLanguage();
   
   const [firstName, setFirstName] = useState('');
@@ -54,11 +54,6 @@ export default function EditProfileScreen() {
       // Save to AsyncStorage
       await AsyncStorage.setItem(STORAGE_KEYS.FIRST_NAME, firstName);
       await AsyncStorage.setItem(STORAGE_KEYS.NOTIFICATIONS_ENABLED, JSON.stringify(notificationsEnabled));
-
-      // Update auth context if needed
-      if (updateUser) {
-        updateUser({ firstName });
-      }
 
       Alert.alert(
         t('common.success') || 'Success',
@@ -117,7 +112,7 @@ export default function EditProfileScreen() {
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
         {/* Header */}
         <View style={styles.header}>
-          <Typography variant="largeTitle" weight="700">
+          <Typography variant="heading" weight="700">
             {t('profile.editProfile') || 'Edit Profile'}
           </Typography>
           <Typography variant="body" color="textSecondary" style={{ marginTop: 8 }}>
@@ -163,6 +158,7 @@ export default function EditProfileScreen() {
                 </Typography>
               </View>
               <Button
+                title={t('profile.updateCard') || 'Update Card Number'}
                 variant="outline"
                 size="small"
                 onPress={() => {
@@ -170,18 +166,15 @@ export default function EditProfileScreen() {
                   setShowCardModal(true);
                 }}
                 style={{ marginTop: 12 }}
-              >
-                {t('profile.updateCard') || 'Update Card Number'}
-              </Button>
+              />
             </View>
           ) : (
             <Button
+              title={t('profile.addCard') || 'Add WIC Card Number'}
               variant="secondary"
               onPress={() => setShowCardModal(true)}
               style={{ marginTop: 12 }}
-            >
-              {t('profile.addCard') || 'Add WIC Card Number'}
-            </Button>
+            />
           )}
           
           <Typography variant="caption" color="textSecondary" style={{ marginTop: 8 }}>
@@ -210,12 +203,11 @@ export default function EditProfileScreen() {
 
         {/* Save Button */}
         <Button
+          title={t('common.save') || 'Save Changes'}
           onPress={handleSaveProfile}
           loading={isLoading}
           style={styles.saveButton}
-        >
-          {t('common.save') || 'Save Changes'}
-        </Button>
+        />
       </ScrollView>
 
       {/* Card Number Modal */}
@@ -262,21 +254,19 @@ export default function EditProfileScreen() {
 
             <View style={styles.modalButtons}>
               <Button
+                title={t('common.cancel') || 'Cancel'}
                 variant="outline"
                 onPress={() => {
                   setShowCardModal(false);
                   setTempCardNumber('');
                 }}
                 style={{ flex: 1, marginRight: 8 }}
-              >
-                {t('common.cancel') || 'Cancel'}
-              </Button>
+              />
               <Button
+                title={t('common.save') || 'Save'}
                 onPress={handleUpdateCard}
                 style={{ flex: 1, marginLeft: 8 }}
-              >
-                {t('common.save') || 'Save'}
-              </Button>
+              />
             </View>
           </View>
         </View>
