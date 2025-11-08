@@ -93,6 +93,10 @@ export default function CardScanScreen({ route }: any) {
             <Typography variant="body" color="textSecondary">Contact your local WIC office at 1-800-WIC-HELP</Typography>
           </View>
         </View>
+
+        <TouchableOpacity onPress={() => navigation.navigate('MainTabs' as never)} style={styles.skipLink} activeOpacity={0.7}>
+          <Text style={[styles.skipText, { color: theme.textSecondary }]}>Skip for now →</Text>
+        </TouchableOpacity>
       </View>
       <ManualEntryModal />
     </View>
@@ -117,4 +121,6 @@ const styles = StyleSheet.create({
   errorContainer: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 16 },
   errorText: { fontSize: 14, color: '#EF4444', fontWeight: '400' },
   closeText: { fontSize: 16, fontWeight: '400', textAlign: 'center' },
+  skipLink: { paddingVertical: 8 },
+  skipText: { fontSize: 14, fontWeight: '300', textAlign: 'center' },
 });

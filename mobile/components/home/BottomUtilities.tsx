@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { HelpCircle, Share2, UserCircle } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import Typography from '../Typography';
 
@@ -8,9 +8,9 @@ export default function BottomUtilities() {
   const { theme } = useTheme();
 
   const utilities = [
-    { key: 'support', title: 'Support', icon: 'help-circle-outline' as keyof typeof Ionicons.glyphMap },
-    { key: 'share', title: 'Share', icon: 'share-outline' as keyof typeof Ionicons.glyphMap },
-    { key: 'account', title: 'Account', icon: 'person-circle-outline' as keyof typeof Ionicons.glyphMap },
+    { key: 'support', title: 'Support', icon: HelpCircle },
+    { key: 'share', title: 'Share', icon: Share2 },
+    { key: 'account', title: 'Account', icon: UserCircle },
   ];
 
   return (
@@ -22,7 +22,7 @@ export default function BottomUtilities() {
           activeOpacity={0.6}
         >
           <View style={[styles.utilityIcon, { backgroundColor: '#FFFFFF' }]}>
-            <Ionicons name={util.icon} size={24} color={theme.text} />
+            <util.icon size={24} color={theme.text} stroke={theme.text} />
           </View>
           <Typography variant="body" weight="500" style={[styles.utilityText, { color: theme.text }]}>
             {util.title}

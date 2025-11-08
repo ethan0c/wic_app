@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Bell } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Typography from '../Typography';
@@ -26,7 +26,7 @@ export default function HomeHeader({ userName = 'Maria' }: HomeHeaderProps) {
           accessibilityLabel="Notifications"
           onPress={() => navigation.navigate('Notifications')}
         >
-          <Ionicons name="notifications-outline" size={24} color="#1A1A1A" />
+          <Bell size={24} color="#1A1A1A" stroke="#1A1A1A" />
         </TouchableOpacity>
       </View>
     </View>

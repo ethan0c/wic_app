@@ -11,6 +11,7 @@ const AuthIndexScreen = ({ navigation }: any) => {
   const navigateToSignIn = () => navigation.navigate("StateProvider");
   const navigateToSignUp = () => navigation.navigate("StateProvider");
   const handleCardLogin = () => navigation.navigate('CardScan', { selectedState: 'Your State' });
+  const handleSkip = () => navigation.navigate('MainTabs' as never);
   const handleHelp = () => {
     Alert.alert(
       "Need Help?",
@@ -61,6 +62,10 @@ const AuthIndexScreen = ({ navigation }: any) => {
           <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.border }]} onPress={navigateToSignIn} activeOpacity={0.8}>
             <Text style={[styles.secondaryButtonText, { color: theme.text }]}>Continue</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity style={styles.skipLink} onPress={handleSkip} activeOpacity={0.7}>
+            <Text style={[styles.skipText, { color: theme.textSecondary }]}>Skip adding card for now →</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -87,6 +92,8 @@ const styles = StyleSheet.create({
   primaryButtonText: { fontSize: 17, fontWeight: '400', letterSpacing: 0.3 },
   secondaryButton: { paddingVertical: 18, borderRadius: BORDER_RADIUS.full, alignItems: 'center', borderWidth: 1 },
   secondaryButtonText: { fontSize: 17, fontWeight: '300' },
+  skipLink: { paddingVertical: 4, alignItems: 'center' },
+  skipText: { fontSize: 14, fontWeight: '300' },
 });
 
 export default AuthIndexScreen;

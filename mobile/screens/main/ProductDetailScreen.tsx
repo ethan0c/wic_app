@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Vibration } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, Image, CheckCircle, XCircle, Volume2, ArrowRight } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import Typography from '../../components/Typography';
@@ -70,7 +70,7 @@ export default function ProductDetailScreen({ route }: any) {
     <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} stroke={theme.text} />
         </TouchableOpacity>
         
         <Typography variant="heading" style={{ flex: 1, marginHorizontal: 16 }}>
@@ -90,7 +90,7 @@ export default function ProductDetailScreen({ route }: any) {
       <View style={styles.content}>
         {/* Product Image Placeholder */}
         <View style={[styles.productImage, { backgroundColor: theme.card }]}>
-          <Ionicons name="image-outline" size={80} color={theme.textSecondary} />
+          <Image size={80} color={theme.textSecondary} stroke={theme.textSecondary} />
         </View>
 
         {/* Status Card */}
@@ -98,11 +98,11 @@ export default function ProductDetailScreen({ route }: any) {
           backgroundColor: product.isApproved ? '#10B981' : '#EF4444',
         }]}>
           <View style={styles.statusHeader}>
-            <Ionicons 
-              name={product.isApproved ? "checkmark-circle" : "close-circle"} 
-              size={32} 
-              color="white" 
-            />
+            {product.isApproved ? (
+              <CheckCircle size={32} color="white" stroke="white" />
+            ) : (
+              <XCircle size={32} color="white" stroke="white" />
+            )}
             <View style={{ flex: 1, marginLeft: 16 }}>
               <Text style={styles.statusTitle}>
                 {product.isApproved ? "WIC Approved" : "Not Covered"}
@@ -115,7 +115,7 @@ export default function ProductDetailScreen({ route }: any) {
               onPress={speakProductInfo}
               style={styles.audioButton}
             >
-              <Ionicons name="volume-high" size={24} color="white" />
+              <Volume2 size={24} color="white" stroke="white" />
             </TouchableOpacity>
           </View>
         </View>
@@ -174,7 +174,7 @@ export default function ProductDetailScreen({ route }: any) {
                     {alt.reason}
                   </Typography>
                 </View>
-                <Ionicons name="arrow-forward" size={20} color={theme.primary} />
+                <ArrowRight size={20} color={theme.primary} stroke={theme.primary} />
               </TouchableOpacity>
             ))}
           </View>

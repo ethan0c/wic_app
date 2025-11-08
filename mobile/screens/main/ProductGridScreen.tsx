@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowLeft, Volume2, CheckCircle, XCircle, Image } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import Typography from '../../components/Typography';
@@ -56,7 +56,7 @@ export default function ProductGridScreen({ route }: any) {
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
+          <ArrowLeft size={24} color={theme.text} stroke={theme.text} />
         </TouchableOpacity>
         
         <View style={styles.headerContent}>
@@ -87,7 +87,7 @@ export default function ProductGridScreen({ route }: any) {
           style={[styles.audioButton, { backgroundColor: theme.primary }]}
           onPress={() => speakText(`Browse ${categoryName} products. Tap any item to see details.`)}
         >
-          <Ionicons name="volume-high" size={20} color="white" />
+          <Volume2 size={20} color="white" stroke="white" />
         </TouchableOpacity>
       </View>
       
@@ -106,15 +106,15 @@ export default function ProductGridScreen({ route }: any) {
             <View style={[styles.statusBadge, { 
               backgroundColor: product.isApproved ? '#10B981' : '#EF4444' 
             }]}>
-              <Ionicons 
-                name={product.isApproved ? "checkmark" : "close"} 
-                size={16} 
-                color="white" 
-              />
+              {product.isApproved ? (
+                <CheckCircle size={16} color="white" stroke="white" />
+              ) : (
+                <XCircle size={16} color="white" stroke="white" />
+              )}
             </View>
             
             <View style={styles.placeholderImage}>
-              <Ionicons name="image-outline" size={40} color={theme.textSecondary} />
+              <Image size={40} color={theme.textSecondary} stroke={theme.textSecondary} />
             </View>
             
             <Typography variant="label" style={{ marginTop: 8 }}>

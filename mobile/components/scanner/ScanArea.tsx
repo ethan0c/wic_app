@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ScanLine, Keyboard } from 'lucide-react-native';
 import Typography from '../Typography';
 import Button from '../Button';
 
@@ -14,10 +14,10 @@ export default function ScanArea({ isScanning, onStartScan, onManualEntry }: Sca
   return (
     <View style={styles.container}>
       <View style={[styles.scanArea, { borderColor: isScanning ? '#1A1A1A' : '#E5E7EB' }]}>
-        <MaterialCommunityIcons
-          name="barcode-scan"
+        <ScanLine
           size={80}
           color={isScanning ? '#1A1A1A' : '#9CA3AF'}
+          stroke={isScanning ? '#1A1A1A' : '#9CA3AF'}
         />
         {isScanning && (
           <View style={styles.scanLine} />
@@ -45,7 +45,7 @@ export default function ScanArea({ isScanning, onStartScan, onManualEntry }: Sca
         style={styles.manualButton}
         onPress={onManualEntry}
       >
-        <MaterialCommunityIcons name="keyboard" size={20} color="#1A1A1A" />
+        <Keyboard size={20} color="#1A1A1A" stroke="#1A1A1A" />
         <Typography variant="body" style={{ color: '#1A1A1A', marginLeft: 8 }}>
           Enter Barcode Manually
         </Typography>

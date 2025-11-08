@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Info, Volume2 } from 'lucide-react-native';
 import Typography from '../Typography';
 import SectionCard from '../home/SectionCard';
 
@@ -9,7 +9,7 @@ export default function ScanInstructions() {
     <View style={styles.container}>
       <SectionCard>
         <View style={styles.instructionItem}>
-          <MaterialCommunityIcons name="information" size={24} color="#1A1A1A" />
+          <Info size={24} color="#1A1A1A" stroke="#1A1A1A" />
           <View style={styles.instructionText}>
             <Typography variant="subheading" weight="600" style={{ marginBottom: 8 }}>
               How to scan
@@ -28,7 +28,7 @@ export default function ScanInstructions() {
 
       <SectionCard>
         <View style={styles.instructionItem}>
-          <MaterialCommunityIcons name="volume-high" size={24} color="#6B7280" />
+          <Volume2 size={24} color="#6B7280" stroke="#6B7280" />
           <View style={styles.instructionText}>
             <Typography variant="subheading" weight="600" style={{ marginBottom: 8 }}>
               Audio Feedback

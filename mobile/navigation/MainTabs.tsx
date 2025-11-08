@@ -41,13 +41,15 @@ export default function MainTabs() {
 
           // Add scale animation for focused tab icons
           const scale = focused ? 1.1 : 1;
+          const activeStroke = '#1A1A1A';
+          const inactiveStroke = theme.textSecondary;
           return (
             <Animated.View style={{ transform: [{ scale }] }}>
-              <IconComponent 
-                size={size} 
-                color={color} 
-                stroke={color}
-                fill={focused ? color : 'transparent'}
+              <IconComponent
+                size={size}
+                color={focused ? activeStroke : inactiveStroke}
+                stroke={focused ? activeStroke : inactiveStroke}
+                fill="none"
               />
             </Animated.View>
           );

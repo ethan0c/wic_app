@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, TouchableOpacity, StyleSheet, Alert, Animated, LayoutAnimation, Platform, UIManager } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { CreditCard, ChevronDown, ArrowLeftRight, Trash2 } from 'lucide-react-native';
 import Typography from '../Typography';
 
 interface CardDisplayProps {
@@ -105,7 +105,7 @@ export default function CardDisplay({ cardNumber = '4829', onPress }: CardDispla
     <View style={styles.container}>
       <TouchableOpacity style={styles.cardInfo} activeOpacity={0.7} onPress={handleCardPress}>
         <View style={styles.cardLeft}>
-          <Ionicons name="card-outline" size={16} color="#1A1A1A" />
+          <CreditCard size={16} color="#1A1A1A" stroke="#1A1A1A" />
           <Typography variant="caption" style={{ color: '#1A1A1A', marginLeft: 6 }}>
             Card ending in {cardNumber}
           </Typography>
@@ -118,10 +118,10 @@ export default function CardDisplay({ cardNumber = '4829', onPress }: CardDispla
             }) 
           }]
         }}>
-          <Ionicons 
-            name="chevron-down" 
+          <ChevronDown 
             size={16} 
-            color="#1A1A1A" 
+            color="#1A1A1A"
+            stroke="#1A1A1A"
           />
         </Animated.View>
       </TouchableOpacity>
@@ -175,7 +175,7 @@ export default function CardDisplay({ cardNumber = '4829', onPress }: CardDispla
               onPress={handleSwitchCard}
               activeOpacity={0.7}
             >
-              <MaterialCommunityIcons name="swap-horizontal" size={18} color="#1D4ED8" />
+              <ArrowLeftRight size={18} color="#1D4ED8" stroke="#1D4ED8" />
               <Typography variant="caption" weight="600" style={{ color: '#1D4ED8', marginLeft: 8 }}>
                 Switch Card
               </Typography>
@@ -186,7 +186,7 @@ export default function CardDisplay({ cardNumber = '4829', onPress }: CardDispla
               onPress={handleRemoveCard}
               activeOpacity={0.7}
             >
-              <MaterialCommunityIcons name="delete-outline" size={18} color="#DC2626" />
+              <Trash2 size={18} color="#DC2626" stroke="#DC2626" />
               <Typography variant="caption" weight="600" style={{ color: '#DC2626', marginLeft: 8 }}>
                 Remove Card
               </Typography>

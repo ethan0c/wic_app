@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { CheckCircle } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import Typography from '../Typography';
 
@@ -26,7 +26,7 @@ export default function SmartPickItem({ title, subtitle, status }: SmartPickItem
         </View>
         {status === 'eligible' && (
           <View style={[styles.eligibleBadge, { backgroundColor: '#10B98115' }]}>
-            <Ionicons name="checkmark-circle" size={16} color="#10B981" />
+            <CheckCircle size={16} color="#10B981" stroke="#10B981" />
             <Typography variant="caption" style={{ color: '#10B981', marginLeft: 4 }}>
               Eligible
             </Typography>

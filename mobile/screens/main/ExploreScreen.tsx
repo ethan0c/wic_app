@@ -100,9 +100,10 @@ export default function ExploreScreen() {
               >
                 <View style={styles.iconContainer}>
                   <card.icon 
-                    size={40} 
-                    color={card.iconColor}
-                    stroke={card.iconColor}
+                    size={40}
+                    color="#1A1A1A"
+                    stroke="#1A1A1A"
+                    fill="#FFFFFF"
                   />
                 </View>
                 <Typography 
@@ -204,11 +205,12 @@ export default function ExploreScreen() {
                 style={styles.utilityItem}
                 activeOpacity={0.6}
               >
-                <View style={[styles.utilityIcon, { backgroundColor: theme.card }]}>
+                <View style={[styles.utilityIcon, { backgroundColor: '#FFFFFF' }]}>
                   <util.icon 
-                    size={24} 
-                    color={theme.text}
-                    stroke={theme.text}
+                    size={24}
+                    color="#1A1A1A"
+                    stroke="#1A1A1A"
+                    fill="#FFFFFF"
                   />
                 </View>
                 <Typography 

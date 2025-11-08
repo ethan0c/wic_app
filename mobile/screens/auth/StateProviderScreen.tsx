@@ -4,6 +4,7 @@ import { Search, XCircle, Check, MapPin, HelpCircle } from 'lucide-react-native'
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import { createSharedStyles, BORDER_RADIUS } from '../../assets/styles/shared.styles';
+import SectionCard from '../../components/home/SectionCard';
 import Typography from '../../components/Typography';
 import Button from '../../components/Button';
 import WicLogo from '../../components/WicLogo';
@@ -81,56 +82,92 @@ export default function StateProviderScreen() {
   const handleStateNotFound = () => alert('Please contact your local WIC office for assistance.');
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
       <View style={styles.header}>
-        <Typography variant="heading" style={{ marginTop: 20 }}>Select Your State</Typography>
+        <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
+          Select Your State
+        </Typography>
       </View>
       <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <Typography variant="body" align="center" color="textSecondary" style={{ marginBottom: 32 }}>
-          Choose your state to connect with your WIC provider
-        </Typography>
-        <View style={[styles.searchContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
-          <Search size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
-            <TextInput style={[styles.searchInput, { color: theme.text }]} placeholder="Search states..." placeholderTextColor={theme.textSecondary} value={searchQuery} onChangeText={setSearchQuery} />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <XCircle size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
-            </TouchableOpacity>
-          )}
+        <View style={styles.sectionNoPad}>
+          <SectionCard>
+            <Typography variant="heading" weight="500" style={{ fontSize: 20, marginBottom: 4 }}>
+              Select Your State
+            </Typography>
+            <Typography variant="body" color="textSecondary" style={{ marginBottom: 16 }}>
+              Choose your state to connect with your WIC provider
+            </Typography>
+            <View style={[styles.searchContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
+              <Search size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
+              <TextInput
+                style={[styles.searchInput, { color: theme.text }]}
+                placeholder="Search states..."
+                placeholderTextColor={theme.textSecondary}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+              {searchQuery.length > 0 && (
+                <TouchableOpacity onPress={() => setSearchQuery('')}>
+                  <XCircle size={20} color={theme.textSecondary} stroke={theme.textSecondary} />
+                </TouchableOpacity>
+              )}
+            </View>
+          </SectionCard>
         </View>
-        <View style={styles.stateList}>
-          {filteredStates.map(state => (
-            <TouchableOpacity key={state.name} style={[styles.stateItem, { backgroundColor: theme.card, borderColor: selectedState === state.name ? theme.primary : 'transparent', borderWidth: 2 }]} onPress={() => handleStateSelect(state.name)}>
-              <View style={styles.stateContent}>
-                <View style={styles.stateLeftContent}>
-                  <WicLogo stateName={state.name} width={48} height={48} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.stateName, { color: theme.text }]}>{state.name}</Text>
-                    <Text style={[styles.stateApp, { color: theme.textSecondary }]}>{state.app}</Text>
+
+        <View style={styles.sectionNoPad}>
+          <SectionCard contentStyle={{ padding: 0 }}>
+            <View style={styles.stateList}>
+              {filteredStates.map(state => (
+                <TouchableOpacity
+                  key={state.name}
+                  style={[
+                    styles.stateItem,
+                    {
+                      backgroundColor: theme.card,
+                      borderColor: selectedState === state.name ? theme.primary : 'transparent',
+                      borderWidth: 2,
+                    },
+                  ]}
+                  onPress={() => handleStateSelect(state.name)}
+                  activeOpacity={0.8}
+                >
+                  <View style={styles.stateContent}>
+                    <View style={styles.stateLeftContent}>
+                      <WicLogo stateName={state.name} width={48} height={48} />
+                      <View style={{ flex: 1 }}>
+                        <Text style={[styles.stateName, { color: theme.text }]}>{state.name}</Text>
+                        <Text style={[styles.stateApp, { color: theme.textSecondary }]}>{state.app}</Text>
+                      </View>
+                    </View>
+                    {selectedState === state.name && (
+                      <View style={[styles.checkmark, { backgroundColor: theme.primary }]}>
+                        <Check size={20} color="white" stroke="white" />
+                      </View>
+                    )}
                   </View>
-                </View>
-                {selectedState === state.name && (
-                  <View style={[styles.checkmark, { backgroundColor: theme.primary }]}>
-                    <Check size={20} color="white" stroke="white" />
-                  </View>
-                )}
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {filteredStates.length === 0 && (
+              <View style={styles.emptyState}>
+                <MapPin size={64} color={theme.textSecondary} stroke={theme.textSecondary} />
+                <Typography variant="body" align="center" color="textSecondary" style={{ marginTop: 16 }}>
+                  No states found matching "{searchQuery}"
+                </Typography>
               </View>
+            )}
+
+            <TouchableOpacity style={styles.notFoundButton} onPress={handleStateNotFound}>
+              <HelpCircle size={20} color="#EF4444" stroke="#EF4444" />
+              <Text style={styles.notFoundText}>State not found? Get help</Text>
             </TouchableOpacity>
-          ))}
+          </SectionCard>
         </View>
-        {filteredStates.length === 0 && (
-          <View style={styles.emptyState}>
-            <MapPin size={64} color={theme.textSecondary} stroke={theme.textSecondary} />
-            <Typography variant="body" align="center" color="textSecondary" style={{ marginTop: 16 }}>No states found matching "{searchQuery}"</Typography>
-          </View>
-        )}
-        <TouchableOpacity style={styles.notFoundButton} onPress={handleStateNotFound}>
-          <HelpCircle size={20} color="#EF4444" stroke="#EF4444" />
-          <Text style={styles.notFoundText}>State not found? Get help</Text>
-        </TouchableOpacity>
       </ScrollView>
       {selectedState && (
-        <View style={[styles.footer, { backgroundColor: theme.background, borderTopColor: theme.border }]}>
+        <View style={[styles.footer, { backgroundColor: '#F5F5F5', borderTopColor: theme.border }]}>
           <View style={styles.selectedStateInfo}>
             <MapPin size={20} color={theme.primary} stroke={theme.primary} />
             <Text style={[styles.selectedStateText, { color: theme.text }]}>{selectedState}</Text>
@@ -144,13 +181,14 @@ export default function StateProviderScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: { paddingTop: 60, paddingHorizontal: 20, paddingBottom: 8 },
+  header: { paddingTop: 60, paddingHorizontal: 16, paddingBottom: 12 },
   content: { flex: 1 },
-  contentContainer: { paddingHorizontal: 20, paddingBottom: 160 },
-  searchContainer: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderRadius: BORDER_RADIUS.md, borderWidth: 1, marginBottom: 24, gap: 12 },
+  contentContainer: { paddingHorizontal: 0, paddingBottom: 160, paddingTop: 0 },
+  sectionNoPad: { marginHorizontal: 16, marginBottom: 12 },
+  searchContainer: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 16, borderWidth: 1, marginBottom: 4, gap: 12 },
   searchInput: { flex: 1, fontSize: 16, fontWeight: '300' },
-  stateList: { gap: 14 },
-  stateItem: { borderRadius: BORDER_RADIUS.md, padding: 22, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 12, elevation: 3 },
+  stateList: { gap: 12 },
+  stateItem: { borderRadius: 24, padding: 20, borderWidth: 1, borderColor: '#E5E7EB' },
   stateContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   stateLeftContent: { flexDirection: 'row', alignItems: 'center', gap: 16, flex: 1 },
   stateLogo: { width: 48, height: 48 },
@@ -160,7 +198,7 @@ const styles = StyleSheet.create({
   emptyState: { alignItems: 'center', paddingVertical: 48 },
   notFoundButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 32, marginBottom: 20, padding: 16 },
   notFoundText: { fontSize: 16, fontWeight: '400', color: '#EF4444' },
-  footer: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 20, paddingBottom: 32, borderTopWidth: 1 },
+  footer: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 16, paddingBottom: 32, borderTopWidth: 1 },
   selectedStateInfo: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16, justifyContent: 'center' },
   selectedStateText: { fontSize: 16, fontWeight: '500' },
 });
