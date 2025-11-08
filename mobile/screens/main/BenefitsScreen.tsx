@@ -132,8 +132,17 @@ export default function BenefitsScreen() {
     return `${value} ${unit}`;
   };
 
+  // Filter benefits based on view mode (current or future month)
+  const currentMonthPeriod = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+  const futureMonthPeriod = `${today.getMonth() === 11 ? today.getFullYear() + 1 : today.getFullYear()}-${String((today.getMonth() + 2) % 12 || 12).padStart(2, '0')}`;
+  
+  const filteredBenefits = benefits.filter(benefit => {
+    const targetPeriod = viewMode === 'current' ? currentMonthPeriod : futureMonthPeriod;
+    return benefit.monthPeriod === targetPeriod;
+  });
+
   // Group benefits by category
-  const benefitsByCategory = benefits.reduce((acc, benefit) => {
+  const benefitsByCategory = filteredBenefits.reduce((acc, benefit) => {
     if (!acc[benefit.category]) {
       acc[benefit.category] = [];
     }

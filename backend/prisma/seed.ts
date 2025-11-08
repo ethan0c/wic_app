@@ -14,11 +14,22 @@ async function main() {
 
   // Get current month period and expiration
   const now = new Date();
-  const monthPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-  const expiresAt = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Last day of current month
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1; // 1-12
+  
+  const currentMonthPeriod = `${currentYear}-${String(currentMonth).padStart(2, '0')}`;
+  const currentExpiresAt = new Date(currentYear, currentMonth, 0); // Last day of current month
+  
+  // Future month (next month)
+  const futureMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+  const futureYear = currentMonth === 12 ? currentYear + 1 : currentYear;
+  const futureMonthPeriod = `${futureYear}-${String(futureMonth).padStart(2, '0')}`;
+  const futureExpiresAt = new Date(futureYear, futureMonth, 0); // Last day of next month
 
-  console.log(`📅 Month Period: ${monthPeriod}`);
-  console.log(`⏰ Expires At: ${expiresAt.toDateString()}`);
+  console.log(`📅 Current Month Period: ${currentMonthPeriod}`);
+  console.log(`⏰ Current Expires At: ${currentExpiresAt.toDateString()}`);
+  console.log(`📅 Future Month Period: ${futureMonthPeriod}`);
+  console.log(`⏰ Future Expires At: ${futureExpiresAt.toDateString()}`);
 
   // === SEED STORES ===
   console.log('\n🏪 Seeding WIC stores...');
@@ -352,7 +363,8 @@ async function main() {
   // === CARD 1: HEAVY USER (Low remaining benefits) ===
   console.log('\n👤 Creating HEAVY USER card:', CARD_NUMBERS.HEAVY_USER);
   
-  const heavyUserBenefits = [
+  // Current month benefits
+  const heavyUserCurrentBenefits = [
     { category: 'dairy', totalAmount: 4.0, remainingAmount: 0.5, unit: 'gallons' },
     { category: 'grains', totalAmount: 16.0, remainingAmount: 2.0, unit: 'oz' },
     { category: 'protein', totalAmount: 2.0, remainingAmount: 0.25, unit: 'lbs' },
@@ -360,7 +372,7 @@ async function main() {
     { category: 'vegetables', totalAmount: 12.0, remainingAmount: 2.0, unit: 'dollars' },
   ];
 
-  for (const benefit of heavyUserBenefits) {
+  for (const benefit of heavyUserCurrentBenefits) {
     await prisma.wicBenefit.create({
       data: {
         wicCardNumber: CARD_NUMBERS.HEAVY_USER,
@@ -368,8 +380,31 @@ async function main() {
         totalAmount: benefit.totalAmount,
         remainingAmount: benefit.remainingAmount,
         unit: benefit.unit,
-        monthPeriod,
-        expiresAt,
+        monthPeriod: currentMonthPeriod,
+        expiresAt: currentExpiresAt,
+      },
+    });
+  }
+
+  // Future month benefits (full amounts for all users)
+  const futureBenefits = [
+    { category: 'dairy', totalAmount: 4.0, unit: 'gallons' },
+    { category: 'grains', totalAmount: 16.0, unit: 'oz' },
+    { category: 'protein', totalAmount: 2.0, unit: 'lbs' },
+    { category: 'fruits', totalAmount: 12.0, unit: 'dollars' },
+    { category: 'vegetables', totalAmount: 12.0, unit: 'dollars' },
+  ];
+
+  for (const benefit of futureBenefits) {
+    await prisma.wicBenefit.create({
+      data: {
+        wicCardNumber: CARD_NUMBERS.HEAVY_USER,
+        category: benefit.category,
+        totalAmount: benefit.totalAmount,
+        remainingAmount: benefit.totalAmount, // Full amount for future
+        unit: benefit.unit,
+        monthPeriod: futureMonthPeriod,
+        expiresAt: futureExpiresAt,
       },
     });
   }
@@ -377,7 +412,7 @@ async function main() {
   // === CARD 2: MODERATE USER (Medium remaining benefits) ===
   console.log('👤 Creating MODERATE USER card:', CARD_NUMBERS.MODERATE_USER);
   
-  const moderateUserBenefits = [
+  const moderateUserCurrentBenefits = [
     { category: 'dairy', totalAmount: 4.0, remainingAmount: 2.0, unit: 'gallons' },
     { category: 'grains', totalAmount: 16.0, remainingAmount: 8.0, unit: 'oz' },
     { category: 'protein', totalAmount: 2.0, remainingAmount: 1.0, unit: 'lbs' },
@@ -385,7 +420,7 @@ async function main() {
     { category: 'vegetables', totalAmount: 12.0, remainingAmount: 6.0, unit: 'dollars' },
   ];
 
-  for (const benefit of moderateUserBenefits) {
+  for (const benefit of moderateUserCurrentBenefits) {
     await prisma.wicBenefit.create({
       data: {
         wicCardNumber: CARD_NUMBERS.MODERATE_USER,
@@ -393,8 +428,22 @@ async function main() {
         totalAmount: benefit.totalAmount,
         remainingAmount: benefit.remainingAmount,
         unit: benefit.unit,
-        monthPeriod,
-        expiresAt,
+        monthPeriod: currentMonthPeriod,
+        expiresAt: currentExpiresAt,
+      },
+    });
+  }
+
+  for (const benefit of futureBenefits) {
+    await prisma.wicBenefit.create({
+      data: {
+        wicCardNumber: CARD_NUMBERS.MODERATE_USER,
+        category: benefit.category,
+        totalAmount: benefit.totalAmount,
+        remainingAmount: benefit.totalAmount,
+        unit: benefit.unit,
+        monthPeriod: futureMonthPeriod,
+        expiresAt: futureExpiresAt,
       },
     });
   }
@@ -402,7 +451,7 @@ async function main() {
   // === CARD 3: LIGHT USER (High remaining benefits) ===
   console.log('👤 Creating LIGHT USER card:', CARD_NUMBERS.LIGHT_USER);
   
-  const lightUserBenefits = [
+  const lightUserCurrentBenefits = [
     { category: 'dairy', totalAmount: 4.0, remainingAmount: 3.5, unit: 'gallons' },
     { category: 'grains', totalAmount: 16.0, remainingAmount: 14.0, unit: 'oz' },
     { category: 'protein', totalAmount: 2.0, remainingAmount: 1.75, unit: 'lbs' },
@@ -410,7 +459,7 @@ async function main() {
     { category: 'vegetables', totalAmount: 12.0, remainingAmount: 11.0, unit: 'dollars' },
   ];
 
-  for (const benefit of lightUserBenefits) {
+  for (const benefit of lightUserCurrentBenefits) {
     await prisma.wicBenefit.create({
       data: {
         wicCardNumber: CARD_NUMBERS.LIGHT_USER,
@@ -418,8 +467,22 @@ async function main() {
         totalAmount: benefit.totalAmount,
         remainingAmount: benefit.remainingAmount,
         unit: benefit.unit,
-        monthPeriod,
-        expiresAt,
+        monthPeriod: currentMonthPeriod,
+        expiresAt: currentExpiresAt,
+      },
+    });
+  }
+
+  for (const benefit of futureBenefits) {
+    await prisma.wicBenefit.create({
+      data: {
+        wicCardNumber: CARD_NUMBERS.LIGHT_USER,
+        category: benefit.category,
+        totalAmount: benefit.totalAmount,
+        remainingAmount: benefit.totalAmount,
+        unit: benefit.unit,
+        monthPeriod: futureMonthPeriod,
+        expiresAt: futureExpiresAt,
       },
     });
   }
@@ -699,12 +762,15 @@ async function main() {
 
   console.log('\n✅ Seed completed successfully!');
   console.log('\n📊 Summary:');
-  console.log(`   - 3 WIC cards created with benefits`);
+  console.log(`   - 5 WIC stores seeded`);
+  console.log(`   - 16 approved foods seeded`);
+  console.log(`   - 3 WIC cards created with current & future benefits`);
   console.log(`   - Card 1 (${CARD_NUMBERS.HEAVY_USER}): Heavy user - low remaining benefits`);
   console.log(`   - Card 2 (${CARD_NUMBERS.MODERATE_USER}): Moderate user - medium remaining benefits`);
   console.log(`   - Card 3 (${CARD_NUMBERS.LIGHT_USER}): Light user - high remaining benefits`);
   console.log(`   - Multiple transactions created for each card`);
-  console.log(`   - All benefits expire: ${expiresAt.toDateString()}`);
+  console.log(`   - Current benefits expire: ${currentExpiresAt.toDateString()}`);
+  console.log(`   - Future benefits expire: ${futureExpiresAt.toDateString()}`);
 }
 
 main()

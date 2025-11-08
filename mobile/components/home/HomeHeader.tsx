@@ -18,7 +18,7 @@ export default function HomeHeader() {
       <View style={styles.headerRow}>
         <View style={{ width: 24 }} />
         <Typography variant="heading" weight="500" style={{ fontSize: 20, textAlign: 'center', flex: 1 }}>
-          {t('home.welcome')}
+          {t('home.welcome')} {}
         </Typography>
         <TouchableOpacity 
           activeOpacity={0.7} 

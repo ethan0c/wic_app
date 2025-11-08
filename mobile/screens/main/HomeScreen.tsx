@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Milk, Apple, Wheat, Zap, List, MapPin, ReceiptText, Plus } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -9,6 +9,8 @@ import { useLanguage } from '../../context/LanguageContext';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
 import CardRequiredOverlay from '../../components/CardRequiredOverlay';
+import { getUserBenefits, getUserTransactions } from '../../services/wicApi';
+import type { WicBenefit, Transaction } from '../../services/wicApi';
 
 // Home Components
 import HomeHeader from '../../components/home/HomeHeader';
@@ -26,99 +28,79 @@ export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   
   const [selectedBenefit, setSelectedBenefit] = useState<string | null>(null);
+  const [benefits, setBenefits] = useState<WicBenefit[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // WIC benefits data for the visual dashboard
-  const wicBenefits = [
-    {
-      key: 'milk',
-      Icon: Milk,
-      title: t('home.milk'),
-      remaining: 3,
-      total: 4,
-      unit: t('home.gallons'),
-    },
-    {
-      key: 'produce',
-      Icon: Apple,
-      title: t('home.fruitsVeg'),
-      remaining: 18.32,
-      total: 32.00,
-      unit: t('home.dollars'),
-    },
-    {
-      key: 'grains',
-      Icon: Wheat,
-      title: t('home.wholeGrains'),
-      remaining: 2,
-      total: 3,
-      unit: t('home.packages'),
-    },
-    {
-      key: 'cereal',
-      Icon: Zap,
-      title: t('home.cereal'),
-      remaining: 45,
-      total: 72,
-      unit: t('home.ounces'),
-    },
-  ];
+  // Fetch benefits and transactions when card number is available
+  useEffect(() => {
+    if (cardNumber) {
+      fetchData();
+    } else {
+      setLoading(false);
+    }
+  }, [cardNumber]);
 
-  // Detailed breakdown for each benefit category
-  const benefitDetails = {
-    milk: {
-      categoryName: t('categories.milk'),
-      categoryIcon: 'Milk' as const,
-      categoryColor: '#E3F2FD',
-      items: [
-        { id: '1', name: 'Whole Milk', quantity: '1 gallon', unit: 'gallons', used: 1, total: 4, icon: 'Milk' as const, suggestion: '1 gallon = 16 cups' },
-        { id: '2', name: 'Low-fat Yogurt', quantity: '32 oz', unit: 'oz', used: 16, total: 32, icon: 'Package2' as const, suggestion: '32 oz ≈ one large container' },
-        { id: '3', name: 'Cheese', quantity: '1 lb', unit: 'lb', used: 0, total: 1, icon: 'Package2' as const, suggestion: '1 lb = 16 oz block or shredded' },
-      ],
-      smartPicks: [
-        { id: '1', title: 'Whole milk (½ gallon)', subtitle: '3 half-gallons remaining' },
-        { id: '2', title: 'Low-fat vanilla yogurt 32oz' },
-      ],
-    },
-    produce: {
-      categoryName: t('categories.produce'),
-      categoryIcon: 'Apple' as const,
-      categoryColor: '#FFEBEE',
-      items: [
-        { id: '1', name: 'Fresh Fruits', quantity: 'Any fresh', unit: 'dollars', used: 8.50, total: 16.00, icon: 'Apple' as const, suggestion: '$16 ≈ 4-5 lbs at avg price' },
-        { id: '2', name: 'Fresh Vegetables', quantity: 'Any fresh', unit: 'dollars', used: 5.18, total: 16.00, icon: 'Carrot' as const, suggestion: '$16 ≈ 5-6 lbs at avg price' },
-      ],
-      smartPicks: [
-        { id: '1', title: 'Fresh strawberries', subtitle: 'In season now' },
-        { id: '2', title: 'Baby carrots 1lb bag' },
-        { id: '3', title: 'Bananas', subtitle: 'Great value' },
-      ],
-    },
-    grains: {
-      categoryName: t('categories.grains'),
-      categoryIcon: 'Wheat' as const,
-      categoryColor: '#FFF3E0',
-      items: [
-        { id: '1', name: 'Whole Wheat Bread', quantity: '16 oz', unit: 'loaves', used: 1, total: 2, icon: 'Sandwich' as const, suggestion: '16 oz = standard loaf' },
-        { id: '2', name: 'Brown Rice', quantity: '1 lb', unit: 'packages', used: 0, total: 1, icon: 'Wheat' as const, suggestion: '1 lb ≈ 2.5 cups uncooked' },
-      ],
-      smartPicks: [
-        { id: '1', title: 'Whole wheat bread 16oz', subtitle: '1 loaf remaining' },
-        { id: '2', title: 'Brown rice 1lb' },
-      ],
-    },
-    cereal: {
-      categoryName: t('categories.cereal'),
-      categoryIcon: 'Zap' as const,
-      categoryColor: '#FCE4EC',
-      items: [
-        { id: '1', name: 'Whole Grain Cereal', quantity: '36 oz', unit: 'oz', used: 27, total: 72, icon: 'Package2' as const, suggestion: '36 oz ≈ two 18-oz boxes' },
-      ],
-      smartPicks: [
-        { id: '1', title: 'Cheerios 18oz', subtitle: '45 oz remaining' },
-        { id: '2', title: 'Whole grain oatmeal' },
-      ],
-    },
+  const fetchData = async () => {
+    if (!cardNumber) return;
+    
+    setLoading(true);
+    try {
+      const [benefitsData, transactionsData] = await Promise.all([
+        getUserBenefits(cardNumber),
+        getUserTransactions(cardNumber),
+      ]);
+      
+      // Filter to current month benefits only
+      const now = new Date();
+      const currentMonthPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      const currentBenefits = benefitsData.filter(b => b.monthPeriod === currentMonthPeriod);
+      
+      setBenefits(currentBenefits);
+      setTransactions(transactionsData.slice(0, 3)); // Latest 3 transactions
+    } catch (error) {
+      console.error('Error fetching home data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Map category names to icons
+  const getCategoryIcon = (category: string) => {
+    switch (category.toLowerCase()) {
+      case 'dairy':
+        return Milk;
+      case 'fruits':
+      case 'vegetables':
+        return Apple;
+      case 'grains':
+        return Wheat;
+      case 'protein':
+        return Zap;
+      default:
+        return Zap;
+    }
+  };
+
+  // Convert benefits to display format
+  const wicBenefits = benefits.map(benefit => ({
+    key: benefit.category.toLowerCase(),
+    Icon: getCategoryIcon(benefit.category),
+    title: benefit.category.charAt(0).toUpperCase() + benefit.category.slice(1),
+    remaining: Number(benefit.remainingAmount),
+    total: Number(benefit.totalAmount),
+    unit: benefit.unit,
+  }));
+
+  // Format transaction date
+  const formatTransactionDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + 
+           ' • ' + 
+           date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  };
+
+ 
 
   // Quick actions
   const quickActions = [
@@ -206,68 +188,43 @@ export default function HomeScreen() {
             </TouchableOpacity>
           }
         >
-          <View style={styles.transactionsList}>
-            <View style={styles.transactionItem}>
-              <View style={styles.transactionLeft}>
-                <View style={[styles.transactionIcon, { backgroundColor: '#F0FDF4' }]}>
-                  <Typography style={{ fontSize: 20 }}>🛒</Typography>
-                </View>
-                <View style={styles.transactionInfo}>
-                  <Typography variant="body" weight="600">
-                    Walmart Supercenter
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 2 }}>
-                    Nov 6, 2025 • 3:42 PM
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 4, lineHeight: 16 }}>
-                    2 gal whole milk, 1 lb cheese, 2 lbs apples
-                  </Typography>
-                </View>
-              </View>
+          {loading && cardNumber ? (
+            <View style={{ paddingVertical: 40, alignItems: 'center' }}>
+              <ActivityIndicator size="small" color="#6B7280" />
             </View>
-
-            <View style={styles.transactionDivider} />
-
-            <View style={styles.transactionItem}>
-              <View style={styles.transactionLeft}>
-                <View style={[styles.transactionIcon, { backgroundColor: '#F0FDF4' }]}>
-                  <Typography style={{ fontSize: 20 }}>🛒</Typography>
-                </View>
-                <View style={styles.transactionInfo}>
-                  <Typography variant="body" weight="600">
-                    Target
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 2 }}>
-                    Nov 3, 2025 • 10:15 AM
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 4, lineHeight: 16 }}>
-                    1 gal milk, 32 oz yogurt, 3 lbs strawberries
-                  </Typography>
-                </View>
-              </View>
+          ) : transactions.length > 0 ? (
+            <View style={styles.transactionsList}>
+              {transactions.map((transaction, index) => (
+                <React.Fragment key={transaction.id}>
+                  {index > 0 && <View style={styles.transactionDivider} />}
+                  <View style={styles.transactionItem}>
+                    <View style={styles.transactionLeft}>
+                      <View style={[styles.transactionIcon, { backgroundColor: '#F0FDF4' }]}>
+                        <Typography style={{ fontSize: 20 }}>🛒</Typography>
+                      </View>
+                      <View style={styles.transactionInfo}>
+                        <Typography variant="body" weight="600">
+                          {transaction.store?.name || 'WIC Store'}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary" style={{ marginTop: 2 }}>
+                          {formatTransactionDate(transaction.transactionDate)}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary" style={{ marginTop: 4, lineHeight: 16 }}>
+                          {transaction.totalItems} {transaction.totalItems === 1 ? 'item' : 'items'} • ${Number(transaction.totalValue).toFixed(2)}
+                        </Typography>
+                      </View>
+                    </View>
+                  </View>
+                </React.Fragment>
+              ))}
             </View>
-
-            <View style={styles.transactionDivider} />
-
-            <View style={styles.transactionItem}>
-              <View style={styles.transactionLeft}>
-                <View style={[styles.transactionIcon, { backgroundColor: '#EFF6FF' }]}>
-                  <Typography style={{ fontSize: 20 }}>💳</Typography>
-                </View>
-                <View style={styles.transactionInfo}>
-                  <Typography variant="body" weight="600">
-                    Monthly Benefits Reset
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 2 }}>
-                    Nov 1, 2025 • 12:00 AM
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 4, lineHeight: 16 }}>
-                    All benefits renewed for November
-                  </Typography>
-                </View>
-              </View>
+          ) : (
+            <View style={{ paddingVertical: 24, alignItems: 'center' }}>
+              <Typography variant="body" color="textSecondary">
+                No recent transactions
+              </Typography>
             </View>
-          </View>
+          )}
         </SectionCard>
       </View>
 
@@ -275,8 +232,8 @@ export default function HomeScreen() {
       <View style={{ height: 10 }} />
       </ScrollView>
 
-      {/* Benefit Detail Modal */}
-      {selectedBenefit && benefitDetails[selectedBenefit as keyof typeof benefitDetails] && (
+      {/* Benefit Detail Modal - Disabled for now, navigate to Benefits screen instead */}
+      {/* {selectedBenefit && benefitDetails[selectedBenefit as keyof typeof benefitDetails] && (
         <BenefitDetailModal
           visible={selectedBenefit !== null}
           onClose={() => setSelectedBenefit(null)}
@@ -286,7 +243,7 @@ export default function HomeScreen() {
           items={benefitDetails[selectedBenefit as keyof typeof benefitDetails].items}
           smartPicks={benefitDetails[selectedBenefit as keyof typeof benefitDetails].smartPicks}
         />
-      )}
+      )} */}
 
       {/* Card Required Overlay - shown when no card number - rendered LAST so it's on top */}
       {!cardNumber && (

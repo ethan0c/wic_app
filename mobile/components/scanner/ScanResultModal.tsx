@@ -160,32 +160,32 @@ export default function ScanResultModal({
                 <MaterialCommunityIcons name="calculator" size={24} color="#3B82F6" />
                 <View style={styles.explanationText}>
                   <Typography variant="subheading" weight="600" style={{ marginBottom: 8, color: '#3B82F6' }}>
-                    💰 Your Balance
+                    💰 {t('scanner.yourBalance')}
                   </Typography>
                   
                   {product.benefitCalculation.canAfford ? (
                     <>
                       <View style={styles.balanceRow}>
-                        <Typography variant="body" color="textSecondary">Before:</Typography>
+                        <Typography variant="body" color="textSecondary">{t('scanner.before')}</Typography>
                         <Typography variant="body" weight="600">
                           {product.benefitCalculation.currentRemaining} {product.benefitCalculation.unit}
                         </Typography>
                       </View>
                       <View style={styles.balanceRow}>
-                        <Typography variant="body" color="textSecondary">After purchase:</Typography>
+                        <Typography variant="body" color="textSecondary">{t('scanner.afterPurchase')}</Typography>
                         <Typography variant="body" weight="600" style={{ color: '#10B981' }}>
-                          {product.benefitCalculation.afterPurchase} {product.benefitCalculation.unit} remaining
+                          {product.benefitCalculation.afterPurchase} {product.benefitCalculation.unit} {t('scanner.remaining')}
                         </Typography>
                       </View>
                       {product.benefitCalculation.maxQuantity && product.benefitCalculation.maxQuantity > 1 && (
                         <Typography variant="caption" style={{ marginTop: 8, color: '#3B82F6' }}>
-                          ✨ You can buy up to {product.benefitCalculation.maxQuantity} more this month
+                          ✨ {t('scanner.canBuyUpTo')} {product.benefitCalculation.maxQuantity} {t('scanner.moreThisMonth')}
                         </Typography>
                       )}
                     </>
                   ) : (
                     <Typography variant="body" style={{ color: '#EF4444' }}>
-                      ⚠️ Insufficient balance. You only have {product.benefitCalculation.currentRemaining} {product.benefitCalculation.unit} remaining.
+                      ⚠️ {t('scanner.insufficientBalance')} {product.benefitCalculation.currentRemaining} {product.benefitCalculation.unit} {t('scanner.remaining')}.
                     </Typography>
                   )}
                 </View>
@@ -200,23 +200,21 @@ export default function ScanResultModal({
                 <MaterialCommunityIcons name="information" size={24} color="#EF4444" />
                 <View style={styles.explanationText}>
                   <Typography variant="subheading" weight="600" style={{ marginBottom: 8, color: '#EF4444' }}>
-                    Why Not Covered
+                    {t('scanner.whyNotCovered')}
                   </Typography>
                   {product.category === "milk" && product.size_oz === 128 && (
                     <Typography variant="body" style={{ marginBottom: 8 }}>
-                      WIC policy allows only <Typography variant="body" weight="600">half-gallon (64 oz)</Typography> milk containers. 
-                      Gallon sizes are not covered to help families manage their monthly allowance.
+                      {t('scanner.wicPolicyAllows')} <Typography variant="body" weight="600">{t('scanner.halfGallonMilkOnly')}</Typography> {t('scanner.milkContainers')}
                     </Typography>
                   )}
                   {product.category === "bread" && product.size_oz !== 16 && (
                     <Typography variant="body" style={{ marginBottom: 8 }}>
-                      WIC policy covers only <Typography variant="body" weight="600">16-ounce</Typography> bread loaves. 
-                      This helps ensure consistent nutritional value across all WIC bread purchases.
+                      {t('scanner.wicPolicyAllows')} <Typography variant="body" weight="600">{t('scanner.sixteenOunceOnly')}</Typography> {t('scanner.breadLoaves')}
                     </Typography>
                   )}
                   {product.reasons.includes("package_size_not_allowed") && (
                     <Typography variant="caption" color="textSecondary">
-                      WIC has specific package size requirements for each food category.
+                      {t('scanner.packageSizeRequirements')}
                     </Typography>
                   )}
                 </View>
@@ -231,7 +229,7 @@ export default function ScanResultModal({
                 <MaterialCommunityIcons name="check-circle" size={24} color="#10B981" />
                 <View style={styles.explanationText}>
                   <Typography variant="subheading" weight="600" style={{ marginBottom: 8, color: '#10B981' }}>
-                    ✨ WIC Approved Alternative
+                    ✨ {t('scanner.wicApprovedAlternative')}
                   </Typography>
                   <Typography variant="body" weight="600" style={{ marginBottom: 4 }}>
                     {product.alternatives[0].suggestion}
@@ -255,7 +253,7 @@ export default function ScanResultModal({
                   >
                     <MaterialCommunityIcons name="arrow-right" size={16} color="white" style={{ marginRight: 6 }} />
                     <Typography variant="body" weight="600" style={{ color: 'white' }}>
-                      View This Product
+                      {t('scanner.viewThisProduct')}
                     </Typography>
                   </TouchableOpacity>
                 </View>
