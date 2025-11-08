@@ -3,6 +3,31 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+export const validateWicCard = async (req: Request, res: Response) => {
+  try {
+    const { wicCardNumber } = req.params;
+
+    // Check if any benefits exist for this card number
+    const benefit = await prisma.wicBenefit.findFirst({
+      where: { wicCardNumber },
+      select: { firstName: true, lastName: true },
+    });
+
+    if (benefit) {
+      res.json({ 
+        valid: true, 
+        firstName: benefit.firstName,
+        lastName: benefit.lastName 
+      });
+    } else {
+      res.json({ valid: false });
+    }
+  } catch (error) {
+    console.error('Error validating WIC card:', error);
+    res.status(500).json({ error: 'Failed to validate WIC card' });
+  }
+};
+
 export const getUserBenefits = async (req: Request, res: Response) => {
   try {
     const { wicCardNumber } = req.params;

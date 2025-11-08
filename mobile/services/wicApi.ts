@@ -147,6 +147,11 @@ export const getNearbyStores = async (
 
 // ===== USER BENEFITS =====
 
+export const validateWicCard = async (wicCardNumber: string): Promise<{ valid: boolean; firstName?: string }> => {
+  const response = await api.get(`/api/users/${wicCardNumber}/validate`);
+  return response.data;
+};
+
 export const getUserBenefits = async (wicCardNumber: string): Promise<WicBenefit[]> => {
   const response = await api.get(`/api/users/${wicCardNumber}/benefits`);
   return response.data;

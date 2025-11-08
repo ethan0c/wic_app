@@ -3,6 +3,7 @@ import { View, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-nati
 import { useNavigation } from '@react-navigation/native';
 import { useWicCard } from '../../context/WicCardContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { validateWicCard } from '../../services/wicApi';
 import Typography from '../../components/Typography';
 import Button from '../../components/Button';
 import { CreditCard, X } from 'lucide-react-native';
@@ -16,27 +17,49 @@ export default function WicCardScreen() {
 
   const handleSave = async () => {
     if (!inputValue.trim()) {
-      Alert.alert('Error', 'Please enter a WIC card number');
+      Alert.alert('Invalid Card', 'Please enter a WIC card number');
       return;
     }
 
-    // Basic validation - WIC card numbers are typically 16-19 digits
+    // Basic validation - WIC card numbers are typically 10-19 digits
     if (!/^\d{10,19}$/.test(inputValue.trim())) {
-      Alert.alert('Error', 'Please enter a valid WIC card number (10-19 digits)');
+      Alert.alert('Invalid Card', 'Please enter a valid WIC card number (10-19 digits)');
       return;
     }
 
     setIsSaving(true);
     try {
+      // Validate card with server
+      const validation = await validateWicCard(inputValue.trim());
+      
+      if (!validation.valid) {
+        Alert.alert(
+          'Card Not Found',
+          'This WIC card number was not found in our system. Please check the number and try again.\n\nTest cards:\n• 1234567890 (Heavy user)\n• 0987654321 (Moderate user)\n• 5555555555 (Light user)'
+        );
+        setIsSaving(false);
+        return;
+      }
+
+      // Card is valid, save it
       await setCardNumber(inputValue.trim());
-      Alert.alert('Success', 'WIC card number saved successfully', [
+      
+      const welcomeMessage = validation.firstName 
+        ? `Welcome back, ${validation.firstName}!`
+        : 'WIC card number saved successfully';
+      
+      Alert.alert('Success', welcomeMessage, [
         {
           text: 'OK',
           onPress: () => navigation.goBack(),
         },
       ]);
     } catch (error) {
-      Alert.alert('Error', 'Failed to save WIC card number');
+      console.error('Error validating card:', error);
+      Alert.alert(
+        'Validation Error',
+        'Unable to validate card number. Please check your internet connection and try again.'
+      );
     } finally {
       setIsSaving(false);
     }
@@ -146,6 +169,17 @@ export default function WicCardScreen() {
           </Typography>
         </View>
 
+        <View style={styles.testCardsBox}>
+          <Typography variant="caption" style={styles.testCardsTitle}>
+            🧪 Test Card Numbers
+          </Typography>
+          <Typography variant="caption" color="textSecondary" style={styles.testCardsText}>
+            • 1234567890 - Heavy user (low benefits){'\n'}
+            • 0987654321 - Moderate user{'\n'}
+            • 5555555555 - Light user (high benefits)
+          </Typography>
+        </View>
+
         {cardNumber && (
           <View style={styles.warningBox}>
             <Typography variant="caption" style={styles.warningText}>
@@ -236,6 +270,25 @@ const styles = StyleSheet.create({
   infoText: {
     textAlign: 'center',
     lineHeight: 18,
+  },
+  testCardsBox: {
+    backgroundColor: '#EFF6FF',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#BFDBFE',
+    marginBottom: 12,
+  },
+  testCardsTitle: {
+    textAlign: 'center',
+    fontWeight: '600',
+    marginBottom: 8,
+    color: '#1E40AF',
+  },
+  testCardsText: {
+    textAlign: 'center',
+    lineHeight: 20,
+    fontFamily: 'monospace',
   },
   warningBox: {
     backgroundColor: '#FEF3C7',
