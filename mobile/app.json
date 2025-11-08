@@ -1,61 +1,27 @@
-{{
+{
+  "expo": {
+    "name": "WIC Mobile",
+    "slug": "wic-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.wic.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    }
+  }
+}
 
-  "expo": {  "expo": {
-
-    "name": "WIC Mobile",    "name": "WIC Expo App",
-
-    "slug": "wic-mobile",    "slug": "wic-expo-app",
-
-    "version": "1.0.0",    "version": "0.1.0",
-
-    "orientation": "portrait",    "orientation": "portrait",
-
-    "icon": "./assets/images/icon.png",    "platforms": ["ios", "android", "web"],
-
-    "userInterfaceStyle": "automatic",    "sdkVersion": "~51.0.0",
-
-    "newArchEnabled": false,    "assetBundlePatterns": ["**/*"],
-
-    "splash": {    "userInterfaceStyle": "automatic",
-
-      "image": "./assets/images/splash.png",    "icon": "./assets/icon.png",
-
-      "resizeMode": "contain",    "splash": {
-
-      "backgroundColor": "#ffffff"      "image": "./assets/splash.png",
-
-    },      "resizeMode": "contain",
-
-    "ios": {      "backgroundColor": "#ffffff"
-
-      "supportsTablet": true,    },
-
-      "bundleIdentifier": "com.wic.mobile"    "ios": {
-
-    },      "supportsTablet": true
-
-    "android": {    },
-
-      "adaptiveIcon": {    "android": {
-
-        "foregroundImage": "./assets/images/adaptive-icon.png",      "adaptiveIcon": {
-
-        "backgroundColor": "#FFFFFF"        "foregroundImage": "./assets/adaptive-icon.png",
-
-      }        "backgroundColor": "#ffffff"
-
-    },      }
-
-    "web": {    },
-
-      "bundler": "metro",    "web": {
-
-      "output": "single",      "bundler": "metro",
-
-      "favicon": "./assets/images/favicon.png"      "output": "static"
-
-    }    }
-
-  }  }
-
-}}
