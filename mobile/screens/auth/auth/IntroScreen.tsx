@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
+  Image,
 } from "react-native";
 import { useTheme } from "../../../context/ThemeContext";
 
@@ -23,7 +24,11 @@ const IntroScreen = ({ navigation }: any) => {
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.content}>
         <View style={styles.logoContainer}>
-          <Text style={[styles.logo, { color: theme.primary }]}>WIC</Text>
+          <Image 
+            source={require('../../../assets/images/wic_logo.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
           <Text style={[styles.tagline, { color: theme.textSecondary }]}>
             Women, Infants, and Children
           </Text>
@@ -45,13 +50,14 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: "center",
   },
-  logo: {
-    fontSize: 72,
-    fontWeight: 'bold',
-    marginBottom: 16,
+  logoImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 24,
   },
   tagline: {
     fontSize: 16,
+    fontWeight: '300',
     textAlign: 'center',
   },
 });

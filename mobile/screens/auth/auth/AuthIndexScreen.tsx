@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Image,
 } from "react-native";
 import { useTheme } from "../../../context/ThemeContext";
 import { SPACING, BORDER_RADIUS } from "../../../assets/styles/shared.styles";
@@ -25,7 +26,11 @@ const AuthIndexScreen = ({ navigation }: any) => {
       <View style={styles.content}>
         {/* Logo Section */}
         <View style={styles.logoSection}>
-          <Text style={[styles.logo, { color: theme.primary }]}>WIC</Text>
+          <Image 
+            source={require('../../../assets/images/wic_logo.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
           <Text style={[styles.tagline, { color: theme.textSecondary }]}>
             Supporting Healthy Families
           </Text>
@@ -86,13 +91,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: SPACING.xxl,
   },
-  logo: {
-    fontSize: 64,
-    fontWeight: 'bold',
-    marginBottom: SPACING.md,
+  logoImage: {
+    width: 160,
+    height: 160,
+    marginBottom: SPACING.lg,
   },
   tagline: {
     fontSize: 16,
+    fontWeight: '300',
     textAlign: 'center',
   },
   featuresSection: {
@@ -101,13 +107,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
   },
   subtitle: {
-    fontSize: 24,
-    fontWeight: '600',
+    fontSize: 26,
+    fontWeight: '300',
     marginBottom: SPACING.lg,
     textAlign: 'center',
+    letterSpacing: -0.5,
   },
   description: {
     fontSize: 16,
+    fontWeight: '300',
     lineHeight: 28,
     textAlign: 'left',
   },
@@ -115,23 +123,24 @@ const styles = StyleSheet.create({
     gap: SPACING.md,
   },
   primaryButton: {
-    paddingVertical: 16,
+    paddingVertical: 18,
     borderRadius: BORDER_RADIUS.full,
     alignItems: 'center',
   },
   primaryButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 17,
+    fontWeight: '400',
+    letterSpacing: 0.3,
   },
   secondaryButton: {
-    paddingVertical: 16,
+    paddingVertical: 18,
     borderRadius: BORDER_RADIUS.full,
     alignItems: 'center',
-    borderWidth: 1.5,
+    borderWidth: 1,
   },
   secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 17,
+    fontWeight: '300',
   },
 });
 
