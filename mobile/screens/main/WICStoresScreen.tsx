@@ -3,21 +3,11 @@ import { View, StyleSheet, ScrollView, TouchableOpacity, Linking, ActivityIndica
 import { MapPin, Phone, Clock, Navigation, ExternalLink, Locate } from 'lucide-react-native';
 import Typography from '../../components/Typography';
 import * as Location from 'expo-location';
-
-interface Store {
-  id: string;
-  name: string;
-  address: string;
-  distance: string;
-  phone: string;
-  hours: string;
-  isOpen: boolean;
-  lat?: number;
-  lng?: number;
-}
+import { getNearbyStores, type WicStore } from '../../services/wicApi';
 
 export default function WICStoresScreen() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [stores, setStores] = useState<WicStore[]>([]);
   const [loading, setLoading] = useState(true);
   const [permissionStatus, setPermissionStatus] = useState<string>('');
 
@@ -33,7 +23,11 @@ export default function WICStoresScreen() {
       if (status === 'granted') {
         const currentLocation = await Location.getCurrentPositionAsync({});
         setLocation(currentLocation);
-        setLoading(false);
+        // Load nearby stores with real location
+        await loadNearbyStores(
+          currentLocation.coords.latitude,
+          currentLocation.coords.longitude
+        );
       } else {
         setLoading(false);
         Alert.alert(
@@ -48,103 +42,86 @@ export default function WICStoresScreen() {
     }
   };
 
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 3959; // Earth's radius in miles
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
+  // Fetch nearby stores from backend API
+  const loadNearbyStores = async (latitude: number, longitude: number) => {
+    try {
+      setLoading(true);
+      const nearbyStores = await getNearbyStores(latitude, longitude, 10); // 10 mile radius
+      setStores(nearbyStores);
+    } catch (error) {
+      console.error('Error loading nearby stores:', error);
+      Alert.alert(
+        'Error',
+        'Could not load nearby stores. Please try again later.',
+        [{ text: 'OK' }]
+      );
+      setStores([]); // Clear stores on error
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Real WIC-approved stores (using approximate coordinates for major chains)
-  const allStores: Store[] = [
-    {
-      id: '1',
-      name: 'Walmart Supercenter',
-      address: '123 Main Street',
-      distance: '0.8 mi',
-      phone: '(555) 123-4567',
-      hours: 'Open until 11:00 PM',
-      isOpen: true,
-      lat: location ? location.coords.latitude + 0.01 : 42.3601,
-      lng: location ? location.coords.longitude + 0.01 : -71.0589,
-    },
-    {
-      id: '2',
-      name: 'Target',
-      address: '456 Commonwealth Ave',
-      distance: '1.2 mi',
-      phone: '(555) 234-5678',
-      hours: 'Open until 10:00 PM',
-      isOpen: true,
-      lat: location ? location.coords.latitude - 0.015 : 42.3501,
-      lng: location ? location.coords.longitude + 0.015 : -71.0689,
-    },
-    {
-      id: '3',
-      name: 'Stop & Shop',
-      address: '789 Boylston Street',
-      distance: '1.5 mi',
-      phone: '(555) 345-6789',
-      hours: 'Open until 9:00 PM',
-      isOpen: true,
-      lat: location ? location.coords.latitude + 0.02 : 42.3701,
-      lng: location ? location.coords.longitude - 0.01 : -71.0489,
-    },
-    {
-      id: '4',
-      name: 'Market Basket',
-      address: '321 Washington Street',
-      distance: '2.1 mi',
-      phone: '(555) 456-7890',
-      hours: 'Closed • Opens at 7:00 AM',
-      isOpen: false,
-      lat: location ? location.coords.latitude - 0.025 : 42.3401,
-      lng: location ? location.coords.longitude - 0.02 : -71.0789,
-    },
-    {
-      id: '5',
-      name: 'Whole Foods Market',
-      address: '654 Harvard Avenue',
-      distance: '2.8 mi',
-      phone: '(555) 567-8901',
-      hours: 'Open until 10:00 PM',
-      isOpen: true,
-      lat: location ? location.coords.latitude + 0.03 : 42.3801,
-      lng: location ? location.coords.longitude + 0.025 : -71.0389,
-    },
-  ];
+  // Helper to format store hours and check if open
+  const getStoreHoursInfo = (hoursJson: any): { displayText: string; isOpen: boolean } => {
+    if (!hoursJson) {
+      return { displayText: 'Hours not available', isOpen: false };
+    }
 
-  // Calculate real distances if we have user location
-  const stores = location
-    ? allStores
-        .map(store => ({
-          ...store,
-          distance: store.lat && store.lng
-            ? `${calculateDistance(
-                location.coords.latitude,
-                location.coords.longitude,
-                store.lat,
-                store.lng
-              ).toFixed(1)} mi`
-            : store.distance,
-        }))
-        .sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance))
-    : allStores;
+    const now = new Date();
+    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const today = dayNames[now.getDay()];
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    const todayHours = hoursJson[today];
+    if (!todayHours || todayHours.closed) {
+      return { displayText: 'Closed today', isOpen: false };
+    }
+
+    // Parse open/close times (format: "HH:MM")
+    const [openHour, openMin] = todayHours.open.split(':').map(Number);
+    const [closeHour, closeMin] = todayHours.close.split(':').map(Number);
+    
+    const currentTime = currentHour * 60 + currentMinute;
+    const openTime = openHour * 60 + openMin;
+    const closeTime = closeHour * 60 + closeMin;
+    
+    const isOpen = currentTime >= openTime && currentTime < closeTime;
+    
+    // Format display time (convert to 12-hour format)
+    const formatTime = (hour: number, min: number) => {
+      const period = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+      return `${displayHour}:${min.toString().padStart(2, '0')} ${period}`;
+    };
+
+    if (isOpen) {
+      return { 
+        displayText: `Open until ${formatTime(closeHour, closeMin)}`, 
+        isOpen: true 
+      };
+    } else if (currentTime < openTime) {
+      return { 
+        displayText: `Opens at ${formatTime(openHour, openMin)}`, 
+        isOpen: false 
+      };
+    } else {
+      return { 
+        displayText: `Closed • Opens tomorrow at ${formatTime(openHour, openMin)}`, 
+        isOpen: false 
+      };
+    }
+  };
 
   const handleCallStore = (phone: string) => {
     Linking.openURL(`tel:${phone.replace(/[^0-9]/g, '')}`);
   };
 
-  const handleGetDirections = (store: Store) => {
-    if (location && store.lat && store.lng) {
+  const handleGetDirections = (store: WicStore) => {
+    if (store.latitude && store.longitude) {
       // Use actual coordinates for directions
       Linking.openURL(
-        `https://maps.google.com/?daddr=${store.lat},${store.lng}`
+        `https://maps.google.com/?daddr=${store.latitude},${store.longitude}`
       );
     } else {
       // Fallback to address search
@@ -200,7 +177,9 @@ export default function WICStoresScreen() {
       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        {stores.map((store, index) => (
+        {stores.map((store, index) => {
+          const hoursInfo = getStoreHoursInfo(store.hoursJson);
+          return (
           <View key={store.id} style={styles.storeCard}>
             {/* Store Header */}
             <View style={styles.storeHeader}>
@@ -217,7 +196,7 @@ export default function WICStoresScreen() {
                   <View style={styles.distanceTag}>
                     <Navigation size={12} color="#10B981" strokeWidth={2.5} />
                     <Typography variant="caption" weight="600" style={{ color: '#10B981', marginLeft: 4 }}>
-                      {store.distance}
+                      {store.distance ? `${store.distance.toFixed(1)} mi` : 'N/A'}
                     </Typography>
                   </View>
                 </View>
@@ -236,7 +215,7 @@ export default function WICStoresScreen() {
             <View style={styles.detailRow}>
               <Phone size={18} color="#666" strokeWidth={2} />
               <Typography variant="body" style={styles.detailText}>
-                {store.phone}
+                {store.phone || 'Phone not available'}
               </Typography>
             </View>
 
@@ -244,13 +223,13 @@ export default function WICStoresScreen() {
             <View style={styles.detailRow}>
               <Clock size={18} color="#666" strokeWidth={2} />
               <View style={styles.hoursContainer}>
-                <View style={[styles.statusDot, { backgroundColor: store.isOpen ? '#10B981' : '#EF4444' }]} />
+                <View style={[styles.statusDot, { backgroundColor: hoursInfo.isOpen ? '#10B981' : '#EF4444' }]} />
                 <Typography 
                   variant="body" 
                   weight="600"
-                  style={[styles.detailText, { color: store.isOpen ? '#10B981' : '#EF4444', marginLeft: 8 }]}
+                  style={[styles.detailText, { color: hoursInfo.isOpen ? '#10B981' : '#EF4444', marginLeft: 8 }]}
                 >
-                  {store.hours}
+                  {hoursInfo.displayText}
                 </Typography>
               </View>
             </View>
@@ -279,7 +258,8 @@ export default function WICStoresScreen() {
               </TouchableOpacity>
             </View>
           </View>
-        ))}
+        );
+        })}
 
         {/* Info Box */}
         <View style={styles.infoBox}>
