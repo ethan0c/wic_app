@@ -13,8 +13,8 @@ import StateProviderScreen from './screens/auth/StateProviderScreen';
 import CardScanScreen from './screens/auth/CardScanScreen';
 import AuthIndexScreen from './screens/auth/AuthIndexScreen';
 
-// Main App Screens
-import MainTabs from './navigation/MainTabs';
+// Main App Navigation
+import MainNavigator from './navigation/MainNavigator';
 
 const Stack = createStackNavigator();
 
@@ -46,7 +46,7 @@ function AppNavigator() {
             </>
           ) : (
             // Main App Stack
-            <Stack.Screen name="MainTabs" component={MainTabs} />
+            <Stack.Screen name="MainApp" component={MainNavigator} />
           )}
         </Stack.Navigator>
       </NavigationContainer>

@@ -127,6 +127,59 @@
       "image": "wonder_16oz.jpg",
       "reasons": [],
       "alternatives": []
+    },
+    {
+      "upc": "016000275232",
+      "name": "Cheerios Mega Size",
+      "brand": "General Mills",
+      "category": "cereal",
+      "size_oz": 48,
+      "size_display": "48 oz",
+      "isApproved": false,
+      "image": "cheerios_48oz.jpg",
+      "reasons": ["exceeds_monthly_limit"],
+      "alternatives": [
+        {
+          "upc": "016000275225",
+          "suggestion": "Try 36 oz size instead",
+          "reason": "Stays within your 72 oz monthly cereal allowance"
+        },
+        {
+          "upc": "016000275218", 
+          "suggestion": "Try regular 18 oz size",
+          "reason": "Perfect portion that leaves room for other cereals"
+        }
+      ]
+    },
+    {
+      "upc": "041303002001",
+      "name": "2% Reduced Fat Milk",
+      "brand": "Great Value",
+      "category": "milk", 
+      "size_oz": 128,
+      "size_display": "1 gallon",
+      "isApproved": false,
+      "image": "milk_2percent_gallon.jpg",
+      "reasons": ["package_size_not_allowed"],
+      "alternatives": [
+        {
+          "upc": "041303002002",
+          "suggestion": "Try 2% milk in ½ gallon size",
+          "reason": "WIC covers half-gallon milk containers"
+        }
+      ]
+    },
+    {
+      "upc": "041303002002",
+      "name": "2% Reduced Fat Milk",
+      "brand": "Great Value",
+      "category": "milk",
+      "size_oz": 64,
+      "size_display": "½ gallon", 
+      "isApproved": true,
+      "image": "milk_2percent_half.jpg",
+      "reasons": [],
+      "alternatives": []
     }
   ],
   "rules": {

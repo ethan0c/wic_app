@@ -143,16 +143,32 @@ export default function ScannerScreen({ route }: any) {
     if (product.isApproved) {
       return `${product.name} by ${product.brand} (${product.size_display}) is WIC approved!`;
     } else {
+      // Handle specific reasons why the product is not covered
       if (product.reasons.includes("product_not_found")) {
         return "This product was not found in our WIC database. Please check the barcode or try a different product.";
       }
-      const categoryRules = (aplData.rules as any)[product.category];
-      if (categoryRules?.messages) {
-        if (product.reasons.includes("package_size_not_allowed")) {
-          return categoryRules.messages.size_restriction?.en || "Package size not allowed by WIC.";
+      
+      if (product.reasons.includes("package_size_not_allowed")) {
+        const categoryRules = (aplData.rules as any)[product.category];
+        
+        // Provide specific messaging based on category
+        if (product.category === "milk" && product.size_oz === 128) {
+          return `${product.name} (${product.size_display}) is not covered. WIC only covers half-gallon milk containers, not full gallons.`;
         }
+        
+        if (product.category === "bread" && product.size_oz !== 16) {
+          return `${product.name} (${product.size_display}) is not covered. WIC only covers 16-ounce bread loaves.`;
+        }
+        
+        if (product.category === "cereal") {
+          return `${product.name} (${product.size_display}) may exceed your monthly cereal allowance. Check if this fits within your 72-ounce monthly limit.`;
+        }
+        
+        // Generic size restriction message
+        return categoryRules?.messages?.size_restriction?.en || `${product.name} (${product.size_display}) package size is not allowed by WIC.`;
       }
-      return `${product.name} by ${product.brand} is not covered by WIC.`;
+      
+      return `${product.name} by ${product.brand} (${product.size_display}) is not covered by WIC.`;
     }
   };
 
@@ -207,20 +223,75 @@ export default function ScannerScreen({ route }: any) {
             {scanResult ? getResultMessage(scanResult) : ''}
           </Text>
 
-          {scanResult?.alternatives && scanResult.alternatives.length > 0 && (
-            <Card variant="outlined" padding="medium" style={{ marginTop: 16 }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                <Ionicons name="bulb" size={24} color={theme.primary} />
+          {/* Why Not Covered - Detailed Explanation */}
+          {scanResult && !scanResult.isApproved && (
+            <Card variant="outlined" padding="medium" style={{ marginTop: 16, borderColor: '#EF444450' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
+                <Ionicons name="information-circle" size={24} color="#EF4444" />
                 <View style={{ flex: 1 }}>
-                  <Typography variant="label" style={{ marginBottom: 4 }}>
-                    Try This Instead
+                  <Typography variant="label" style={{ marginBottom: 8, color: '#EF4444' }}>
+                    Why Not Covered
                   </Typography>
-                  <Typography variant="body">
+                  {scanResult.category === "milk" && scanResult.size_oz === 128 && (
+                    <Typography variant="body" style={{ marginBottom: 8 }}>
+                      WIC policy allows only <Typography variant="body" weight="600">half-gallon (64 oz)</Typography> milk containers. 
+                      Gallon sizes are not covered to help families manage their monthly allowance.
+                    </Typography>
+                  )}
+                  {scanResult.category === "bread" && scanResult.size_oz !== 16 && (
+                    <Typography variant="body" style={{ marginBottom: 8 }}>
+                      WIC policy covers only <Typography variant="body" weight="600">16-ounce</Typography> bread loaves. 
+                      This helps ensure consistent nutritional value across all WIC bread purchases.
+                    </Typography>
+                  )}
+                  {scanResult.reasons.includes("package_size_not_allowed") && (
+                    <Typography variant="caption" color="textSecondary">
+                      WIC has specific package size requirements for each food category.
+                    </Typography>
+                  )}
+                </View>
+              </View>
+            </Card>
+          )}
+
+          {/* Alternatives - What to Buy Instead */}
+          {scanResult?.alternatives && scanResult.alternatives.length > 0 && (
+            <Card variant="outlined" padding="medium" style={{ 
+              marginTop: 12, 
+              borderColor: theme.primary + '50',
+              backgroundColor: theme.primary + '05'
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
+                <Ionicons name="checkmark-circle" size={24} color={theme.primary} />
+                <View style={{ flex: 1 }}>
+                  <Typography variant="label" style={{ marginBottom: 8, color: theme.primary }}>
+                    ✨ WIC Approved Alternative
+                  </Typography>
+                  <Typography variant="body" weight="600" style={{ marginBottom: 4 }}>
                     {scanResult.alternatives[0].suggestion}
                   </Typography>
-                  <Typography variant="caption" color="textSecondary" style={{ marginTop: 4 }}>
+                  <Typography variant="body" style={{ marginBottom: 8 }}>
                     {scanResult.alternatives[0].reason}
                   </Typography>
+                  
+                  {/* Action button to find the alternative */}
+                  <TouchableOpacity
+                    style={[styles.alternativeButton, { backgroundColor: theme.primary }]}
+                    onPress={() => {
+                      // Look up the alternative product and show its details
+                      const alternativeProduct = aplData.products.find(p => p.upc === scanResult.alternatives[0].upc);
+                      if (alternativeProduct) {
+                        setShowResult(false);
+                        (navigation as any).navigate('ProductDetail', { 
+                          product: alternativeProduct, 
+                          categoryName: (aplData.categories as any)[alternativeProduct.category]?.name || 'Unknown'
+                        });
+                      }
+                    }}
+                  >
+                    <Ionicons name="arrow-forward" size={16} color="white" style={{ marginRight: 6 }} />
+                    <Text style={styles.alternativeButtonText}>View This Product</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </Card>
@@ -400,6 +471,77 @@ export default function ScannerScreen({ route }: any) {
             </View>
           </View>
         </Card>
+
+        {/* Demo Scenarios - showcasing "why not covered" feature */}
+        <Card variant="default" padding="medium" style={{ marginTop: 20 }}>
+          <Typography variant="label" style={{ marginBottom: 16, textAlign: 'center' }}>
+            🎯 Try Demo Examples
+          </Typography>
+          
+          <View style={styles.demoGrid}>
+            <TouchableOpacity
+              style={[styles.demoButton, { backgroundColor: '#EF444415', borderColor: '#EF4444' }]}
+              onPress={() => {
+                const product = lookupProduct("041303001813"); // Gallon milk
+                if (product) {
+                  setScanResult(product);
+                  setShowResult(true);
+                  speakResult(product);
+                }
+              }}
+            >
+              <Text style={[styles.demoButtonText, { color: '#EF4444' }]}>🥛 Gallon Milk</Text>
+              <Text style={styles.demoSubtext}>Not covered → See why</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.demoButton, { backgroundColor: '#10B98115', borderColor: '#10B981' }]}
+              onPress={() => {
+                const product = lookupProduct("041303001806"); // Half-gallon milk
+                if (product) {
+                  setScanResult(product);
+                  setShowResult(true);
+                  speakResult(product);
+                }
+              }}
+            >
+              <Text style={[styles.demoButtonText, { color: '#10B981' }]}>🥛 ½ Gallon Milk</Text>
+              <Text style={styles.demoSubtext}>WIC Approved ✓</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.demoGrid}>
+            <TouchableOpacity
+              style={[styles.demoButton, { backgroundColor: '#EF444415', borderColor: '#EF4444' }]}
+              onPress={() => {
+                const product = lookupProduct("072250015144"); // 20oz bread
+                if (product) {
+                  setScanResult(product);
+                  setShowResult(true);
+                  speakResult(product);
+                }
+              }}
+            >
+              <Text style={[styles.demoButtonText, { color: '#EF4444' }]}>🍞 20oz Bread</Text>
+              <Text style={styles.demoSubtext}>Wrong size → Alternative</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.demoButton, { backgroundColor: '#10B98115', borderColor: '#10B981' }]}
+              onPress={() => {
+                const product = lookupProduct("072250015137"); // 16oz bread
+                if (product) {
+                  setScanResult(product);
+                  setShowResult(true);
+                  speakResult(product);
+                }
+              }}
+            >
+              <Text style={[styles.demoButtonText, { color: '#10B981' }]}>🍞 16oz Bread</Text>
+              <Text style={styles.demoSubtext}>WIC Approved ✓</Text>
+            </TouchableOpacity>
+          </View>
+        </Card>
       </View>
 
       <ResultModal />
@@ -497,5 +639,69 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     textAlign: 'center',
     lineHeight: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingHorizontal: 4,
+  },
+  langButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  langText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  audioButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalActions: {
+    marginTop: 24,
+  },
+  alternativeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  alternativeButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  demoGrid: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 8,
+  },
+  demoButton: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  demoButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 2,
+  },
+  demoSubtext: {
+    fontSize: 10,
+    textAlign: 'center',
+    opacity: 0.8,
+    fontWeight: '500',
   },
 });
