@@ -19,6 +19,9 @@ export default function CardDisplay({ cardNumber = '4829', onPress }: CardDispla
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0)).current;
 
+  // Get last 4 digits only
+  const lastFourDigits = cardNumber ? cardNumber.slice(-4) : '****';
+
   const handleCardPress = () => {
     // Configure smooth layout animation
     LayoutAnimation.configureNext({
@@ -107,7 +110,7 @@ export default function CardDisplay({ cardNumber = '4829', onPress }: CardDispla
         <View style={styles.cardLeft}>
           <CreditCard size={16} color="#1A1A1A" stroke="#1A1A1A" />
           <Typography variant="caption" style={{ color: '#1A1A1A', marginLeft: 6 }}>
-            Card ending in {cardNumber}
+            Card ending in {lastFourDigits}
           </Typography>
         </View>
         <Animated.View style={{
@@ -156,7 +159,11 @@ export default function CardDisplay({ cardNumber = '4829', onPress }: CardDispla
             </Typography>
             <View style={styles.detailRow}>
               <Typography variant="caption" color="textSecondary">Card Number:</Typography>
-              <Typography variant="caption">•••• •••• •••• {cardNumber}</Typography>
+              <View style={styles.cardNumberContainer}>
+                <Typography variant="caption" style={styles.cardNumberText}>
+                  •••• •••• •••• {lastFourDigits}
+                </Typography>
+              </View>
             </View>
             <View style={styles.detailRow}>
               <Typography variant="caption" color="textSecondary">Status:</Typography>
@@ -226,6 +233,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 4,
+  },
+  cardNumberContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cardNumberText: {
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+    fontSize: 12,
+    letterSpacing: 1,
+    lineHeight: 14,
   },
   actionButtons: {
     flexDirection: 'row',

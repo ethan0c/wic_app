@@ -4,15 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useNavigation } from '@react-navigation/native';
 import Typography from '../../components/Typography';
-
-interface ApprovedProduct {
-  upc: string;
-  name: string;
-  brand: string;
-  category: string;
-  size: string;
-  imageUrl?: string;
-}
+import { getAllApprovedProducts, ApprovedProduct } from '../../services/wicApi';
 
 export default function CategoriesScreen() {
   const { theme } = useTheme();
@@ -23,12 +15,12 @@ export default function CategoriesScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const categories = [
-    { key: 'all', label: t('categories.all') || 'All Foods', emoji: '🛒' },
-    { key: 'dairy', label: t('categories.dairy') || 'Dairy', emoji: '🥛' },
-    { key: 'grains', label: t('categories.grains') || 'Grains', emoji: '🌾' },
-    { key: 'protein', label: t('categories.protein') || 'Protein', emoji: '🥚' },
-    { key: 'fruits', label: t('categories.fruits') || 'Fruits', emoji: '🍎' },
-    { key: 'vegetables', label: t('categories.vegetables') || 'Vegetables', emoji: '🥕' },
+    { key: 'all', label: 'All Foods', emoji: '🛒' },
+    { key: 'dairy', label: 'Dairy', emoji: '🥛' },
+    { key: 'grains', label: 'Grains', emoji: '🌾' },
+    { key: 'protein', label: 'Protein', emoji: '🥚' },
+    { key: 'fruits', label: 'Fruits', emoji: '🍎' },
+    { key: 'vegetables', label: 'Vegetables', emoji: '🥕' },
   ];
 
   useEffect(() => {
@@ -38,22 +30,12 @@ export default function CategoriesScreen() {
   const loadApprovedProducts = async () => {
     setLoading(true);
     try {
-      // TODO: Replace with actual API endpoint to fetch all approved WIC products from DB
-      // const response = await fetch('https://wic-food-production.up.railway.app/api/products/approved');
-      // const data = await response.json();
-      // setProducts(data);
-      
-      // Mock data - should be replaced with DB seeded products
-      setProducts([
-        { upc: '041220576920', name: 'Whole Milk', brand: 'Store Brand', category: 'dairy', size: '1 gallon' },
-        { upc: '011110484505', name: 'Cheerios', brand: 'General Mills', category: 'grains', size: '18 oz' },
-        { upc: '070038349150', name: 'Whole Wheat Bread', brand: 'Nature\'s Own', category: 'grains', size: '20 oz' },
-        { upc: '070470002538', name: 'Eggs Large', brand: 'Store Brand', category: 'protein', size: '1 dozen' },
-        { upc: '041220576937', name: '2% Milk', brand: 'Store Brand', category: 'dairy', size: '1 gallon' },
-        { upc: '016000119109', name: 'Peanut Butter', brand: 'Jif', category: 'protein', size: '16 oz' },
-      ]);
+      const data = await getAllApprovedProducts();
+      setProducts(data || []);
     } catch (error) {
       console.error('Failed to load approved products:', error);
+      // Fallback to empty array on error
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -61,7 +43,7 @@ export default function CategoriesScreen() {
 
   const filteredProducts = selectedCategory === 'all' 
     ? products 
-    : products.filter(p => p.category === selectedCategory);
+    : products.filter(p => p.wicCategory?.toLowerCase() === selectedCategory.toLowerCase());
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -69,10 +51,10 @@ export default function CategoriesScreen() {
         {/* Header Section */}
         <View style={styles.headerSection}>
           <Typography variant="heading" weight="600" style={{ fontSize: 24 }}>
-            {t('categories.title') || 'WIC Approved Foods'}
+            WIC Approved Foods
           </Typography>
           <Typography variant="body" color="textSecondary" style={{ marginTop: 8 }}>
-            {t('categories.subtitle') || 'Browse all WIC-approved products'}
+            Browse all WIC-approved products
           </Typography>
         </View>
 
@@ -111,26 +93,29 @@ export default function CategoriesScreen() {
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color={theme.primary} />
               <Typography variant="body" color="textSecondary" style={{ marginTop: 16 }}>
-                {t('categories.loading') || 'Loading approved products...'}
+                Loading approved products...
               </Typography>
             </View>
           ) : filteredProducts.length === 0 ? (
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyEmoji}>📦</Text>
               <Typography variant="subheading" weight="600" style={{ marginTop: 12 }}>
-                {t('categories.noProducts') || 'No products found'}
+                No Products Found
               </Typography>
               <Typography variant="body" color="textSecondary" style={{ marginTop: 8, textAlign: 'center' }}>
-                {t('categories.noProductsMessage') || 'No approved products in this category yet'}
+                No approved products in this category yet
               </Typography>
             </View>
           ) : (
             <View style={styles.productsList}>
               {filteredProducts.map((product) => (
-                <View key={product.upc} style={[styles.productCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
+                <View 
+                  key={product.id} 
+                  style={[styles.productCard, { backgroundColor: theme.card, borderColor: theme.border }]}
+                >
                   <View style={styles.productImage}>
-                    {product.imageUrl ? (
-                      <Image source={{ uri: product.imageUrl }} style={styles.image} />
+                    {product.generalFood?.imageUrl ? (
+                      <Image source={{ uri: product.generalFood.imageUrl }} style={styles.image} />
                     ) : (
                       <View style={[styles.imagePlaceholder, { backgroundColor: '#F3F4F6' }]}>
                         <Text style={styles.placeholderEmoji}>📦</Text>
@@ -139,13 +124,13 @@ export default function CategoriesScreen() {
                   </View>
                   <View style={styles.productInfo}>
                     <Typography variant="body" weight="600" numberOfLines={2}>
-                      {product.name}
+                      {product.generalFood?.name || 'Unknown Product'}
                     </Typography>
                     <Typography variant="caption" color="textSecondary" style={{ marginTop: 4 }}>
-                      {product.brand}
+                      {product.generalFood?.brand || 'Generic'}
                     </Typography>
                     <Typography variant="caption" color="textSecondary">
-                      {product.size}
+                      {product.generalFood?.unitSize || 'Various sizes'}
                     </Typography>
                     <View style={styles.approvedBadge}>
                       <Text style={styles.checkmark}>✓</Text>

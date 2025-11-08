@@ -169,7 +169,7 @@ export default function HomeScreen() {
         {/* Current Card - Right under header */}
         <View style={styles.sectionNoPad}>
         <SectionCard style={styles.cardDisplaySection}>
-          <CardDisplay cardNumber="4829" />
+          <CardDisplay cardNumber={cardNumber || ''} />
         </SectionCard>
       </View>
       

@@ -81,10 +81,25 @@ export default function BenefitsScreen() {
   const [expandedCategory, setExpandedCategory] = useState<CategoryKey | null>('dairy');
   const [viewMode, setViewMode] = useState<'current' | 'future'>('current');
 
-  // Calculate days until expiration
-  const expirationDate = new Date('2024-12-01'); // Mock expiration date
+  // Calculate current month's expiration date (last day of current month)
   const today = new Date();
-  const daysUntilExpiration = Math.ceil((expirationDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const currentMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  const daysUntilExpiration = Math.ceil((currentMonthEnd.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  
+  // Format expiration date
+  const expirationDateString = currentMonthEnd.toLocaleDateString('en-US', { 
+    month: 'short', 
+    day: 'numeric', 
+    year: 'numeric' 
+  });
+
+  // Next month's start date for future benefits
+  const nextMonthStart = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+  const nextMonthStartString = nextMonthStart.toLocaleDateString('en-US', { 
+    month: 'short', 
+    day: 'numeric', 
+    year: 'numeric' 
+  });
 
   // Determine color based on days remaining
   const getExpirationStyle = () => {
@@ -159,8 +174,8 @@ export default function BenefitsScreen() {
           <AlertCircle size={18} color={expirationStyle.iconColor} />
           <Text style={[styles.expirationText, { color: expirationStyle.textColor }]}>
             {viewMode === 'current' 
-              ? t('benefits.expiresMessage').replace('{days}', daysUntilExpiration.toString()).replace('{date}', 'Dec 1, 2024')
-              : t('benefits.nextBenefitsMessage').replace('{date}', 'Dec 1, 2024')}
+              ? `Benefits expire in ${daysUntilExpiration} days on ${expirationDateString}`
+              : `Next benefits available on ${nextMonthStartString}`}
           </Text>
         </View>
       </View>
