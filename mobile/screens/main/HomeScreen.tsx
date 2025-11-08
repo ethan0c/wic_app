@@ -34,41 +34,41 @@ export default function HomeScreen() {
     {
       key: 'milk',
       Icon: Milk,
-      title: 'Milk',
+      title: t('home.milk'),
       remaining: 3,
       total: 4,
-      unit: 'gallons',
+      unit: t('home.gallons'),
     },
     {
       key: 'produce',
       Icon: Apple,
-      title: 'Fruits & Veg',
+      title: t('home.fruitsVeg'),
       remaining: 18.32,
       total: 32.00,
-      unit: 'dollars',
+      unit: t('home.dollars'),
     },
     {
       key: 'grains',
       Icon: Wheat,
-      title: 'Whole Grains',
+      title: t('home.wholeGrains'),
       remaining: 2,
       total: 3,
-      unit: 'packages',
+      unit: t('home.packages'),
     },
     {
       key: 'cereal',
       Icon: Zap,
-      title: 'Cereal',
+      title: t('home.cereal'),
       remaining: 45,
       total: 72,
-      unit: 'ounces',
+      unit: t('home.ounces'),
     },
   ];
 
   // Detailed breakdown for each benefit category
   const benefitDetails = {
     milk: {
-      categoryName: 'Milk & Dairy',
+      categoryName: t('categories.milk'),
       categoryIcon: 'Milk' as const,
       categoryColor: '#E3F2FD',
       items: [
@@ -82,7 +82,7 @@ export default function HomeScreen() {
       ],
     },
     produce: {
-      categoryName: 'Fruits & Vegetables',
+      categoryName: t('categories.produce'),
       categoryIcon: 'Apple' as const,
       categoryColor: '#FFEBEE',
       items: [
@@ -96,7 +96,7 @@ export default function HomeScreen() {
       ],
     },
     grains: {
-      categoryName: 'Whole Grains',
+      categoryName: t('categories.grains'),
       categoryIcon: 'Wheat' as const,
       categoryColor: '#FFF3E0',
       items: [
@@ -109,7 +109,7 @@ export default function HomeScreen() {
       ],
     },
     cereal: {
-      categoryName: 'Cereal',
+      categoryName: t('categories.cereal'),
       categoryIcon: 'Zap' as const,
       categoryColor: '#FCE4EC',
       items: [
@@ -172,7 +172,7 @@ export default function HomeScreen() {
       
       {/* You Have Left This Month */}
       <View style={styles.sectionNoPad}>
-        <SectionCard title="Left This Month">
+        <SectionCard title={t('home.leftThisMonth')}>
         <BenefitTilesGroup
           items={wicBenefits}
           onCardPress={(key) => setSelectedBenefit(key)}
@@ -182,7 +182,7 @@ export default function HomeScreen() {
 
       {/* Quick Actions */}
       <View style={styles.sectionNoPad}>
-        <SectionCard title="Quick Actions">
+        <SectionCard title={t('home.quickActions')}>
           <View style={styles.actionsGrid}>
           {quickActions.map((action) => (
             <QuickActionCard

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { Plus, Check, Trash2, ShoppingBag } from 'lucide-react-native';
+import { useLanguage } from '../../context/LanguageContext';
 import Typography from '../../components/Typography';
 import Button from '../../components/Button';
 
@@ -11,6 +12,7 @@ interface ShoppingItem {
 }
 
 export default function ShoppingListScreen() {
+  const { t } = useLanguage();
   const [items, setItems] = useState<ShoppingItem[]>([
     { id: '1', name: 'Whole milk (½ gallon)', checked: false },
     { id: '2', name: 'Whole wheat bread', checked: false },
@@ -60,7 +62,7 @@ export default function ShoppingListScreen() {
             {uncheckedCount}
           </Typography>
           <Typography variant="caption" color="textSecondary">
-            To Buy
+            {t('shoppingList.toBuy')}
           </Typography>
         </View>
         <View style={[styles.statCard, { backgroundColor: '#F0FDF4' }]}>
@@ -68,7 +70,7 @@ export default function ShoppingListScreen() {
             {checkedCount}
           </Typography>
           <Typography variant="caption" style={{ color: '#10B981' }}>
-            Checked Off
+            {t('shoppingList.checkedOff')}
           </Typography>
         </View>
       </View>
@@ -79,7 +81,7 @@ export default function ShoppingListScreen() {
           <View style={styles.addItemContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Enter item name..."
+              placeholder={t('shoppingList.enterItemName')}
               value={newItemName}
               onChangeText={setNewItemName}
               autoFocus
@@ -87,13 +89,13 @@ export default function ShoppingListScreen() {
             />
             <View style={styles.inputButtons}>
               <Button
-                title="Add"
+                title={t('shoppingList.add')}
                 onPress={addItem}
                 size="small"
                 style={{ flex: 1, marginRight: 8 }}
               />
               <Button
-                title="Cancel"
+                title={t('common.cancel')}
                 onPress={() => {
                   setShowInput(false);
                   setNewItemName('');
@@ -112,7 +114,7 @@ export default function ShoppingListScreen() {
           >
             <Plus size={24} color="#1A1A1A" strokeWidth={2} />
             <Typography variant="body" weight="600" style={{ marginLeft: 12 }}>
-              Add Item to List
+              {t('shoppingList.addItemToList')}
             </Typography>
           </TouchableOpacity>
         )}
@@ -122,10 +124,10 @@ export default function ShoppingListScreen() {
           <View style={styles.emptyState}>
             <ShoppingBag size={64} color="#9CA3AF" strokeWidth={1.5} />
             <Typography variant="subheading" color="textSecondary" style={{ marginTop: 16 }}>
-              Your shopping list is empty
+              {t('shoppingList.emptyTitle')}
             </Typography>
             <Typography variant="body" color="textSecondary" style={{ marginTop: 8, textAlign: 'center' }}>
-              Add items you need to buy on your next trip
+              {t('shoppingList.emptyMessage')}
             </Typography>
           </View>
         ) : (
@@ -182,7 +184,9 @@ export default function ShoppingListScreen() {
             activeOpacity={0.7}
           >
             <Typography variant="body" weight="600" style={{ color: '#EF4444' }}>
-              Clear {checkedCount} Checked Item{checkedCount > 1 ? 's' : ''}
+              {checkedCount === 1 
+                ? `${t('shoppingList.clearChecked')}` 
+                : `${t('shoppingList.clearCheckedPlural').replace('Checked Items', `${checkedCount} Checked Items`).replace('Pwodwi Make Yo', `${checkedCount} Pwodwi Make`)}`}
             </Typography>
           </TouchableOpacity>
         )}

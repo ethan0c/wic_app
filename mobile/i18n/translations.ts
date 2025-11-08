@@ -278,6 +278,7 @@ export const translations = {
     // Home
     home: {
       welcome: 'Byenvini',
+      welcomeBack: 'Byenvini ankò',
       yourBenefits: 'Benefis WIC ou',
       quickActions: 'Aksyon Rapid',
       recentTransactions: 'Dènye Achá',
@@ -288,13 +289,27 @@ export const translations = {
       shoppingList: 'Lis Achá',
       wicStores: 'Magazen WIC',
       showCashier: 'Montre Kesye',
+      leftThisMonth: 'Ki Rete Mwa Sa a',
+      // Benefit tiles
+      milk: 'Lèt',
+      fruitsVeg: 'Fwi ak Legim',
+      wholeGrains: 'Grenn Antye',
+      cereal: 'Sereyal',
+      gallons: 'galon',
+      dollars: 'dola',
+      packages: 'pake',
+      ounces: 'ons',
     },
     
     // Categories
     categories: {
       milk: 'Lèt ak Pwodwi Lèt',
+      dairy: 'Pwodwi Lèt',
       produce: 'Fwi ak Legim',
       grains: 'Pen ak Sereyal',
+      protein: 'Pwoteyin',
+      vegetables: 'Legim',
+      fruits: 'Fwi',
       cereal: 'Sereyal Manje Maten',
       juice: 'Ji',
       eggs: 'Ze',
@@ -306,24 +321,44 @@ export const translations = {
     shoppingList: {
       title: 'Lis Achá',
       addItem: 'Ajoute Pwodwi',
+      addItemToList: 'Ajoute Pwodwi nan Lis',
+      enterItemName: 'Antre non pwodwi...',
+      add: 'Ajoute',
+      toBuy: 'Pou Achte',
+      checkedOff: 'Make',
       noItems: 'Poko gen pwodwi',
+      emptyTitle: 'Lis achá ou vid',
+      emptyMessage: 'Ajoute pwodwi ou bezwen achte nan pwochèn vwayaj ou',
       startAdding: 'Kòmanse ajoute pwodwi nan lis achá ou',
       itemsLeft: 'pwodwi ki rete',
       itemChecked: 'Pwodwi make',
       itemDeleted: 'Pwodwi efase',
+      clearChecked: 'Efase Pwodwi Make',
+      clearCheckedPlural: 'Efase Pwodwi Make Yo',
     },
     
     // Stores
     stores: {
       title: 'Magazen WIC',
       nearby: 'Magazen Toupre',
+      nearbyCount: 'Magazen WIC Apwouve Toupre Ou',
+      sortedByDistance: 'Klase pa distans',
       open: 'Louvri',
       closed: 'Fèmen',
+      closedToday: 'Fèmen jodi a',
       opensAt: 'Louvri a',
       openUntil: 'Louvri jiska',
       getDirections: 'Direksyon',
       call: 'Rele',
       milesAway: 'mil lwen',
+      phoneNotAvailable: 'Telefòn pa disponib',
+      hoursNotAvailable: 'Lè pa disponib',
+      gettingLocation: 'Ap jwenn kote ou ye...',
+      showingNearYou: 'Magazen toupre ou',
+      locationUnavailable: 'Kote pa disponib • Ap montre egzanp magazen',
+      retry: 'Eseye ankò',
+      shoppingTips: 'Konsèy pou Fè Achá',
+      tipsMessage: 'Rele davans pou konfime pwodwi WIC disponib. Pote kat WIC ou ak lis pwodwi apwouve. Mande sèvis kliyan pou jwenn pwodwi WIC apwouve yo.',
     },
     
     // Profile
@@ -369,6 +404,25 @@ export const translations = {
       nutritionTips: 'Konsèy Nitrisyon',
       support: 'Sipò',
       share: 'Pataje',
+    },
+    
+    // Benefits Screen
+    benefits: {
+      current: 'Kounye a',
+      future: 'Pita',
+      expiresMessage: 'Benefis ekspire nan {days} jou • Renouvle: {date}',
+      nextBenefitsMessage: 'Pwochen benefis disponib: {date}',
+      items: 'pwodwi',
+      used: 'itilize',
+      itemsAvailable: 'pwodwi disponib',
+      remaining: 'ki rete',
+      of: 'sou',
+    },
+    
+    // Benefit Detail Modal
+    benefitDetail: {
+      smartPicks: 'Bon Chwa pou Ou',
+      yourBenefits: 'Benefis Ou',
     },
   },
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Modal, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { X } from 'lucide-react-native';
+import { useLanguage } from '../../context/LanguageContext';
 import Typography from '../Typography';
 import * as LucideIcons from 'lucide-react-native';
 
@@ -40,6 +41,7 @@ export default function BenefitDetailModal({
   items,
   smartPicks = [],
 }: BenefitDetailModalProps) {
+  const { t } = useLanguage();
   const CategoryIcon = LucideIcons[categoryIcon] as React.ComponentType<any>;
 
   const formatValue = (value: number, unit: string) => {
@@ -77,7 +79,7 @@ export default function BenefitDetailModal({
             {smartPicks.length > 0 && (
               <View style={styles.smartPicksSection}>
                 <Typography variant="body" weight="700" style={styles.sectionTitle}>
-                  Smart Picks for You
+                  {t('benefitDetail.smartPicks')}
                 </Typography>
                 {smartPicks.map((pick) => (
                   <View key={pick.id} style={styles.smartPickCard}>
@@ -103,7 +105,7 @@ export default function BenefitDetailModal({
 
             {/* Current Benefits */}
             <Typography variant="body" weight="700" style={styles.sectionTitle}>
-              Your Benefits
+              {t('benefitDetail.yourBenefits')}
             </Typography>
             {items.map((item) => {
               const ItemIcon = LucideIcons[item.icon] as React.ComponentType<any>;
@@ -129,7 +131,7 @@ export default function BenefitDetailModal({
                         {formatValue(remaining, item.unit === 'each' ? '' : item.unit)}
                       </Typography>
                       <Typography variant="caption" style={styles.totalText}>
-                        of {formatValue(item.total, item.unit === 'each' ? '' : item.unit)}
+                        {t('benefits.of')} {formatValue(item.total, item.unit === 'each' ? '' : item.unit)}
                       </Typography>
                     </View>
                   </View>

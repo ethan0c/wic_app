@@ -11,6 +11,7 @@ import {
   Sandwich, Soup, Beef, Bean, Leaf, Package2, CupSoda
 } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
+import { useLanguage } from '../../context/LanguageContext';
 import Typography from '../../components/Typography';
 
 // Mock WIC benefits data with more realistic items
@@ -66,6 +67,7 @@ type CategoryKey = keyof typeof mockBenefits;
 
 export default function BenefitsScreen() {
   const { theme } = useTheme();
+  const { t } = useLanguage();
   const [expandedCategory, setExpandedCategory] = useState<CategoryKey | null>('dairy');
   const [viewMode, setViewMode] = useState<'current' | 'future'>('current');
 
@@ -95,7 +97,7 @@ export default function BenefitsScreen() {
             onPress={() => setViewMode('current')}
           >
             <Text style={[styles.toggleText, viewMode === 'current' && styles.toggleTextActive]}>
-              Current
+              {t('benefits.current')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -103,7 +105,7 @@ export default function BenefitsScreen() {
             onPress={() => setViewMode('future')}
           >
             <Text style={[styles.toggleText, viewMode === 'future' && styles.toggleTextActive]}>
-              Future
+              {t('benefits.future')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -113,8 +115,8 @@ export default function BenefitsScreen() {
           <AlertCircle size={18} color="#DC2626" />
           <Text style={styles.expirationText}>
             {viewMode === 'current' 
-              ? 'Benefits expire in 23 days • Reset: Dec 1, 2025'
-              : 'Next benefits available: Dec 1, 2025'}
+              ? t('benefits.expiresMessage').replace('{days}', '23').replace('{date}', 'Dec 1, 2025')
+              : t('benefits.nextBenefitsMessage').replace('{date}', 'Dec 1, 2025')}
           </Text>
         </View>
       </View>
@@ -165,8 +167,8 @@ export default function BenefitsScreen() {
                   </Text>
                   <Text style={[styles.categorySubtitle, { color: theme.textSecondary }]}>
                     {viewMode === 'current' 
-                      ? `${totalItems} items • ${usedItems} used`
-                      : `${totalItems} items available`}
+                      ? `${totalItems} ${t('benefits.items')} • ${usedItems} ${t('benefits.used')}`
+                      : `${totalItems} ${t('benefits.itemsAvailable')}`}
                   </Text>
                 </View>
               </View>
@@ -230,7 +232,7 @@ export default function BenefitsScreen() {
                               styles.itemRemainingLabel, 
                               { color: viewMode === 'future' ? '#BBB' : theme.textSecondary }
                             ]}>
-                              remaining
+                              {t('benefits.remaining')}
                             </Text>
                           </View>
                         </View>

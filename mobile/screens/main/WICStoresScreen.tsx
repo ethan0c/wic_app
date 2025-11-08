@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, Linking, ActivityIndicator, Alert } from 'react-native';
 import { MapPin, Phone, Clock, Navigation, ExternalLink, Locate } from 'lucide-react-native';
+import { useLanguage } from '../../context/LanguageContext';
 import Typography from '../../components/Typography';
 import * as Location from 'expo-location';
 import { getNearbyStores, type WicStore } from '../../services/wicApi';
 
 export default function WICStoresScreen() {
+  const { t } = useLanguage();
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [stores, setStores] = useState<WicStore[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,7 +66,7 @@ export default function WICStoresScreen() {
   // Helper to format store hours and check if open
   const getStoreHoursInfo = (hoursJson: any): { displayText: string; isOpen: boolean } => {
     if (!hoursJson) {
-      return { displayText: 'Hours not available', isOpen: false };
+      return { displayText: t('stores.hoursNotAvailable'), isOpen: false };
     }
 
     const now = new Date();
@@ -75,7 +77,7 @@ export default function WICStoresScreen() {
 
     const todayHours = hoursJson[today];
     if (!todayHours || todayHours.closed) {
-      return { displayText: 'Closed today', isOpen: false };
+      return { displayText: t('stores.closedToday'), isOpen: false };
     }
 
     // Parse open/close times (format: "HH:MM")
@@ -97,17 +99,17 @@ export default function WICStoresScreen() {
 
     if (isOpen) {
       return { 
-        displayText: `Open until ${formatTime(closeHour, closeMin)}`, 
+        displayText: `${t('stores.openUntil')} ${formatTime(closeHour, closeMin)}`, 
         isOpen: true 
       };
     } else if (currentTime < openTime) {
       return { 
-        displayText: `Opens at ${formatTime(openHour, openMin)}`, 
+        displayText: `${t('stores.opensAt')} ${formatTime(openHour, openMin)}`, 
         isOpen: false 
       };
     } else {
       return { 
-        displayText: `Closed • Opens tomorrow at ${formatTime(openHour, openMin)}`, 
+        displayText: `${t('stores.closed')} • ${t('stores.opensAt')} ${formatTime(openHour, openMin)}`, 
         isOpen: false 
       };
     }
@@ -138,25 +140,25 @@ export default function WICStoresScreen() {
           <View style={styles.locationLoading}>
             <ActivityIndicator size="small" color="#10B981" />
             <Typography variant="body" style={{ marginLeft: 12, color: '#6B7280' }}>
-              Getting your location...
+              {t('stores.gettingLocation')}
             </Typography>
           </View>
         ) : location ? (
           <View style={styles.locationSuccess}>
             <Locate size={20} color="#10B981" strokeWidth={2} />
             <Typography variant="body" style={{ marginLeft: 8, color: '#047857' }}>
-              Showing stores near you
+              {t('stores.showingNearYou')}
             </Typography>
           </View>
         ) : (
           <View style={styles.locationError}>
             <MapPin size={20} color="#F59E0B" strokeWidth={2} />
             <Typography variant="caption" style={{ marginLeft: 8, color: '#92400E', flex: 1 }}>
-              Location unavailable • Showing sample stores
+              {t('stores.locationUnavailable')}
             </Typography>
             <TouchableOpacity onPress={requestLocationPermission} style={styles.retryButton}>
               <Typography variant="caption" weight="600" style={{ color: '#10B981' }}>
-                Retry
+                {t('stores.retry')}
               </Typography>
             </TouchableOpacity>
           </View>
@@ -168,10 +170,10 @@ export default function WICStoresScreen() {
         <MapPin size={24} color="#1A1A1A" strokeWidth={2} />
         <View style={styles.headerText}>
           <Typography variant="body" weight="600">
-            {stores.length} WIC-Approved Stores Near You
+            {stores.length} {t('stores.nearbyCount')}
           </Typography>
           <Typography variant="caption" color="textSecondary">
-            Sorted by distance
+            {t('stores.sortedByDistance')}
           </Typography>
         </View>
       </View>
@@ -215,7 +217,7 @@ export default function WICStoresScreen() {
             <View style={styles.detailRow}>
               <Phone size={18} color="#666" strokeWidth={2} />
               <Typography variant="body" style={styles.detailText}>
-                {store.phone || 'Phone not available'}
+                {store.phone || t('stores.phoneNotAvailable')}
               </Typography>
             </View>
 
@@ -243,7 +245,7 @@ export default function WICStoresScreen() {
               >
                 <Navigation size={18} color="white" strokeWidth={2.5} />
                 <Typography variant="body" weight="600" style={{ color: 'white', marginLeft: 8 }}>
-                  Directions
+                  {t('stores.getDirections')}
                 </Typography>
               </TouchableOpacity>
               <TouchableOpacity
@@ -253,7 +255,7 @@ export default function WICStoresScreen() {
               >
                 <Phone size={18} color="#1A1A1A" strokeWidth={2} />
                 <Typography variant="body" weight="600" style={{ marginLeft: 8 }}>
-                  Call
+                  {t('stores.call')}
                 </Typography>
               </TouchableOpacity>
             </View>
@@ -264,11 +266,10 @@ export default function WICStoresScreen() {
         {/* Info Box */}
         <View style={styles.infoBox}>
           <Typography variant="body" weight="600" style={{ marginBottom: 8 }}>
-            💡 Shopping Tips
+            💡 {t('stores.shoppingTips')}
           </Typography>
           <Typography variant="body" style={{ color: '#666', lineHeight: 20 }}>
-            Call ahead to confirm WIC items are in stock. Bring your WIC eCard and approved items list. 
-            Ask customer service for help finding WIC-approved products.
+            {t('stores.tipsMessage')}
           </Typography>
         </View>
 
