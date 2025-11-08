@@ -5,10 +5,10 @@ const prisma = new PrismaClient();
 
 export const getUserTransactions = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const { wicCardNumber } = req.params;
 
     const transactions = await prisma.transaction.findMany({
-      where: { userId },
+      where: { wicCardNumber },
       include: {
         items: {
           include: {
@@ -30,7 +30,7 @@ export const getUserTransactions = async (req: Request, res: Response) => {
 
 export const createTransaction = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const { wicCardNumber } = req.params;
     const { storeId, items } = req.body;
 
     // Start a transaction to ensure atomicity
@@ -38,7 +38,7 @@ export const createTransaction = async (req: Request, res: Response) => {
       // Create transaction
       const transaction = await tx.transaction.create({
         data: {
-          userId,
+          wicCardNumber,
           storeId,
           transactionType: 'purchase',
         },
@@ -63,7 +63,7 @@ export const createTransaction = async (req: Request, res: Response) => {
         // Find and update the corresponding benefit
         const benefit = await tx.wicBenefit.findFirst({
           where: {
-            userId,
+            wicCardNumber,
             category,
           },
         });

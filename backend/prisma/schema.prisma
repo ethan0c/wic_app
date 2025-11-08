@@ -7,28 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// User accounts
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  phone     String?
-  firstName String?  @map("first_name")
-  lastName  String?  @map("last_name")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  benefits     WicBenefit[]
-  transactions Transaction[]
-  shoppingList ShoppingListItem[]
-  flags        ProductFlag[]
-
-  @@map("users")
-}
-
-// WIC Benefits per user
+// WIC Benefits - keyed by WIC card number (no separate user accounts)
 model WicBenefit {
   id              String   @id @default(uuid())
-  userId          String   @map("user_id")
+  wicCardNumber   String   @map("wic_card_number") // The WIC eCard number
+  firstName       String?  @map("first_name") // Optional profile info
   category        String // 'milk', 'produce', 'grains', 'cereal'
   totalAmount     Decimal  @map("total_amount") @db.Decimal(10, 2)
   remainingAmount Decimal  @map("remaining_amount") @db.Decimal(10, 2)
@@ -38,9 +21,7 @@ model WicBenefit {
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
+  @@index([wicCardNumber])
   @@map("wic_benefits")
 }
 
@@ -114,17 +95,16 @@ model ApprovedFood {
 // Customer Transactions
 model Transaction {
   id              String   @id @default(uuid())
-  userId          String   @map("user_id")
+  wicCardNumber   String   @map("wic_card_number") // Link to WIC card instead of user
   storeId         String?  @map("store_id")
   transactionType String   @map("transaction_type") // 'purchase', 'reset'
   transactionDate DateTime @default(now()) @map("transaction_date")
   createdAt       DateTime @default(now()) @map("created_at")
 
-  user  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   store WicStore? @relation(fields: [storeId], references: [id], onDelete: SetNull)
   items TransactionItem[]
 
-  @@index([userId])
+  @@index([wicCardNumber])
   @@index([transactionDate])
   @@map("transactions")
 }
@@ -186,31 +166,27 @@ model RecipeItem {
 
 // Shopping Lists
 model ShoppingListItem {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  itemName  String   @map("item_name")
-  isChecked Boolean  @default(false) @map("is_checked")
-  category  String?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id            String   @id @default(uuid())
+  wicCardNumber String   @map("wic_card_number") // Link to WIC card instead of user
+  itemName      String   @map("item_name")
+  isChecked     Boolean  @default(false) @map("is_checked")
+  category      String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
+  @@index([wicCardNumber])
   @@map("shopping_lists")
 }
 
 // Product Flagging (report issues)
 model ProductFlag {
-  id              String   @id @default(uuid())
-  userId          String?  @map("user_id")
-  generalFoodId   String   @map("general_food_id")
-  flagReason      String   @map("flag_reason")
-  status          String   @default("pending") // 'pending', 'reviewed', 'resolved'
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id            String   @id @default(uuid())
+  wicCardNumber String?  @map("wic_card_number") // Optional - anonymous flags allowed
+  generalFoodId String   @map("general_food_id")
+  flagReason    String   @map("flag_reason")
+  status        String   @default("pending") // 'pending', 'reviewed', 'resolved'
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
   @@map("product_flags")
 }
