@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
+import SectionCard from '../../components/home/SectionCard';
 
 type ExploreScreenNavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
@@ -83,15 +84,6 @@ export default function ExploreScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
-      {/* Header - Fixed at top */}
-      <View style={styles.headerSection}>
-        <Typography variant="heading" weight="500" style={{ fontSize: 24 }}>
-          Explore
-        </Typography>
-        <Typography variant="body" color="textSecondary" style={{ marginTop: 4, fontSize: 14 }}>
-          Discover WIC resources and tools
-        </Typography>
-      </View>
 
       <ScrollView 
         style={styles.scrollContainer}
@@ -99,10 +91,7 @@ export default function ExploreScreen() {
       >
       {/* Main Cards Grid */}
       <View style={styles.sectionNoPad}>
-        <View style={styles.cardsWrapper}>
-          <Typography variant="subheading" weight="600" style={{ marginBottom: 16, paddingHorizontal: 16 }}>
-            Quick Access
-          </Typography>
+        <SectionCard title="Quick Access">
           <View style={styles.cardsContainer}>
             {cards.map(card => (
               <TouchableOpacity
@@ -129,16 +118,12 @@ export default function ExploreScreen() {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </SectionCard>
       </View>
 
       {/* Account Section */}
       <View style={styles.sectionNoPad}>
-        <View style={styles.accountCard}>
-          <Typography variant="subheading" weight="600" style={{ marginBottom: 16 }}>
-            Account
-          </Typography>
-          
+        <SectionCard title="Account">
           {/* User Info */}
           <View style={styles.userInfo}>
             <View style={styles.userAvatar}>
@@ -209,7 +194,7 @@ export default function ExploreScreen() {
               </Typography>
             </TouchableOpacity>
           </View>
-        </View>
+        </SectionCard>
       </View>
 
       {/* Bottom Spacing */}
@@ -233,20 +218,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingTop: 16,
+    paddingTop: 0,
   },
   sectionNoPad: {
-    marginHorizontal: 16,
-    marginBottom: 16,
-  },
-  cardsWrapper: {
-    // No extra styling needed
+    marginBottom: 3,
   },
   cardsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingHorizontal: 0,
+    paddingHorizontal: 12,
   },
   card: {
     width: '48%',
@@ -262,11 +243,6 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 15,
     marginTop: 8,
-  },
-  accountCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
   },
   userInfo: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Milk, Apple, Wheat, Zap, ScanLine, List, MapPin } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -13,10 +13,9 @@ import Typography from '../../components/Typography';
 import HomeHeader from '../../components/home/HomeHeader';
 import BenefitTilesGroup from '../../components/home/BenefitTilesGroup';
 import QuickActionCard from '../../components/home/QuickActionCard';
-import SmartPickItem from '../../components/home/SmartPickItem';
-import BottomUtilities from '../../components/home/BottomUtilities';
 import SectionCard from '../../components/home/SectionCard';
 import CardDisplay from '../../components/home/CardDisplay';
+import BenefitDetailModal from '../../components/home/BenefitDetailModal';
 
 type HomeScreenNavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
@@ -25,6 +24,8 @@ export default function HomeScreen() {
   const { user } = useAuth();
   const { benefits, monthPeriod, daysRemaining } = useWIC();
   const navigation = useNavigation<HomeScreenNavigationProp>();
+  
+  const [selectedBenefit, setSelectedBenefit] = useState<string | null>(null);
 
   // WIC benefits data for the visual dashboard
   const wicBenefits = [
@@ -62,6 +63,63 @@ export default function HomeScreen() {
     },
   ];
 
+  // Detailed breakdown for each benefit category
+  const benefitDetails = {
+    milk: {
+      categoryName: 'Milk & Dairy',
+      categoryIcon: 'Milk' as const,
+      categoryColor: '#E3F2FD',
+      items: [
+        { id: '1', name: 'Whole Milk', quantity: '1 gallon', unit: 'gallons', used: 1, total: 4, icon: 'Milk' as const, suggestion: '1 gallon = 16 cups' },
+        { id: '2', name: 'Low-fat Yogurt', quantity: '32 oz', unit: 'oz', used: 16, total: 32, icon: 'Package2' as const, suggestion: '32 oz ≈ one large container' },
+        { id: '3', name: 'Cheese', quantity: '1 lb', unit: 'lb', used: 0, total: 1, icon: 'Package2' as const, suggestion: '1 lb = 16 oz block or shredded' },
+      ],
+      smartPicks: [
+        { id: '1', title: 'Whole milk (½ gallon)', subtitle: '3 half-gallons remaining' },
+        { id: '2', title: 'Low-fat vanilla yogurt 32oz' },
+      ],
+    },
+    produce: {
+      categoryName: 'Fruits & Vegetables',
+      categoryIcon: 'Apple' as const,
+      categoryColor: '#FFEBEE',
+      items: [
+        { id: '1', name: 'Fresh Fruits', quantity: 'Any fresh', unit: 'dollars', used: 8.50, total: 16.00, icon: 'Apple' as const, suggestion: '$16 ≈ 4-5 lbs at avg price' },
+        { id: '2', name: 'Fresh Vegetables', quantity: 'Any fresh', unit: 'dollars', used: 5.18, total: 16.00, icon: 'Carrot' as const, suggestion: '$16 ≈ 5-6 lbs at avg price' },
+      ],
+      smartPicks: [
+        { id: '1', title: 'Fresh strawberries', subtitle: 'In season now' },
+        { id: '2', title: 'Baby carrots 1lb bag' },
+        { id: '3', title: 'Bananas', subtitle: 'Great value' },
+      ],
+    },
+    grains: {
+      categoryName: 'Whole Grains',
+      categoryIcon: 'Wheat' as const,
+      categoryColor: '#FFF3E0',
+      items: [
+        { id: '1', name: 'Whole Wheat Bread', quantity: '16 oz', unit: 'loaves', used: 1, total: 2, icon: 'Sandwich' as const, suggestion: '16 oz = standard loaf' },
+        { id: '2', name: 'Brown Rice', quantity: '1 lb', unit: 'packages', used: 0, total: 1, icon: 'Wheat' as const, suggestion: '1 lb ≈ 2.5 cups uncooked' },
+      ],
+      smartPicks: [
+        { id: '1', title: 'Whole wheat bread 16oz', subtitle: '1 loaf remaining' },
+        { id: '2', title: 'Brown rice 1lb' },
+      ],
+    },
+    cereal: {
+      categoryName: 'Cereal',
+      categoryIcon: 'Zap' as const,
+      categoryColor: '#FCE4EC',
+      items: [
+        { id: '1', name: 'Whole Grain Cereal', quantity: '36 oz', unit: 'oz', used: 27, total: 72, icon: 'Package2' as const, suggestion: '36 oz ≈ two 18-oz boxes' },
+      ],
+      smartPicks: [
+        { id: '1', title: 'Cheerios 18oz', subtitle: '45 oz remaining' },
+        { id: '2', title: 'Whole grain oatmeal' },
+      ],
+    },
+  };
+
   // Quick actions
   const quickActions = [
     {
@@ -88,28 +146,6 @@ export default function HomeScreen() {
     },
   ];
 
-  // Smart picks based on remaining benefits
-  const smartPicks = [
-    {
-      key: 'bread',
-      title: 'Whole wheat bread 16oz',
-      subtitle: 'Perfect for your grains allowance',
-      status: 'eligible' as const,
-    },
-    {
-      key: 'milk',
-      title: 'Whole milk (½ gallon)',
-      subtitle: '3 half-gallons remaining',
-      status: 'eligible' as const,
-    },
-    {
-      key: 'strawberries',
-      title: 'Fresh strawberries',
-      subtitle: 'Fruits/veg balance applies',
-      status: 'eligible' as const,
-    },
-  ];
-
   return (
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
       {/* Header - Fixed at top */}
@@ -132,10 +168,10 @@ export default function HomeScreen() {
       
       {/* You Have Left This Month */}
       <View style={styles.sectionNoPad}>
-        <SectionCard title="You Have Left This Month">
+        <SectionCard title="Left This Month">
         <BenefitTilesGroup
           items={wicBenefits}
-          onCardPress={() => navigation.navigate('MainTabs', { screen: 'Benefits' } as any)}
+          onCardPress={(key) => setSelectedBenefit(key)}
         />
         </SectionCard>
       </View>
@@ -158,28 +194,22 @@ export default function HomeScreen() {
         </SectionCard>
       </View>
 
-      {/* Smart Picks */}
-      <View style={styles.sectionNoPad}>
-        <SectionCard
-          title="Smart Picks for You"
-          subtitle="Based on what you have left, here are items that match your benefits"
-        >
-          <View>
-          {smartPicks.map((pick) => (
-            <SmartPickItem
-              key={pick.key}
-              title={pick.title}
-              subtitle={pick.subtitle}
-              status={pick.status}
-            />
-          ))}
-          </View>
-        </SectionCard>
-      </View>
-
       {/* Bottom Spacing */}
       <View style={{ height: 10 }} />
       </ScrollView>
+
+      {/* Benefit Detail Modal */}
+      {selectedBenefit && benefitDetails[selectedBenefit as keyof typeof benefitDetails] && (
+        <BenefitDetailModal
+          visible={selectedBenefit !== null}
+          onClose={() => setSelectedBenefit(null)}
+          categoryName={benefitDetails[selectedBenefit as keyof typeof benefitDetails].categoryName}
+          categoryIcon={benefitDetails[selectedBenefit as keyof typeof benefitDetails].categoryIcon}
+          categoryColor={benefitDetails[selectedBenefit as keyof typeof benefitDetails].categoryColor}
+          items={benefitDetails[selectedBenefit as keyof typeof benefitDetails].items}
+          smartPicks={benefitDetails[selectedBenefit as keyof typeof benefitDetails].smartPicks}
+        />
+      )}
     </View>
   );
 }

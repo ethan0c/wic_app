@@ -55,24 +55,18 @@ export default function BenefitCard({
 
   const renderProgressBar = () => {
     const usedPercentage = ((total - remaining) / total) * 100;
-    const segments = Array.from({ length: 9 }, (_, i) => {
-      const segmentPercentage = ((i + 1) / 9) * 100;
-      return segmentPercentage <= (100 - usedPercentage);
-    });
 
     return (
       <View style={styles.progressContainer}>
-        {segments.map((filled, index) => (
-          <View
-            key={index}
-            style={[
-              styles.progressSegment,
-              {
-                backgroundColor: filled ? '#1A1A1A' : 'rgba(0,0,0,0.15)',
-              },
-            ]}
-          />
-        ))}
+        <View
+          style={[
+            styles.progressFill,
+            {
+              width: `${100 - usedPercentage}%`,
+              backgroundColor: '#1A1A1A',
+            },
+          ]}
+        />
       </View>
     );
   };
@@ -133,13 +127,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   progressContainer: {
-    flexDirection: 'row',
-    gap: 2,
+    height: 3,
+    backgroundColor: 'rgba(0,0,0,0.15)',
+    borderRadius: 1.5,
+    overflow: 'hidden',
     marginVertical: 8,
   },
-  progressSegment: {
-    flex: 1,
-    height: 4,
-    borderRadius: 2,
+  progressFill: {
+    height: '100%',
+    borderRadius: 1.5,
   },
 });

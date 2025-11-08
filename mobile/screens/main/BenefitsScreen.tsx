@@ -448,13 +448,13 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   progressBar: {
-    height: 6,
-    borderRadius: 3,
+    height: 4,
+    borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    borderRadius: 3,
+    borderRadius: 2,
   },
   bottomPadding: {
     height: 20,
