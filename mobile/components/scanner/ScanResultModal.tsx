@@ -65,6 +65,24 @@ export default function ScanResultModal({
     }
   }, [visible]);
 
+  const getCategoryEmoji = (category: string): string => {
+    const categoryEmojis: { [key: string]: string } = {
+      'milk': '🥛',
+      'bread': '🍞',
+      'cereal': '🥣',
+      'cheese': '🧀',
+      'eggs': '🥚',
+      'fruits': '🍎',
+      'vegetables': '🥕',
+      'juice': '🧃',
+      'peanut_butter': '🥜',
+      'beans': '🫘',
+      'fish': '🐟',
+      'meat': '🥩',
+    };
+    return categoryEmojis[category] || '📦';
+  };
+
   const getResultMessage = (product: Product): string => {
     if (product.isApproved) {
       return `${product.name} ${t('scanner.byBrand')} ${product.brand} (${product.size_display}) ${t('scanner.isApproved')}`;
@@ -163,16 +181,10 @@ export default function ScanResultModal({
                   style={styles.productImage}
                   resizeMode="contain"
                 />
-              ) : product.emoji ? (
-                <Typography variant="heading" style={{ fontSize: 48 }}>
-                  {product.emoji}
-                </Typography>
               ) : (
-                <MaterialCommunityIcons
-                  name={product.isApproved ? 'check-circle' : 'close-circle'}
-                  size={48}
-                  color={product.isApproved ? '#10B981' : '#EF4444'}
-                />
+                <Typography variant="heading" style={{ fontSize: 48 }}>
+                  {product.emoji || getCategoryEmoji(product.category)}
+                </Typography>
               )}
             </View>
 
@@ -370,7 +382,7 @@ export default function ScanResultModal({
               });
             }}
           >
-            <Typography variant="body" weight="600" style={{ color: 'white' }}>
+            <Typography variant="body" weight="500" style={{ color: 'white' }}>
               {t('scanner.viewProductDetails')}
             </Typography>
           </TouchableOpacity>
@@ -475,7 +487,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#10B981',
     paddingVertical: 14,
     paddingHorizontal: 24,
-    borderRadius: 50,
+    borderRadius: 25,
     alignItems: 'center',
     marginBottom: 12,
     marginTop: 10,

@@ -88,8 +88,8 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
     };
   };
   
-  const lookupProduct = (upc: string): Product | null => {
-    const foundProduct = aplData.products.find((p: Product) => p.upc === upc);
+  const lookupProduct = (upc: string, demoEmoji?: string): Product | null => {
+    const foundProduct = aplData.products.find((p: any) => p.upc === upc);
     if (!foundProduct) return null;
 
     // Add benefit calculation
@@ -97,12 +97,13 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
     
     return {
       ...foundProduct,
+      emoji: demoEmoji || foundProduct.emoji || undefined, // Use demo emoji if provided, otherwise use product emoji
       benefitCalculation: benefitCalc,
     };
   };
 
-  const handleDemoPress = (upc: string) => {
-    const product = lookupProduct(upc);
+  const handleDemoPress = (upc: string, emoji?: string) => {
+    const product = lookupProduct(upc, emoji);
     if (product) {
       onProductSelect(product);
     }
@@ -128,7 +129,7 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
           <TouchableOpacity
             key={index}
             style={[styles.demoButton, demo.approved ? styles.approvedButton : styles.notCoveredButton]}
-            onPress={() => handleDemoPress(demo.upc)}
+            onPress={() => handleDemoPress(demo.upc, demo.emoji)}
           >
             <Typography variant="caption" weight="600" style={{ 
               color: demo.approved ? '#10B981' : '#EF4444', 
@@ -154,7 +155,7 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
           <TouchableOpacity
             key={index}
             style={[styles.demoButton, demo.approved ? styles.approvedButton : styles.notCoveredButton]}
-            onPress={() => handleDemoPress(demo.upc)}
+            onPress={() => handleDemoPress(demo.upc, demo.emoji)}
           >
             <Typography variant="caption" weight="600" style={{ 
               color: demo.approved ? '#10B981' : '#EF4444', 
@@ -180,7 +181,7 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
           <TouchableOpacity
             key={index}
             style={[styles.demoButton, demo.approved ? styles.approvedButton : styles.notCoveredButton]}
-            onPress={() => handleDemoPress(demo.upc)}
+            onPress={() => handleDemoPress(demo.upc, demo.emoji)}
           >
             <Typography variant="caption" weight="600" style={{ 
               color: demo.approved ? '#10B981' : '#EF4444', 
@@ -206,7 +207,7 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
           <TouchableOpacity
             key={index}
             style={[styles.demoButton, demo.approved ? styles.approvedButton : styles.notCoveredButton]}
-            onPress={() => handleDemoPress(demo.upc)}
+            onPress={() => handleDemoPress(demo.upc, demo.emoji)}
           >
             <Typography variant="caption" weight="600" style={{ 
               color: demo.approved ? '#10B981' : '#EF4444', 
