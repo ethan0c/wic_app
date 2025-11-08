@@ -13,8 +13,7 @@ import audioFeedback from '../../services/audioFeedback';
 import aplData from '../../data/apl.json';
 import * as Speech from 'expo-speech';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
-import { lookupByUPC, extractSizeInOunces, categorizeProduct } from '../../services/usdaApi';
-import { matchProduct } from '../../services/productMatcher';
+import { scanProductByUPC } from '../../services/wicApi';
 
 // Scanner Components
 import ScanArea from '../../components/scanner/ScanArea';
@@ -130,7 +129,7 @@ export default function ScannerScreen({ route }: any) {
   };
 
   const lookupProduct = async (upcOrName: string): Promise<Product | null> => {
-    // First, check local APL database
+    // First, check local APL database for demo products
     const foundProduct = aplData.products.find((p: Product) => 
       p.upc === upcOrName || 
       p.name.toLowerCase().includes(upcOrName.toLowerCase()) ||
@@ -155,46 +154,74 @@ export default function ScannerScreen({ route }: any) {
       return productWithEmoji;
     }
     
-    // Not in local database - try USDA lookup
+    // Not in local database - call backend API (which uses USDA)
     try {
-      console.log('🔍 Product not in local DB, checking USDA...', upcOrName);
-      const usdaProduct = await lookupByUPC(upcOrName);
+      console.log('🔍 Product not in local DB, checking backend API...', upcOrName);
+      const scanResult = await scanProductByUPC(upcOrName);
       
-      if (!usdaProduct) {
-        console.log('❌ Not found in USDA database');
+      if (!scanResult.found) {
+        console.log('❌ Not found in backend/USDA database');
         return null;
       }
       
-      console.log('✅ Found in USDA:', usdaProduct.description);
+      console.log('✅ Found via backend:', scanResult);
       
-      // Match against WIC approved products
-      const matchResult = matchProduct(usdaProduct);
+      // Backend returns ScanResult with usdaProduct and wicCategory
+      const usdaProduct = scanResult.usdaProduct;
+      const category = scanResult.wicCategory || 'unknown';
       
-      // Convert to Product type
-      const size = matchResult.scannedSize || 0;
+      // Extract size from USDA data
+      let size = 0;
+      if (usdaProduct?.packageWeight) {
+        const weight = usdaProduct.packageWeight.toLowerCase();
+        const ozMatch = weight.match(/(\d+\.?\d*)\s*(oz|ounce)/i);
+        if (ozMatch) size = parseFloat(ozMatch[1]);
+        
+        const gallonMatch = weight.match(/(\d+\.?\d*)\s*gallon/i);
+        if (gallonMatch) size = parseFloat(gallonMatch[1]) * 128;
+        
+        const lbMatch = weight.match(/(\d+\.?\d*)\s*(lb|pound)/i);
+        if (lbMatch) size = parseFloat(lbMatch[1]) * 16;
+      }
+      
+      // Find alternatives from local APL database based on category
+      const alternatives = aplData.products
+        .filter(p => p.category === category && p.isApproved)
+        .slice(0, 2)
+        .map(p => ({
+          upc: p.upc,
+          suggestion: `Try ${p.brand} ${p.name} (${p.size_display})`,
+          reason: scanResult.isWicApproved 
+            ? `Same category, WIC approved` 
+            : `This is a WIC-approved alternative`,
+          imageUrl: p.imageUrl,
+          emoji: getCategoryEmoji(p.category),
+        }));
+      
+      // Convert backend result to Product type
       const product: Product = {
-        upc: usdaProduct.gtinUpc || upcOrName,
-        name: usdaProduct.description || 'Unknown Product',
-        brand: usdaProduct.brandOwner || usdaProduct.brandName || 'Unknown',
-        category: matchResult.category,
+        upc: upcOrName,
+        name: usdaProduct?.description || scanResult.localProduct?.name || 'Unknown Product',
+        brand: usdaProduct?.brandOwner || usdaProduct?.brandName || scanResult.localProduct?.brand || 'Unknown',
+        category,
         size_oz: size,
         size_display: size > 0 ? `${size} oz` : 'Unknown',
-        isApproved: matchResult.isApproved,
+        isApproved: scanResult.isWicApproved,
         image: '',
-        imageUrl: matchResult.matchedProduct?.imageUrl,
-        emoji: getCategoryEmoji(matchResult.category),
-        reasons: matchResult.reasons,
-        alternatives: matchResult.alternatives,
+        imageUrl: undefined,
+        emoji: getCategoryEmoji(category),
+        reasons: scanResult.isWicApproved ? [] : ['brand_or_product_not_approved'],
+        alternatives,
       };
       
-      console.log('📦 Matched product:', product.isApproved ? 'APPROVED ✅' : 'NOT APPROVED ❌');
+      console.log('📦 Processed product:', product.isApproved ? 'APPROVED ✅' : 'NOT APPROVED ❌');
       console.log('📏 Size:', product.size_display);
       console.log('🏷️ Category:', product.category);
-      console.log('💡 Alternatives:', matchResult.alternatives.length);
+      console.log('💡 Alternatives:', alternatives.length);
       
       return product;
     } catch (error) {
-      console.error('Error looking up product:', error);
+      console.error('Error looking up product via backend:', error);
       return null;
     }
   };
