@@ -102,13 +102,18 @@ export const scanProduceByPLU = async (plu: string): Promise<ScanResult> => {
 
 // ===== PRODUCTS =====
 
+export const getAllApprovedProducts = async (): Promise<ApprovedProduct[]> => {
+  const response = await api.get('/api/scan/approved');
+  return response.data;
+};
+
 export const getApprovedProducts = async (category: string): Promise<ApprovedProduct[]> => {
-  const response = await api.get(`/api/products/approved/${category}`);
+  const response = await api.get(`/api/scan/category/${category}`);
   return response.data;
 };
 
 export const searchApprovedProducts = async (searchTerm: string): Promise<ApprovedProduct[]> => {
-  const response = await api.get('/api/products/search', {
+  const response = await api.get('/api/scan/search', {
     params: { q: searchTerm },
   });
   return response.data;

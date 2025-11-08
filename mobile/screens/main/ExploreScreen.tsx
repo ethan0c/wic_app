@@ -12,6 +12,7 @@ import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
 import SectionCard from '../../components/home/SectionCard';
 import LanguageToggle from '../../components/LanguageToggle';
+import ExploreHeader from '../../components/explore/ExploreHeader';
 
 type ExploreScreenNavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
@@ -87,6 +88,9 @@ export default function ExploreScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
+      <View style={styles.headerSection}>
+        <ExploreHeader />
+      </View>
 
       <ScrollView 
         style={styles.scrollContainer}
@@ -225,7 +229,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     paddingTop: 60,
-    paddingBottom: 16,
+    paddingBottom: 0,
   },
   scrollContainer: {
     flex: 1,

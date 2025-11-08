@@ -3,6 +3,9 @@ import { scanByUPC, scanByPLU, getProductsByCategory, searchProducts } from '../
 
 const router = Router();
 
+// Get all approved products
+router.get('/approved', getProductsByCategory);
+
 // Scan product by UPC barcode
 router.get('/upc/:upc', scanByUPC);
 
