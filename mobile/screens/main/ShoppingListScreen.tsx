@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
-import { Plus, Check, Trash2, ShoppingBag } from 'lucide-react-native';
+import { Plus, Check, Trash2, ShoppingBag, ChevronDown } from 'lucide-react-native';
 import { useLanguage } from '../../context/LanguageContext';
 import Typography from '../../components/Typography';
 import Button from '../../components/Button';
@@ -10,6 +10,26 @@ interface ShoppingItem {
   name: string;
   checked: boolean;
 }
+
+// Predefined WIC-approved items
+const SUGGESTED_ITEMS = [
+  'Whole milk (½ gallon)',
+  'Low-fat milk (½ gallon)',
+  'Whole wheat bread 16oz',
+  'Brown rice 1lb',
+  'Cheerios 18oz',
+  'Whole grain cereal',
+  'Eggs (1 dozen)',
+  'Peanut butter 18oz',
+  'Fresh strawberries',
+  'Fresh apples',
+  'Baby carrots 1lb',
+  'Fresh bananas',
+  'Low-fat yogurt 32oz',
+  'Cheese 1lb block',
+  '100% orange juice 64oz',
+  'Canned beans 15oz',
+];
 
 export default function ShoppingListScreen() {
   const { t } = useLanguage();
@@ -22,6 +42,7 @@ export default function ShoppingListScreen() {
   ]);
   const [newItemName, setNewItemName] = useState('');
   const [showInput, setShowInput] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const toggleItem = (id: string) => {
     setItems(items.map(item => 
@@ -44,6 +65,20 @@ export default function ShoppingListScreen() {
       setNewItemName('');
       setShowInput(false);
     }
+  };
+
+  const addSuggestedItem = (itemName: string) => {
+    // Check if item already exists
+    const exists = items.some(item => item.name.toLowerCase() === itemName.toLowerCase());
+    if (!exists) {
+      const newItem: ShoppingItem = {
+        id: Date.now().toString(),
+        name: itemName,
+        checked: false,
+      };
+      setItems([newItem, ...items]);
+    }
+    setShowSuggestions(false);
   };
 
   const clearChecked = () => {
@@ -76,6 +111,52 @@ export default function ShoppingListScreen() {
       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+        {/* Quick Add from Suggestions */}
+        {!showInput && (
+          <TouchableOpacity
+            style={styles.quickAddButton}
+            onPress={() => setShowSuggestions(!showSuggestions)}
+            activeOpacity={0.7}
+          >
+            <View style={styles.quickAddLeft}>
+              <Plus size={24} color="#10B981" strokeWidth={2.5} />
+              <Typography variant="body" weight="600" style={{ marginLeft: 12, color: '#10B981' }}>
+                {t('shoppingList.quickAddWicItems')}
+              </Typography>
+            </View>
+            <ChevronDown 
+              size={20} 
+              color="#10B981" 
+              strokeWidth={2.5}
+              style={{ transform: [{ rotate: showSuggestions ? '180deg' : '0deg' }] }}
+            />
+          </TouchableOpacity>
+        )}
+
+        {/* Suggested Items Dropdown */}
+        {showSuggestions && (
+          <View style={styles.suggestionsContainer}>
+            <Typography variant="caption" color="textSecondary" style={{ marginBottom: 8, paddingHorizontal: 4 }}>
+              {t('shoppingList.tapToAdd')}
+            </Typography>
+            <View style={styles.suggestionsGrid}>
+              {SUGGESTED_ITEMS.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.suggestionChip}
+                  onPress={() => addSuggestedItem(item)}
+                  activeOpacity={0.7}
+                >
+                  <Plus size={16} color="#10B981" strokeWidth={2.5} />
+                  <Typography variant="caption" weight="500" style={{ marginLeft: 6, color: '#1A1A1A' }}>
+                    {item}
+                  </Typography>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        )}
+
         {/* Add Item Input */}
         {showInput ? (
           <View style={styles.addItemContainer}>
@@ -317,5 +398,43 @@ const styles = StyleSheet.create({
   emptyState: {
     alignItems: 'center',
     paddingVertical: 60,
+  },
+  quickAddButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F0FDF4',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: '#BBF7D0',
+  },
+  quickAddLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  suggestionsContainer: {
+    backgroundColor: '#FFFFFF',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  suggestionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  suggestionChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0FDF4',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#BBF7D0',
   },
 });
