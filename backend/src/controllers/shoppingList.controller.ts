@@ -5,10 +5,10 @@ const prisma = new PrismaClient();
 
 export const getShoppingList = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const { wicCardNumber } = req.params;
 
     const items = await prisma.shoppingListItem.findMany({
-      where: { userId },
+      where: { wicCardNumber },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -21,12 +21,12 @@ export const getShoppingList = async (req: Request, res: Response) => {
 
 export const addShoppingListItem = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const { wicCardNumber } = req.params;
     const { itemName, category } = req.body;
 
     const item = await prisma.shoppingListItem.create({
       data: {
-        userId,
+        wicCardNumber,
         itemName,
         category,
       },

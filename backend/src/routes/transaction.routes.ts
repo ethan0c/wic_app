@@ -3,10 +3,10 @@ import { getUserTransactions, createTransaction } from '../controllers/transacti
 
 const router = Router();
 
-// Get user transactions
-router.get('/:userId/transactions', getUserTransactions);
+// Get user transactions by WIC card number
+router.get('/:wicCardNumber/transactions', getUserTransactions);
 
 // Create new transaction
-router.post('/:userId/transactions', createTransaction);
+router.post('/:wicCardNumber/transactions', createTransaction);
 
 export default router;

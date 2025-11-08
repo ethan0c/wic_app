@@ -3,11 +3,11 @@ import { getShoppingList, addShoppingListItem, updateShoppingListItem, deleteSho
 
 const router = Router();
 
-// Get user shopping list
-router.get('/:userId/shopping-list', getShoppingList);
+// Get user shopping list by WIC card number
+router.get('/:wicCardNumber/shopping-list', getShoppingList);
 
 // Add item to shopping list
-router.post('/:userId/shopping-list', addShoppingListItem);
+router.post('/:wicCardNumber/shopping-list', addShoppingListItem);
 
 // Update shopping list item
 router.patch('/shopping-list/:itemId', updateShoppingListItem);

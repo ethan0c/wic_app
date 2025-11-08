@@ -24,10 +24,12 @@ app.get('/', (req: Request, res: Response) => {
       health: '/health',
       scan: '/api/scan/upc/:upc or /api/scan/plu/:plu',
       stores: '/api/stores/nearby?latitude=X&longitude=Y&radius=10',
-      benefits: '/api/users/:userId/benefits',
-      transactions: '/api/users/:userId/transactions',
-      shoppingList: '/api/users/:userId/shopping-list'
-    }
+      benefits: '/api/users/:wicCardNumber/benefits',
+      profile: '/api/users/:wicCardNumber/profile (PATCH)',
+      transactions: '/api/users/:wicCardNumber/transactions',
+      shoppingList: '/api/users/:wicCardNumber/shopping-list'
+    },
+    note: 'No user accounts - use WIC card number as identifier'
   });
 });
 
