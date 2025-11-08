@@ -531,7 +531,7 @@ async function main() {
       const heavyTrans3 = await prisma.transaction.create({
         data: {
           wicCardNumber: CARD_NUMBERS.HEAVY_USER,
-          storeId: stores[0].id,
+          storeId: storeList[0].id,
           transactionType: 'purchase',
           totalItems: 3,
           totalValue: 18.25,
@@ -577,7 +577,7 @@ async function main() {
       const modTrans1 = await prisma.transaction.create({
         data: {
           wicCardNumber: CARD_NUMBERS.MODERATE_USER,
-          storeId: stores[1].id,
+          storeId: storeList[1].id,
           transactionType: 'purchase',
           totalItems: 3,
           totalValue: 12.50,
@@ -620,7 +620,7 @@ async function main() {
       const modTrans2 = await prisma.transaction.create({
         data: {
           wicCardNumber: CARD_NUMBERS.MODERATE_USER,
-          storeId: stores[2].id,
+          storeId: storeList[2].id,
           transactionType: 'purchase',
           totalItems: 3,
           totalValue: 14.75,
