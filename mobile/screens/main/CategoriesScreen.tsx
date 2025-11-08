@@ -5,6 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import Typography from '../../components/Typography';
 import SectionCard from '../../components/home/SectionCard';
+import CategoriesHeader from '../../components/categories/CategoriesHeader';
 import aplData from '../../data/apl.json';
 
 export default function CategoriesScreen() {
@@ -21,45 +22,48 @@ export default function CategoriesScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={styles.headerSection}>
-        <SectionCard>
-          <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
-            Shop by Category
-          </Typography>
-          <Typography variant="body" color="textSecondary" style={{ marginTop: 8 }}>
-            Tap a category to see approved items
-          </Typography>
-        </SectionCard>
-      </View>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <CategoriesHeader />
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.headerSection}>
+          <SectionCard>
+            <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
+              Shop by Category
+            </Typography>
+            <Typography variant="body" color="textSecondary" style={{ marginTop: 8 }}>
+              Tap a category to see approved items
+            </Typography>
+          </SectionCard>
+        </View>
       
-      <View style={styles.sectionNoPad}>
-        <SectionCard title="Food Categories">
-          <View style={styles.grid}>
-            {Object.entries(aplData.categories).map(([key, category]: [string, any]) => (
-              <TouchableOpacity
-                key={key}
-                style={[styles.categoryCard, { backgroundColor: theme.card, borderColor: theme.border }]}
-                onPress={() => handleCategoryPress(key, category)}
-                activeOpacity={0.7}
-              >
-                <View style={[styles.iconContainer, { backgroundColor: theme.primary + '15' }]}>
-                  <Ionicons name={category.icon as any} size={32} color={theme.primary} />
-                </View>
-                <Typography variant="label" style={{ marginTop: 12, textAlign: 'center' }}>
-                  {category.name}
-                </Typography>
-                <Typography variant="caption" color="textSecondary" style={{ textAlign: 'center', marginTop: 4 }}>
-                  {category.monthly_allowance} {category.unit}/month
-                </Typography>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </SectionCard>
-      </View>
+        <View style={styles.sectionNoPad}>
+          <SectionCard title="Food Categories">
+            <View style={styles.grid}>
+              {Object.entries(aplData.categories).map(([key, category]: [string, any]) => (
+                <TouchableOpacity
+                  key={key}
+                  style={[styles.categoryCard, { backgroundColor: theme.card, borderColor: theme.border }]}
+                  onPress={() => handleCategoryPress(key, category)}
+                  activeOpacity={0.7}
+                >
+                  <View style={[styles.iconContainer, { backgroundColor: theme.primary + '15' }]}>
+                    <Ionicons name={category.icon as any} size={32} color={theme.primary} />
+                  </View>
+                  <Typography variant="label" style={{ marginTop: 12, textAlign: 'center' }}>
+                    {category.name}
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary" style={{ textAlign: 'center', marginTop: 4 }}>
+                    {category.monthly_allowance} {category.unit}/month
+                  </Typography>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </SectionCard>
+        </View>
       
-      <View style={{ height: 100 }} />
-    </ScrollView>
+        <View style={{ height: 100 }} />
+      </ScrollView>
+    </View>
   );
 }
 

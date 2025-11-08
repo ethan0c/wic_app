@@ -22,6 +22,7 @@ import DemoExamples from '../../components/scanner/DemoExamples';
 import ManualEntry from '../../components/scanner/ManualEntry';
 import ScanResultModal from '../../components/scanner/ScanResultModal';
 import QuickResultFlash from '../../components/scanner/QuickResultFlash';
+import ScannerHeader from '../../components/scanner/ScannerHeader';
 
 type Product = {
   upc: string;
@@ -449,6 +450,7 @@ export default function ScannerScreen({ route }: any) {
 
   return (
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
+      <ScannerHeader />
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.content}>
         <ScanArea
           isScanning={isScanning}
@@ -496,6 +498,6 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 16,
-    paddingTop: 20,
+    paddingTop: 10,
   },
 });
