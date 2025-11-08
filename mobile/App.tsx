@@ -10,12 +10,8 @@ import { WICProvider } from './context/WICContext';
 // Auth Screens
 import IntroScreen from './screens/auth/auth/IntroScreen';
 import StateProviderScreen from './screens/auth/auth/StateProviderScreen';
+import CardScanScreen from './screens/auth/auth/CardScanScreen';
 import AuthIndexScreen from './screens/auth/auth/AuthIndexScreen';
-import SignInScreen from './screens/auth/auth/SignInScreen';
-import SignUpNameScreen from './screens/auth/auth/SignUpNameScreen';
-import SignUpEmailScreen from './screens/auth/auth/SignUpEmailScreen';
-import SignUpPasswordScreen from './screens/auth/auth/SignUpPasswordScreen';
-import ForgotPasswordScreen from './screens/auth/auth/ForgotPasswordScreen';
 
 // Main App Screens
 import MainTabs from './navigation/MainTabs';
@@ -45,12 +41,8 @@ function AppNavigator() {
             <>
               <Stack.Screen name="Intro" component={IntroScreen} />
               <Stack.Screen name="StateProvider" component={StateProviderScreen} />
+              <Stack.Screen name="CardScan" component={CardScanScreen} />
               <Stack.Screen name="AuthIndex" component={AuthIndexScreen} />
-              <Stack.Screen name="SignIn" component={SignInScreen} />
-              <Stack.Screen name="SignUpName" component={SignUpNameScreen} />
-              <Stack.Screen name="SignUpEmail" component={SignUpEmailScreen} />
-              <Stack.Screen name="SignUpPassword" component={SignUpPasswordScreen} />
-              <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
             </>
           ) : (
             // Main App Stack

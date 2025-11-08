@@ -24,15 +24,8 @@ const AuthIndexScreen = ({ navigation }: any) => {
   };
 
   const handleCardLogin = () => {
-    // In production, this would scan/input WIC card number
-    Alert.alert(
-      "Login with WIC Card",
-      "Scan your WIC card barcode or enter your card number to access your benefits.",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Enter Card Number", onPress: navigateToSignIn }
-      ]
-    );
+    // Navigate directly to card scan screen
+    navigation.navigate('CardScan', { selectedState: 'Your State' });
   };
 
   const handleHelp = () => {

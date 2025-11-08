@@ -16,16 +16,60 @@ import Typography from '../../../components/Typography';
 import Button from '../../../components/Button';
 
 const US_STATES_WITH_WIC = [
-  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
-  'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
-  'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-  'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-  'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
-  'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
-  'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
-  'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
-  'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
-  'West Virginia', 'Wisconsin', 'Wyoming', 'District of Columbia',
+  { name: 'Alabama', app: 'ALABAMA WIC' },
+  { name: 'Alaska', app: 'ALASKA WIC' },
+  { name: 'Arizona', app: 'ITCA WIC - Inter Tribal Council of Arizona' },
+  { name: 'Arkansas', app: 'ARKANSAS WIC' },
+  { name: 'California', app: 'California WIC' },
+  { name: 'Chickasaw Nation', app: 'Chickasaw WIC' },
+  { name: 'Colorado', app: 'COLORADO WIC' },
+  { name: 'Connecticut', app: 'CONNECTICUT' },
+  { name: 'Delaware', app: 'DELAWARE' },
+  { name: 'District of Columbia', app: 'DC WIC' },
+  { name: 'Florida', app: 'FL WIC' },
+  { name: 'Georgia', app: 'Georgia WIC' },
+  { name: 'Hawaii', app: 'HAWAII WIC' },
+  { name: 'Idaho', app: 'IDAHO WIC' },
+  { name: 'Illinois', app: 'Illinois WIC' },
+  { name: 'Indiana', app: 'INDIANA' },
+  { name: 'Iowa', app: 'Iowa WIC' },
+  { name: 'Kansas', app: 'KANSAS' },
+  { name: 'Kentucky', app: 'KENTUCKY' },
+  { name: 'Louisiana', app: 'LOUISIANA WIC' },
+  { name: 'Maine', app: 'MAINE' },
+  { name: 'Massachusetts', app: 'MA WIC' },
+  { name: 'Michigan', app: 'MICHIGAN' },
+  { name: 'Minnesota', app: 'Minnesota WIC' },
+  { name: 'Mississippi', app: 'MISSISSIPPI' },
+  { name: 'Missouri', app: 'MISSOURI WIC' },
+  { name: 'Montana', app: 'MONTANA' },
+  { name: 'Nebraska', app: 'NEBRASKA WIC' },
+  { name: 'Nevada', app: 'NEVADA' },
+  { name: 'Nevada - ITC', app: 'ITCN - Inter-Tribal Council of Nevada' },
+  { name: 'New Hampshire', app: 'NEW HAMPSHIRE' },
+  { name: 'New Jersey', app: 'NEW JERSEY' },
+  { name: 'New Mexico', app: 'NEW MEXICO' },
+  { name: 'New York', app: 'New York WIC' },
+  { name: 'North Carolina', app: 'North Carolina WIC' },
+  { name: 'North Dakota', app: 'NORTH DAKOTA' },
+  { name: 'Ohio', app: 'Ohio WIC' },
+  { name: 'Oklahoma', app: 'OKLAHOMA' },
+  { name: 'Oregon', app: 'Oregon WIC' },
+  { name: 'Passamaquoddy Reservation', app: 'PASSAMAQUODDY - Pleasant Point' },
+  { name: 'Pennsylvania', app: 'PA WIC' },
+  { name: 'Puerto Rico', app: 'PUERTO RICO WIC' },
+  { name: 'Rhode Island', app: 'Rhode Island WIC' },
+  { name: 'South Carolina', app: 'South Carolina WIC' },
+  { name: 'South Dakota', app: 'South Dakota WIC' },
+  { name: 'Tennessee', app: 'TENNESSEE WIC' },
+  { name: 'Texas', app: 'Texas WIC' },
+  { name: 'Utah', app: 'UTAH WIC' },
+  { name: 'Vermont', app: 'Vermont WIC' },
+  { name: 'Virginia', app: 'VIRGINIA' },
+  { name: 'Washington', app: 'WASHINGTON WIC' },
+  { name: 'West Virginia', app: 'WV WIC' },
+  { name: 'Wisconsin', app: 'Wisconsin WIC' },
+  { name: 'Wyoming', app: 'WYOMING' },
 ];
 
 export default function StateProviderScreen() {
@@ -36,17 +80,18 @@ export default function StateProviderScreen() {
   const [selectedState, setSelectedState] = useState<string | null>(null);
 
   const filteredStates = US_STATES_WITH_WIC.filter(state =>
-    state.toLowerCase().includes(searchQuery.toLowerCase())
+    state.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    state.app.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleStateSelect = (state: string) => {
-    setSelectedState(state);
+  const handleStateSelect = (stateName: string) => {
+    setSelectedState(stateName);
   };
 
   const handleContinue = () => {
     if (selectedState) {
-      // Navigate to auth options screen
-      navigation.navigate('AuthIndex' as never);
+      // Navigate to card scan screen
+      (navigation as any).navigate('CardScan', { selectedState });
     }
   };
 
@@ -59,12 +104,9 @@ export default function StateProviderScreen() {
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
-        </TouchableOpacity>
+        <Typography variant="heading" style={{ marginTop: 20 }}>
+          Select Your State
+        </Typography>
       </View>
 
       <ScrollView 
@@ -72,10 +114,6 @@ export default function StateProviderScreen() {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-        <Typography variant="heading" align="center" style={{ marginBottom: 8 }}>
-          Select Your State
-        </Typography>
-        
         <Typography variant="body" align="center" color="textSecondary" style={{ marginBottom: 32 }}>
           Choose your state to connect with your WIC provider
         </Typography>
@@ -104,16 +142,16 @@ export default function StateProviderScreen() {
         <View style={styles.stateList}>
           {filteredStates.map((state) => (
             <TouchableOpacity
-              key={state}
+              key={state.name}
               style={[
                 styles.stateItem,
                 { 
                   backgroundColor: theme.card,
-                  borderColor: selectedState === state ? theme.primary : 'transparent',
+                  borderColor: selectedState === state.name ? theme.primary : 'transparent',
                   borderWidth: 2,
                 }
               ]}
-              onPress={() => handleStateSelect(state)}
+              onPress={() => handleStateSelect(state.name)}
             >
               <View style={styles.stateContent}>
                 <View style={styles.stateLeftContent}>
@@ -122,11 +160,16 @@ export default function StateProviderScreen() {
                     style={styles.stateLogo}
                     resizeMode="contain"
                   />
-                  <Text style={[styles.stateName, { color: theme.text }]}>
-                    {state}
-                  </Text>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.stateName, { color: theme.text }]}>
+                      {state.name}
+                    </Text>
+                    <Text style={[styles.stateApp, { color: theme.textSecondary }]}>
+                      {state.app}
+                    </Text>
+                  </View>
                 </View>
-                {selectedState === state && (
+                {selectedState === state.name && (
                   <View style={[styles.checkmark, { backgroundColor: theme.primary }]}>
                     <Ionicons name="checkmark" size={20} color="white" />
                   </View>
@@ -188,13 +231,7 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 60,
     paddingHorizontal: 20,
-    paddingBottom: 16,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    paddingBottom: 8,
   },
   content: {
     flex: 1,
@@ -249,6 +286,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     flex: 1,
+  },
+  stateApp: {
+    fontSize: 13,
+    fontWeight: '300',
+    marginTop: 2,
   },
   checkmark: {
     width: 32,
