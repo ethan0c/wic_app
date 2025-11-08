@@ -91,7 +91,7 @@ export default function BenefitCard({
               size={24} 
               stroke="#1A1A1A" 
               fill="#FFFFFF" 
-              strokeWidth={2}
+              strokeWidth={1}
             />
           );
         })()}

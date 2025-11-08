@@ -23,8 +23,8 @@ export default function QuickActionCard({
       onPress={onPress}
       activeOpacity={0.8}
     >
-  <Icon size={28} color={iconColor} stroke={iconColor} />
-      <Typography variant="caption" weight="600" style={{ color: '#1A1A1A', marginTop: 6 }}>
+  <Icon size={28} color={iconColor} stroke="black" strokeWidth={1} fill="white" />
+      <Typography variant="body" weight="600" style={{ color: '#1A1A1A', marginTop: 10, textAlign: 'center' }}>
         {title}
       </Typography>
     </TouchableOpacity>
@@ -34,7 +34,7 @@ export default function QuickActionCard({
 const styles = StyleSheet.create({
   actionCard: {
     flex: 1,
-    padding: 16,
+    padding: 12,
     borderRadius: 20,
     alignItems: 'center',
     borderWidth: 1,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Milk, Apple, Wheat, Zap, ScanLine, List, MapPin, ReceiptText } from 'lucide-react-native';
+import { Milk, Apple, Wheat, Zap, List, MapPin, ReceiptText } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../../context/ThemeContext';
@@ -122,14 +122,6 @@ export default function HomeScreen() {
 
   // Quick actions
   const quickActions = [
-    {
-      key: 'scan',
-      title: 'Scanner',
-      Icon: ScanLine,
-      backgroundColor: '#E8F5E8',
-      iconColor: '#22C55E',
-      action: () => navigation.navigate('MainTabs', { screen: 'Scanner' } as any),
-    },
     {
       key: 'list',
       title: 'Shopping List',
@@ -339,7 +331,7 @@ const styles = StyleSheet.create({
   actionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: 16,
   },
   cardDisplaySection: {
     borderTopLeftRadius: 0,
