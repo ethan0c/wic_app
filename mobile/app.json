@@ -16,7 +16,8 @@
       "bundleIdentifier": "com.wicbuy.app",
       "infoPlist": {
         "NSCameraUsageDescription": "WicBuy needs camera access to scan product barcodes and verify WIC eligibility.",
-        "NSMicrophoneUsageDescription": "WicBuy needs microphone access for audio feedback features."
+        "NSMicrophoneUsageDescription": "WicBuy needs microphone access for audio feedback features.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
