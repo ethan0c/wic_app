@@ -1,6 +1,7 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { useTheme } from '../context/ThemeContext';
+import { Easing } from 'react-native';
 
 // Tab Navigator
 import MainTabs from './MainTabs';
@@ -32,6 +33,60 @@ const Stack = createStackNavigator<MainNavigatorParamList>();
 export default function MainNavigator() {
   const { theme } = useTheme();
 
+  // Custom smooth transition configuration
+  const customTransition = {
+    gestureEnabled: true,
+    gestureDirection: 'horizontal' as const,
+    transitionSpec: {
+      open: {
+        animation: 'timing' as const,
+        config: {
+          duration: 300,
+          easing: Easing.out(Easing.cubic),
+        },
+      },
+      close: {
+        animation: 'timing' as const,
+        config: {
+          duration: 250,
+          easing: Easing.in(Easing.cubic),
+        },
+      },
+    },
+    cardStyleInterpolator: ({ current, next, layouts }: any) => {
+      return {
+        cardStyle: {
+          transform: [
+            {
+              translateX: current.progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [layouts.screen.width, 0],
+              }),
+            },
+            {
+              scale: next
+                ? next.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 0.95],
+                  })
+                : 1,
+            },
+          ],
+          opacity: current.progress.interpolate({
+            inputRange: [0, 0.3, 1],
+            outputRange: [0, 0.5, 1],
+          }),
+        },
+        overlayStyle: {
+          opacity: current.progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 0.1],
+          }),
+        },
+      };
+    },
+  };
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -42,11 +97,12 @@ export default function MainNavigator() {
         },
         headerTintColor: theme.text,
         headerTitleStyle: {
-          fontFamily: 'PlayfairDisplay_400Regular',
+          fontFamily: 'Canela_400Regular',
           fontWeight: '600',
           fontSize: 20,
         },
         headerBackTitle: '',
+        ...customTransition,
       }}
     >
       <Stack.Screen 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
@@ -40,24 +40,47 @@ export default function MainTabs() {
             iconName = 'help-outline';
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          // Add scale animation for focused tab icons
+          const scale = focused ? 1.1 : 1;
+          return (
+            <Animated.View style={{ transform: [{ scale }] }}>
+              <Ionicons name={iconName} size={size} color={color} />
+            </Animated.View>
+          );
         },
         tabBarActiveTintColor: '#1A1A1A',
         tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {
           backgroundColor: theme.background,
           borderTopColor: theme.border,
+          elevation: 10,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: -2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 5,
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '500',
         },
         headerStyle: {
           backgroundColor: theme.background,
         },
         headerTintColor: theme.text,
         headerTitleStyle: {
-          fontFamily: 'PlayfairDisplay_400Regular',
+          fontFamily: 'Canela_400Regular',
           fontWeight: '600',
           fontSize: 20,
         },
         headerShadowVisible: false,
+        animationEnabled: true,
+        animationTypeForReplace: 'push',
       })}
     >
       <Tab.Screen 

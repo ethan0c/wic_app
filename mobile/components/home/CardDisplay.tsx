@@ -173,10 +173,10 @@ export default function CardDisplay({ cardNumber = '4829', onPress }: CardDispla
             <TouchableOpacity 
               style={[styles.actionButton, styles.switchButton]} 
               onPress={handleSwitchCard}
-              activeOpacity={0.8}
+              activeOpacity={0.7}
             >
-              <MaterialCommunityIcons name="swap-horizontal" size={18} color="#FFFFFF" />
-              <Typography variant="caption" weight="600" style={{ color: '#FFFFFF', marginLeft: 8 }}>
+              <MaterialCommunityIcons name="swap-horizontal" size={18} color="#1D4ED8" />
+              <Typography variant="caption" weight="600" style={{ color: '#1D4ED8', marginLeft: 8 }}>
                 Switch Card
               </Typography>
             </TouchableOpacity>
@@ -184,10 +184,10 @@ export default function CardDisplay({ cardNumber = '4829', onPress }: CardDispla
             <TouchableOpacity 
               style={[styles.actionButton, styles.removeButton]} 
               onPress={handleRemoveCard}
-              activeOpacity={0.8}
+              activeOpacity={0.7}
             >
-              <MaterialCommunityIcons name="delete-outline" size={18} color="#FFFFFF" />
-              <Typography variant="caption" weight="600" style={{ color: '#FFFFFF', marginLeft: 8 }}>
+              <MaterialCommunityIcons name="delete-outline" size={18} color="#DC2626" />
+              <Typography variant="caption" weight="600" style={{ color: '#DC2626', marginLeft: 8 }}>
                 Remove Card
               </Typography>
             </TouchableOpacity>
@@ -229,24 +229,26 @@ const styles = StyleSheet.create({
   },
   actionButtons: {
     flexDirection: 'row',
-    gap: 16,
+    marginTop: 8,
   },
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: '#F9FAFB',
-    borderRadius: 12,
+    paddingHorizontal: 18,
+    borderRadius: 26,
     flex: 1,
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    borderWidth: 1,
+  },
+  switchButton: {
+    backgroundColor: '#DBEAFE',
+    borderColor: '#93C5FD',
+    marginRight: 8,
+  },
+  removeButton: {
+    backgroundColor: '#FEE2E2',
+    borderColor: '#FECACA',
+    marginLeft: 8,
   },
 });

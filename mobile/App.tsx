@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { TransitionPresets } from '@react-navigation/stack';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { WICProvider } from './context/WICContext';
@@ -50,18 +51,54 @@ function AppNavigator() {
     <>
       <StatusBar style={themeKey === 'dark' ? 'light' : 'dark'} />
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator 
+          screenOptions={{ 
+            headerShown: false,
+            ...TransitionPresets.SlideFromRightIOS,
+            gestureEnabled: true,
+          }}
+        >
           {!isAuthenticated ? (
             // Auth Stack
             <>
-              <Stack.Screen name="Intro" component={IntroScreen} />
-              <Stack.Screen name="StateProvider" component={StateProviderScreen} />
-              <Stack.Screen name="CardScan" component={CardScanScreen} />
-              <Stack.Screen name="AuthIndex" component={AuthIndexScreen} />
+              <Stack.Screen 
+                name="Intro" 
+                component={IntroScreen}
+                options={{
+                  ...TransitionPresets.FadeFromBottomAndroid,
+                }}
+              />
+              <Stack.Screen 
+                name="StateProvider" 
+                component={StateProviderScreen}
+                options={{
+                  ...TransitionPresets.SlideFromRightIOS,
+                }}
+              />
+              <Stack.Screen 
+                name="CardScan" 
+                component={CardScanScreen}
+                options={{
+                  ...TransitionPresets.ModalSlideFromBottomIOS,
+                }}
+              />
+              <Stack.Screen 
+                name="AuthIndex" 
+                component={AuthIndexScreen}
+                options={{
+                  ...TransitionPresets.SlideFromRightIOS,
+                }}
+              />
             </>
           ) : (
             // Main App Stack
-            <Stack.Screen name="MainApp" component={MainNavigator} />
+            <Stack.Screen 
+              name="MainApp" 
+              component={MainNavigator}
+              options={{
+                ...TransitionPresets.FadeFromBottomAndroid,
+              }}
+            />
           )}
         </Stack.Navigator>
       </NavigationContainer>
