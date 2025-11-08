@@ -40,8 +40,9 @@ export default function MainNavigator() {
         },
         headerTintColor: theme.text,
         headerTitleStyle: {
+          fontFamily: 'PlayfairDisplay_400Regular',
           fontWeight: '600',
-          fontSize: 18,
+          fontSize: 20,
         },
         headerBackTitle: '',
       }}

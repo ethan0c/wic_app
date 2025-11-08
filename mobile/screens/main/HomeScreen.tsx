@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../../context/ThemeContext';
@@ -67,7 +68,7 @@ export default function HomeScreen() {
     {
       key: 'scan',
       title: 'Scan Item',
-      icon: 'scan-outline' as keyof typeof Ionicons.glyphMap,
+      icon: 'barcode-scan' as keyof typeof MaterialCommunityIcons.glyphMap,
       backgroundColor: '#E8F5E8',
       iconColor: '#22C55E',
       action: () => navigation.navigate('MainTabs', { screen: 'Scanner' } as any),
@@ -75,14 +76,14 @@ export default function HomeScreen() {
     {
       key: 'list',
       title: 'Shopping List',
-      icon: 'list-outline' as keyof typeof Ionicons.glyphMap,
+      icon: 'format-list-bulleted' as keyof typeof MaterialCommunityIcons.glyphMap,
       backgroundColor: '#FEF3C7',
       iconColor: '#F59E0B',
     },
     {
       key: 'stores',
       title: 'WIC Stores',
-      icon: 'location-outline' as keyof typeof Ionicons.glyphMap,
+      icon: 'map-marker-outline' as keyof typeof MaterialCommunityIcons.glyphMap,
       backgroundColor: '#DBEAFE',
       iconColor: '#3B82F6',
     },
@@ -117,17 +118,19 @@ export default function HomeScreen() {
         <HomeHeader userName={user?.firstName} />
       </View>
       
-      {/* Current Card - Right under header */}
-      <View style={styles.sectionNoPad}>
-        <SectionCard>
-          <CardDisplay cardNumber="4829" />
-        </SectionCard>
-      </View>
+      
 
       <ScrollView 
         style={styles.scrollContainer}
         contentContainerStyle={styles.contentContainer}
       >
+        {/* Current Card - Right under header */}
+        <View style={styles.sectionNoPad}>
+        <SectionCard style={styles.cardDisplaySection}>
+          <CardDisplay cardNumber="4829" />
+        </SectionCard>
+      </View>
+      
       {/* You Have Left This Month */}
       <View style={styles.sectionNoPad}>
         <BenefitTilesGroup
@@ -219,5 +222,9 @@ const styles = StyleSheet.create({
   actionsGrid: {
     flexDirection: 'row',
     gap: 12,
+  },
+  cardDisplaySection: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
 });

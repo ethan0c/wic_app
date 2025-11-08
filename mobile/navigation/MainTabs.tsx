@@ -44,6 +44,11 @@ export default function MainTabs() {
           backgroundColor: theme.background,
         },
         headerTintColor: theme.text,
+        headerTitleStyle: {
+          fontFamily: 'PlayfairDisplay_400Regular',
+          fontWeight: '600',
+          fontSize: 20,
+        },
         headerShadowVisible: false,
       })}
     >

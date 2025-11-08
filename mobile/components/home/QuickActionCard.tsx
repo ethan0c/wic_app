@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Typography from '../Typography';
 
 interface QuickActionCardProps {
-  icon: keyof typeof Ionicons.glyphMap;
+  icon: keyof typeof MaterialCommunityIcons.glyphMap;
   title: string;
   backgroundColor: string;
   iconColor: string;
@@ -24,8 +24,8 @@ export default function QuickActionCard({
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <Ionicons name={icon} size={32} color={iconColor} />
-      <Typography variant="body" weight="600" style={{ color: '#1A1A1A', marginTop: 8 }}>
+      <MaterialCommunityIcons name={icon} size={28} color={iconColor} />
+      <Typography variant="caption" weight="600" style={{ color: '#1A1A1A', marginTop: 6 }}>
         {title}
       </Typography>
     </TouchableOpacity>
@@ -35,7 +35,7 @@ export default function QuickActionCard({
 const styles = StyleSheet.create({
   actionCard: {
     flex: 1,
-    padding: 20,
+    padding: 16,
     borderRadius: 20,
     alignItems: 'center',
     borderWidth: 1,
