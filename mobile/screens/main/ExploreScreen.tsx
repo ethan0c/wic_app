@@ -9,7 +9,6 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainNavigatorParamList } from '../../navigation/MainNavigator';
 import Typography from '../../components/Typography';
-import SectionCard from '../../components/home/SectionCard';
 
 type ExploreScreenNavigationProp = StackNavigationProp<MainNavigatorParamList>;
 
@@ -83,13 +82,27 @@ export default function ExploreScreen() {
   ];
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: theme.background }]}
-      contentContainerStyle={styles.contentContainer}
-    >
+    <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
+      {/* Header - Fixed at top */}
+      <View style={styles.headerSection}>
+        <Typography variant="heading" weight="500" style={{ fontSize: 24 }}>
+          Explore
+        </Typography>
+        <Typography variant="body" color="textSecondary" style={{ marginTop: 4, fontSize: 14 }}>
+          Discover WIC resources and tools
+        </Typography>
+      </View>
+
+      <ScrollView 
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.contentContainer}
+      >
       {/* Main Cards Grid */}
       <View style={styles.sectionNoPad}>
-        <SectionCard title="Quick Access">
+        <View style={styles.cardsWrapper}>
+          <Typography variant="subheading" weight="600" style={{ marginBottom: 16, paddingHorizontal: 16 }}>
+            Quick Access
+          </Typography>
           <View style={styles.cardsContainer}>
             {cards.map(card => (
               <TouchableOpacity
@@ -100,7 +113,7 @@ export default function ExploreScreen() {
               >
                 <View style={styles.iconContainer}>
                   <card.icon 
-                    size={40}
+                    size={36}
                     color="#1A1A1A"
                     stroke="#1A1A1A"
                     fill="#FFFFFF"
@@ -116,12 +129,16 @@ export default function ExploreScreen() {
               </TouchableOpacity>
             ))}
           </View>
-        </SectionCard>
+        </View>
       </View>
 
       {/* Account Section */}
       <View style={styles.sectionNoPad}>
-        <SectionCard title="Account">
+        <View style={styles.accountCard}>
+          <Typography variant="subheading" weight="600" style={{ marginBottom: 16 }}>
+            Account
+          </Typography>
+          
           {/* User Info */}
           <View style={styles.userInfo}>
             <View style={styles.userAvatar}>
@@ -192,43 +209,13 @@ export default function ExploreScreen() {
               </Typography>
             </TouchableOpacity>
           </View>
-        </SectionCard>
-      </View>
-
-      {/* Bottom Utilities */}
-      <View style={styles.sectionNoPad}>
-        <SectionCard title="Help & Support">
-          <View style={styles.utilitiesContainer}>
-            {utilities.map(util => (
-              <TouchableOpacity
-                key={util.key}
-                style={styles.utilityItem}
-                activeOpacity={0.6}
-              >
-                <View style={[styles.utilityIcon, { backgroundColor: '#FFFFFF' }]}>
-                  <util.icon 
-                    size={24}
-                    color="#1A1A1A"
-                    stroke="#1A1A1A"
-                    fill="#FFFFFF"
-                  />
-                </View>
-                <Typography 
-                  variant="body" 
-                  weight="500" 
-                  style={[styles.utilityText, { color: theme.text }]}
-                >
-                  {util.title}
-                </Typography>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </SectionCard>
+        </View>
       </View>
 
       {/* Bottom Spacing */}
-      <View style={{ height: 100 }} />
-    </ScrollView>
+      <View style={{ height: 20 }} />
+      </ScrollView>
+    </View>
   );
 }
 
@@ -236,90 +223,58 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1,
   },
+  headerSection: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingTop: 60,
+    paddingBottom: 16,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
   contentContainer: {
-    paddingTop: 20,
+    paddingTop: 16,
   },
   sectionNoPad: {
     marginHorizontal: 16,
-    marginBottom: 12,
+    marginBottom: 16,
   },
-  headerSection: { 
-    paddingHorizontal: 16,
-    marginBottom: 3,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerSpacer: {
-    width: 20,
+  cardsWrapper: {
+    // No extra styling needed
   },
   cardsContainer: {
-    paddingHorizontal: 16,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    paddingHorizontal: 0,
   },
   card: {
     width: '48%',
     height: 120,
-    borderRadius: 24,
-    padding: 20,
-    marginBottom: 16,
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 12,
     justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
   },
   iconContainer: {
     alignSelf: 'flex-start',
   },
-  cardIcon: {
-    // Icon styling handled by Ionicons
-  },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 15,
     marginTop: 8,
   },
-  utilitiesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingHorizontal: 40,
-    paddingVertical: 32,
-    borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
-    marginTop: 40,
-  },
-  utilityItem: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  utilityIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  utilityText: {
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  accountSection: {
-    paddingHorizontal: 16,
-    marginTop: 24,
+  accountCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
   },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
   },
   userAvatar: {
     width: 60,

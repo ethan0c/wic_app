@@ -6,51 +6,68 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { 
+  Milk, Wheat, Egg, Apple, Carrot, AlertCircle, 
+  Sandwich, Soup, Beef, Bean, Leaf, Package2, CupSoda
+} from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import Typography from '../../components/Typography';
-import SectionCard from '../../components/home/SectionCard';
 
-// Mock WIC benefits data
+// Mock WIC benefits data with more realistic items
 const mockBenefits = {
-  dairy: [
-    { id: '1', name: 'Milk (Whole)', quantity: 4, unit: 'gallons', used: 2 },
-    { id: '2', name: 'Cheese', quantity: 1, unit: 'lb', used: 0 },
-    { id: '3', name: 'Yogurt', quantity: 32, unit: 'oz', used: 16 },
-  ],
-  grains: [
-    { id: '4', name: 'Whole Wheat Bread', quantity: 2, unit: 'loaves', used: 1 },
-    { id: '5', name: 'Cereal', quantity: 2, unit: 'boxes', used: 1 },
-    { id: '6', name: 'Brown Rice', quantity: 1, unit: 'lb', used: 0 },
-  ],
-  protein: [
-    { id: '7', name: 'Eggs', quantity: 1, unit: 'dozen', used: 0 },
-    { id: '8', name: 'Peanut Butter', quantity: 1, unit: 'jar', used: 0 },
-    { id: '9', name: 'Dried Beans', quantity: 1, unit: 'lb', used: 0 },
-  ],
-  vegetables: [
-    { id: '10', name: 'Fresh Vegetables', quantity: 10, unit: 'dollars', used: 4 },
-    { id: '11', name: 'Carrots', quantity: 1, unit: 'lb', used: 1 },
-  ],
-  fruits: [
-    { id: '12', name: 'Fresh Fruit', quantity: 8, unit: 'dollars', used: 3 },
-    { id: '13', name: 'Apples', quantity: 2, unit: 'lbs', used: 0 },
-  ],
+  dairy: {
+    icon: Milk,
+    color: '#E3F2FD',
+    items: [
+      { id: '1', name: 'Milk (Whole)', quantity: 4, unit: 'gallons', used: 1, suggestion: '≈ three 1-gallon jugs', icon: Milk },
+      { id: '2', name: 'Cheese', quantity: 16, unit: 'oz', used: 0, suggestion: '≈ one 1-lb block', icon: Package2 },
+      { id: '3', name: 'Yogurt', quantity: 32, unit: 'oz', used: 16, suggestion: '≈ two 16-oz tubs', icon: CupSoda },
+    ],
+  },
+  grains: {
+    icon: Wheat,
+    color: '#FFF3E0',
+    items: [
+      { id: '4', name: 'Whole Wheat Bread', quantity: 2, unit: 'loaves', used: 1, suggestion: '≈ one 24-oz loaf', icon: Sandwich },
+      { id: '5', name: 'Cereal', quantity: 36, unit: 'oz', used: 18, suggestion: '≈ one 18-oz box', icon: Package2 },
+      { id: '6', name: 'Brown Rice', quantity: 32, unit: 'oz', used: 0, suggestion: '≈ one 2-lb bag', icon: Wheat },
+    ],
+  },
+  protein: {
+    icon: Egg,
+    color: '#FCE4EC',
+    items: [
+      { id: '7', name: 'Eggs', quantity: 2, unit: 'dozen', used: 1, suggestion: '≈ one 12-count carton', icon: Egg },
+      { id: '8', name: 'Peanut Butter', quantity: 18, unit: 'oz', used: 0, suggestion: '≈ one standard jar', icon: Package2 },
+      { id: '9', name: 'Dried Beans', quantity: 16, unit: 'oz', used: 0, suggestion: '≈ one 1-lb bag', icon: Bean },
+    ],
+  },
+  vegetables: {
+    icon: Carrot,
+    color: '#E8F5E9',
+    items: [
+      { id: '10', name: 'Fresh Vegetables', quantity: 12.00, unit: 'dollars', used: 4.50, suggestion: '≈ $7.50 to spend', icon: Leaf },
+      { id: '11', name: 'Carrots', quantity: 2, unit: 'lbs', used: 1, suggestion: '≈ one 1-lb bag', icon: Carrot },
+      { id: '12', name: 'Canned Vegetables', quantity: 4, unit: 'cans', used: 0, suggestion: '≈ four 15-oz cans', icon: Soup },
+    ],
+  },
+  fruits: {
+    icon: Apple,
+    color: '#FFEBEE',
+    items: [
+      { id: '13', name: 'Fresh Fruit', quantity: 11.00, unit: 'dollars', used: 3.50, suggestion: '≈ $7.50 to spend', icon: Apple },
+      { id: '14', name: 'Apples', quantity: 3, unit: 'lbs', used: 0, suggestion: '≈ 8-10 medium apples', icon: Apple },
+      { id: '15', name: '100% Juice', quantity: 128, unit: 'fl oz', used: 64, suggestion: '≈ one 64-oz bottle', icon: CupSoda },
+    ],
+  },
 };
 
 type CategoryKey = keyof typeof mockBenefits;
 
-const categoryIcons: Record<CategoryKey, keyof typeof Ionicons.glyphMap> = {
-  dairy: 'nutrition',
-  grains: 'leaf',
-  protein: 'egg',
-  vegetables: 'fitness',
-  fruits: 'pizza',
-};
-
 export default function BenefitsScreen() {
   const { theme } = useTheme();
   const [expandedCategory, setExpandedCategory] = useState<CategoryKey | null>('dairy');
+  const [viewMode, setViewMode] = useState<'current' | 'future'>('current');
 
   const toggleCategory = (category: CategoryKey) => {
     setExpandedCategory(expandedCategory === category ? null : category);
@@ -60,107 +77,188 @@ export default function BenefitsScreen() {
     return category.charAt(0).toUpperCase() + category.slice(1);
   };
 
+  const formatValue = (value: number, unit: string) => {
+    if (unit === 'dollars') {
+      return `$${value.toFixed(2)}`;
+    }
+    return `${value} ${unit}`;
+  };
+
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.background }]}
-    >
+    <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
+      {/* Header - Fixed at top */}
       <View style={styles.headerSection}>
-        <SectionCard>
-          <View style={styles.headerRow}>
-            <View style={styles.headerContent}>
-              <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
-                Your Monthly Benefits
-              </Typography>
-              <Typography variant="body" color="textSecondary" style={{ marginTop: 4 }}>
-                Tap categories to view approved items
-              </Typography>
-            </View>
-            <View style={styles.headerSpacer} />
-          </View>
-        </SectionCard>
+        {/* Toggle between Current and Future */}
+        <View style={styles.toggleContainer}>
+          <TouchableOpacity
+            style={[styles.toggleButton, viewMode === 'current' && styles.toggleButtonActive]}
+            onPress={() => setViewMode('current')}
+          >
+            <Text style={[styles.toggleText, viewMode === 'current' && styles.toggleTextActive]}>
+              Current
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.toggleButton, viewMode === 'future' && styles.toggleButtonActive]}
+            onPress={() => setViewMode('future')}
+          >
+            <Text style={[styles.toggleText, viewMode === 'future' && styles.toggleTextActive]}>
+              Future
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Expiration Notice */}
+        <View style={styles.expirationNotice}>
+          <AlertCircle size={18} color="#DC2626" />
+          <Text style={styles.expirationText}>
+            {viewMode === 'current' 
+              ? 'Benefits expire in 23 days • Reset: Dec 1, 2025'
+              : 'Next benefits available: Dec 1, 2025'}
+          </Text>
+        </View>
       </View>
 
+      <ScrollView 
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.contentContainer}
+      >
       {(Object.keys(mockBenefits) as CategoryKey[]).map((category) => {
-        const items = mockBenefits[category];
+        const categoryData = mockBenefits[category];
+        const items = categoryData.items;
+        const IconComponent = categoryData.icon;
         const totalItems = items.length;
-        const usedItems = items.filter(item => item.used > 0).length;
+        
+        // For current view, show actual used items. For future view, all items are unused
+        const usedItems = viewMode === 'current' 
+          ? items.filter(item => item.used > 0).length 
+          : 0;
+        
         const isExpanded = expandedCategory === category;
 
         return (
           <View key={category} style={styles.sectionNoPad}>
-            <SectionCard>
+            <View style={[styles.categoryCard, viewMode === 'future' && styles.categoryCardFuture]}>
               <TouchableOpacity
                 style={styles.categoryHeader}
                 onPress={() => toggleCategory(category)}
               >
               <View style={styles.categoryLeft}>
-                <View style={[styles.iconContainer, { backgroundColor: theme.primary + '20' }]}>
-                  <Ionicons
-                    name={categoryIcons[category]}
+                <View style={[
+                  styles.iconContainer, 
+                  { backgroundColor: categoryData.color },
+                  viewMode === 'future' && styles.iconContainerFuture
+                ]}>
+                  <IconComponent
                     size={24}
-                    color={theme.primary}
+                    stroke={viewMode === 'future' ? '#999' : '#1A1A1A'}
+                    fill="#FFFFFF"
+                    strokeWidth={2}
                   />
                 </View>
                 <View>
-                  <Text style={[styles.categoryTitle, { color: theme.text }]}>
+                  <Text style={[
+                    styles.categoryTitle, 
+                    { color: viewMode === 'future' ? '#999' : theme.text }
+                  ]}>
                     {getCategoryTitle(category)}
                   </Text>
                   <Text style={[styles.categorySubtitle, { color: theme.textSecondary }]}>
-                    {totalItems} items • {usedItems} used
+                    {viewMode === 'current' 
+                      ? `${totalItems} items • ${usedItems} used`
+                      : `${totalItems} items available`}
                   </Text>
                 </View>
               </View>
-              <Ionicons
-                name={isExpanded ? 'chevron-up' : 'chevron-down'}
-                size={24}
-                color={theme.textSecondary}
-              />
+              <View style={styles.chevronContainer}>
+                {isExpanded ? (
+                  <View style={[styles.chevronUp, viewMode === 'future' && styles.chevronFuture]} />
+                ) : (
+                  <View style={[styles.chevronDown, viewMode === 'future' && styles.chevronFuture]} />
+                )}
+              </View>
             </TouchableOpacity>
 
               {isExpanded && (
                 <View style={styles.itemsContainer}>
                   {items.map((item) => {
-                    const remaining = item.quantity - item.used;
-                    const percentage = (item.used / item.quantity) * 100;
+                    // For future view, show full quantities with no usage
+                    const remaining = viewMode === 'current' 
+                      ? item.quantity - item.used 
+                      : item.quantity;
+                    const percentage = viewMode === 'current'
+                      ? (item.used / item.quantity) * 100
+                      : 0;
+                    const ItemIcon = item.icon;
 
                     return (
                       <View key={item.id} style={styles.item}>
-                        <View style={styles.itemHeader}>
-                          <Text style={[styles.itemName, { color: theme.text }]}>
-                            {item.name}
-                          </Text>
-                          <Text style={[styles.itemQuantity, { color: theme.primary }]}>
-                            {remaining} {item.unit}
-                          </Text>
+                        <View style={styles.itemTop}>
+                          <View style={[
+                            styles.itemIconContainer,
+                            viewMode === 'future' && styles.itemIconContainerFuture
+                          ]}>
+                            <ItemIcon
+                              size={20}
+                              stroke={viewMode === 'future' ? '#AAA' : '#666'}
+                              fill={viewMode === 'future' ? '#F9F9F9' : '#F5F5F5'}
+                              strokeWidth={1.5}
+                            />
+                          </View>
+                          <View style={styles.itemLeft}>
+                            <Text style={[
+                              styles.itemName, 
+                              { color: viewMode === 'future' ? '#999' : theme.text }
+                            ]}>
+                              {item.name}
+                            </Text>
+                            <Text style={[
+                              styles.itemSuggestion, 
+                              { color: viewMode === 'future' ? '#AAA' : theme.textSecondary }
+                            ]}>
+                              {item.suggestion}
+                            </Text>
+                          </View>
+                          <View style={styles.itemRight}>
+                            <Text style={[
+                              styles.itemRemaining, 
+                              { color: viewMode === 'future' ? '#999' : theme.text }
+                            ]}>
+                              {formatValue(remaining, item.unit)}
+                            </Text>
+                            <Text style={[
+                              styles.itemRemainingLabel, 
+                              { color: viewMode === 'future' ? '#BBB' : theme.textSecondary }
+                            ]}>
+                              remaining
+                            </Text>
+                          </View>
                         </View>
-                        <View style={[styles.progressBar, { backgroundColor: theme.border }]}>
+                        
+                        <View style={[styles.progressBar, { backgroundColor: '#F0F0F0' }]}>
                           <View
                             style={[
                               styles.progressFill,
                               {
                                 width: `${percentage}%`,
-                                backgroundColor: percentage >= 75 ? theme.error : theme.primary,
+                                backgroundColor: percentage >= 80 ? '#DC2626' : percentage >= 50 ? '#F59E0B' : '#10B981',
                               },
                             ]}
                           />
                         </View>
-                        <Text style={[styles.itemUsed, { color: theme.textSecondary }]}>
-                          {item.used > 0
-                            ? `Used ${item.used} of ${item.quantity} ${item.unit}`
-                            : 'Not yet used'}
-                        </Text>
                       </View>
                     );
                   })}
                 </View>
               )}
-            </SectionCard>
+            </View>
           </View>
         );
       })}
 
       <View style={styles.bottomPadding} />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -168,96 +266,195 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerSection: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
+  },
+  headerContent: {
+    marginBottom: 12,
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 10,
+    padding: 4,
+    marginBottom: 12,
+  },
+  toggleButton: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  toggleButtonActive: {
+    backgroundColor: '#FFFFFF',
+  },
+  toggleText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#666',
+  },
+  toggleTextActive: {
+    color: '#1A1A1A',
+    fontWeight: '600',
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  contentContainer: {
+    paddingTop: 16,
+  },
   sectionNoPad: {
     marginHorizontal: 16,
     marginBottom: 12,
   },
-  headerSection: {
-    paddingHorizontal: 16,
-    marginBottom: 3,
+  categoryCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    overflow: 'hidden',
   },
-  headerRow: {
+  categoryCardFuture: {
+    opacity: 0.6,
+  },
+  expirationNotice: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#FEE2E2',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    gap: 8,
   },
-  headerContent: {
-    flex: 1,
-  },
-  headerSpacer: {
-    width: 20,
-  },
-  categoryContainer: {
-    marginHorizontal: 20,
-    marginBottom: 12,
+  expirationText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#DC2626',
   },
   categoryHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 18,
-    borderRadius: 20,
+    padding: 16,
   },
   categoryLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: 12,
+    flex: 1,
   },
   iconContainer: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  iconContainerFuture: {
+    opacity: 0.5,
+  },
   categoryTitle: {
-    fontSize: 18,
-    fontWeight: '400',
+    fontSize: 17,
+    fontWeight: '600',
   },
   categorySubtitle: {
     fontSize: 13,
-    fontWeight: '300',
+    fontWeight: '400',
     marginTop: 2,
   },
+  chevronContainer: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  chevronUp: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderBottomWidth: 6,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: '#666',
+  },
+  chevronDown: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderTopWidth: 6,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#666',
+  },
+  chevronFuture: {
+    opacity: 0.5,
+  },
   itemsContainer: {
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    paddingHorizontal: 18,
-    paddingBottom: 10,
-    marginTop: -8,
+    paddingHorizontal: 16,
+    paddingBottom: 8,
   },
   item: {
-    paddingVertical: 14,
+    paddingVertical: 16,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.04)',
+    borderTopColor: 'rgba(0,0,0,0.06)',
   },
-  itemHeader: {
+  itemTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  itemIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    marginRight: 12,
+  },
+  itemIconContainerFuture: {
+    opacity: 0.5,
+  },
+  itemLeft: {
+    flex: 1,
+    marginRight: 16,
   },
   itemName: {
-    fontSize: 16,
-    fontWeight: '400',
+    fontSize: 15,
+    fontWeight: '500',
+    marginBottom: 4,
   },
-  itemQuantity: {
-    fontSize: 14,
+  itemSuggestion: {
+    fontSize: 13,
     fontWeight: '400',
+    fontStyle: 'italic',
+  },
+  itemRight: {
+    alignItems: 'flex-end',
+  },
+  itemRemaining: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  itemRemainingLabel: {
+    fontSize: 12,
+    fontWeight: '400',
+    marginTop: 2,
   },
   progressBar: {
-    height: 5,
-    borderRadius: 10,
+    height: 6,
+    borderRadius: 3,
     overflow: 'hidden',
-    marginVertical: 8,
   },
   progressFill: {
     height: '100%',
-    borderRadius: 10,
-  },
-  itemUsed: {
-    fontSize: 13,
-    fontWeight: '300',
+    borderRadius: 3,
   },
   bottomPadding: {
     height: 20,
