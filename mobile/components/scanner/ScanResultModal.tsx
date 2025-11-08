@@ -104,7 +104,11 @@ export default function ScanResultModal({
         <View style={styles.container}>
           {/* Header Controls */}
           <View style={styles.header}>
-            <View style={styles.headerSpacer} />
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <Typography variant="body" color="textSecondary">
+                {t('common.close')}
+              </Typography>
+            </TouchableOpacity>
             
             <TouchableOpacity 
               onPress={onSpeakResult}
@@ -115,43 +119,48 @@ export default function ScanResultModal({
           </View>
 
           {/* Result Status */}
-          <SectionCard style={{ marginBottom: 12 }}>
-            <View style={styles.resultHeader}>
-              {/* Product Image or Emoji */}
-              <View style={styles.productImageContainer}>
-                {product.imageUrl ? (
-                  <Image 
-                    source={{ uri: product.imageUrl }} 
-                    style={styles.productImage}
-                    resizeMode="contain"
-                  />
-                ) : product.emoji ? (
-                  <Typography variant="heading" style={{ fontSize: 60 }}>
-                    {product.emoji}
-                  </Typography>
-                ) : (
-                  <View style={[
-                    styles.resultIcon,
-                    { backgroundColor: product.isApproved ? '#F0FDF4' : '#FEF2F2' }
-                  ]}>
-                    <MaterialCommunityIcons
-                      name={product.isApproved ? 'check-circle' : 'close-circle'}
-                      size={60}
-                      color={product.isApproved ? '#10B981' : '#EF4444'}
-                    />
-                  </View>
-                )}
-              </View>
+          <View style={styles.resultHeader}>
+            {/* Product Image or Emoji */}
+            <View style={styles.productImageContainer}>
+              {product.imageUrl ? (
+                <Image 
+                  source={{ uri: product.imageUrl }} 
+                  style={styles.productImage}
+                  resizeMode="contain"
+                />
+              ) : product.emoji ? (
+                <Typography variant="heading" style={{ fontSize: 48 }}>
+                  {product.emoji}
+                </Typography>
+              ) : (
+                <MaterialCommunityIcons
+                  name={product.isApproved ? 'check-circle' : 'close-circle'}
+                  size={48}
+                  color={product.isApproved ? '#10B981' : '#EF4444'}
+                />
+              )}
+            </View>
 
-              <Typography variant="heading" style={{ textAlign: 'center', marginBottom: 16 }}>
+            <View style={[
+              styles.statusBadge,
+              { backgroundColor: product.isApproved ? '#F0FDF4' : '#FEF2F2' }
+            ]}>
+              <Typography 
+                variant="body" 
+                weight="600"
+                style={{ color: product.isApproved ? '#10B981' : '#EF4444' }}
+              >
                 {product.isApproved ? t('scanner.approved') : t('scanner.notApproved')}
               </Typography>
-
-              <Typography variant="body" style={{ textAlign: 'center', lineHeight: 24 }}>
-                {getResultMessage(product)}
-              </Typography>
             </View>
-          </SectionCard>
+
+            <Typography variant="subheading" weight="600" style={{ textAlign: 'center', marginTop: 12 }}>
+              {product.name}
+            </Typography>
+            <Typography variant="body" color="textSecondary" style={{ textAlign: 'center', marginTop: 4 }}>
+              {product.brand} • {product.size_display}
+            </Typography>
+          </View>
 
           {/* Benefit Calculation - Before/After */}
           {product.benefitCalculation && product.isApproved && (
@@ -289,7 +298,7 @@ export default function ScanResultModal({
               });
             }}
             fullWidth
-            size="large"
+            size="medium"
             style={{ marginBottom: 12 }}
           />
 
@@ -297,16 +306,9 @@ export default function ScanResultModal({
             title={t('scanner.scanAnotherItem')}
             onPress={onClose}
             fullWidth
-            size="large"
+            size="medium"
             variant="outline"
-            style={{ marginBottom: 16 }}
           />
-
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Typography variant="body" color="textSecondary" style={{ textAlign: 'center' }}>
-              {t('common.close')}
-            </Typography>
-          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -320,21 +322,21 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   container: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    padding: 16,
+    padding: 20,
     paddingBottom: 32,
-    maxHeight: '80%',
+    maxHeight: '85%',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  headerSpacer: {
-    width: 40,
+  closeButton: {
+    padding: 8,
   },
   audioButton: {
     width: 40,
@@ -346,28 +348,27 @@ const styles = StyleSheet.create({
   },
   resultHeader: {
     alignItems: 'center',
+    marginBottom: 20,
   },
   productImageContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 12,
-    backgroundColor: '#F9FAFB',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-    overflow: 'hidden',
-  },
-  productImage: {
-    width: 90,
-    height: 90,
-  },
-  resultIcon: {
     width: 80,
     height: 80,
     borderRadius: 40,
+    backgroundColor: '#F9FAFB',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
+    overflow: 'hidden',
+  },
+  productImage: {
+    width: 70,
+    height: 70,
+  },
+  statusBadge: {
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 20,
+    marginTop: 8,
   },
   benefitCalc: {
     flexDirection: 'row',
@@ -396,8 +397,5 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
-  },
-  closeButton: {
-    padding: 8,
   },
 });

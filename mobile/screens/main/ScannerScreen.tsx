@@ -405,6 +405,31 @@ export default function ScannerScreen({ route }: any) {
     setShowResult(false);
   };
 
+  const handleReadScreen = async () => {
+    // Stop any ongoing speech first
+    Speech.stop();
+    
+    if (!settings.audioEnabled) {
+      return;
+    }
+
+    // Build simple screen content description
+    let screenContent = '';
+    
+    // Basic instruction
+    if (isScanning) {
+      screenContent = 'Camera is active. Point at a barcode to scan.';
+    } else if (scanResult) {
+      // Read the last scan result
+      screenContent = `Last scanned: ${scanResult.name}. `;
+      screenContent += getResultMessage(scanResult);
+    } else {
+      screenContent = 'Tap the scan button to start scanning.';
+    }
+    
+    await audioFeedback.speak(screenContent, language);
+  };
+
   const getResultMessage = (product: Product): string => {
     if (product.isApproved) {
       return `${product.name} ${t('scanner.byBrand')} ${product.brand} (${product.size_display}) ${t('scanner.isApproved')}`;
@@ -457,7 +482,7 @@ export default function ScannerScreen({ route }: any) {
   return (
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
       <View style={styles.headerSection}>
-        <ScannerHeader />
+        <ScannerHeader onReadScreen={handleReadScreen} />
       </View>
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.content}>
         <ScanArea
@@ -511,7 +536,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    paddingHorizontal: 16,
-    paddingTop: 10,
+    paddingTop: 0,
   },
 });

@@ -110,13 +110,15 @@ export default function ScanArea({ isScanning, onStartScan, onManualEntry, onBar
         {t('scanner.scanAreaDescription')}
       </Typography>
 
-      <Button
-        title={t('scanner.scanAreaStartCamera')}
-        onPress={handleStartScan}
-        fullWidth
-        size="large"
-        style={{ marginBottom: 12 }}
-      />
+      <View style={{ width: '70%' }}>
+        <Button
+          title={t('scanner.scanAreaStartCamera')}
+          onPress={handleStartScan}
+          fullWidth
+          size="medium"
+          style={{ marginBottom: 12 }}
+        />
+      </View>
 
       <TouchableOpacity
         style={styles.manualButton}
