@@ -23,7 +23,8 @@ export default function HomeHeader({ userName }: HomeHeaderProps) {
   return (
     <View style={styles.headerWrapper}>
       <View style={styles.headerRow}>
-        <Typography variant="heading" weight="500" style={{ fontSize: 20 }}>
+        <View style={{ width: 24 }} />
+        <Typography variant="heading" weight="500" style={{ fontSize: 20, textAlign: 'center', flex: 1 }}>
           {greeting}
         </Typography>
         <TouchableOpacity 
