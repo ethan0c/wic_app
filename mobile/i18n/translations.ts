@@ -53,6 +53,13 @@ export const translations = {
       tryLargerSize: 'Try larger size',
       tryDifferentBrand: 'Try different brand',
       checkApprovedList: 'Check approved brands list',
+      
+      // Demo examples
+      demoExamples: 'Try Demo Examples',
+      demoGallonMilk: 'Gallon Milk',
+      demoHalfGallonMilk: '½ Gallon Milk',
+      demo20ozBread: '20oz Bread',
+      demo16ozBread: '16oz Bread',
     },
     
     // Home
@@ -169,6 +176,13 @@ export const translations = {
       tryLargerSize: 'Eseye yon pi gwo gwosè',
       tryDifferentBrand: 'Eseye yon lòt mak',
       checkApprovedList: 'Gade lis mak ki apwouve yo',
+      
+      // Demo examples
+      demoExamples: 'Eseye Egzanp',
+      demoGallonMilk: 'Galon Lèt',
+      demoHalfGallonMilk: '½ Galon Lèt',
+      demo20ozBread: 'Pen 20oz',
+      demo16ozBread: 'Pen 16oz',
     },
     
     // Home

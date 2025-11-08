@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '../../context/ThemeContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { useNavigation } from '@react-navigation/native';
 import Typography from '../Typography';
 import Button from '../Button';
@@ -42,6 +43,7 @@ export default function ScanResultModal({
   onSpeakResult,
 }: ScanResultModalProps) {
   const { theme } = useTheme();
+  const { t } = useLanguage();
   const navigation = useNavigation();
 
   // Stop speech when modal closes
@@ -53,27 +55,27 @@ export default function ScanResultModal({
 
   const getResultMessage = (product: Product): string => {
     if (product.isApproved) {
-      return `${product.name} by ${product.brand} (${product.size_display}) is WIC approved!`;
+      return `${product.name} ${t('scanner.byBrand')} ${product.brand} (${product.size_display}) ${t('scanner.isApproved')}`;
     } else {
       if (product.reasons.includes("product_not_found")) {
-        return "This product was not found in our WIC database. Please check the barcode or try a different product.";
+        return t('scanner.productNotFound');
       }
       
       if (product.reasons.includes("package_size_not_allowed")) {
         if (product.category === "milk" && product.size_oz === 128) {
-          return `${product.name} (${product.size_display}) is not covered. WIC only covers half-gallon milk containers, not full gallons.`;
+          return `${product.name} (${product.size_display}) ${t('scanner.wrongSize')}. ${t('scanner.milkSizeRule')}`;
         }
         
         if (product.category === "bread" && product.size_oz !== 16) {
-          return `${product.name} (${product.size_display}) is not covered. WIC only covers 16-ounce bread loaves.`;
+          return `${product.name} (${product.size_display}) ${t('scanner.wrongSize')}. ${t('scanner.breadSizeRule')}`;
         }
         
         if (product.category === "cereal") {
-          return `${product.name} (${product.size_display}) may exceed your monthly cereal allowance. Check if this fits within your 72-ounce monthly limit.`;
+          return `${product.name} (${product.size_display}) ${t('scanner.cerealSizeRule')}`;
         }
       }
       
-      return `${product.name} by ${product.brand} (${product.size_display}) is not covered by WIC.`;
+      return `${product.name} ${t('scanner.byBrand')} ${product.brand} (${product.size_display}) ${t('scanner.notCovered')}`;
     }
   };
 
@@ -115,7 +117,7 @@ export default function ScanResultModal({
               </View>
 
               <Typography variant="heading" style={{ textAlign: 'center', marginBottom: 16 }}>
-                {product.isApproved ? 'WIC Approved!' : 'Not Covered'}
+                {product.isApproved ? t('scanner.approved') : t('scanner.notApproved')}
               </Typography>
 
               <Typography variant="body" style={{ textAlign: 'center', lineHeight: 24 }}>

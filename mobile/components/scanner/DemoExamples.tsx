@@ -27,6 +27,8 @@ interface DemoExamplesProps {
 }
 
 export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
+  const { t } = useLanguage();
+  
   const lookupProduct = (upc: string): Product | null => {
     return aplData.products.find((p: Product) => p.upc === upc) || null;
   };
@@ -39,17 +41,17 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
   };
 
   return (
-    <SectionCard title="🎯 Try Demo Examples">
+    <SectionCard title={`🎯 ${t('scanner.demoExamples') || 'Try Demo Examples'}`}>
       <View style={styles.demoGrid}>
         <TouchableOpacity
           style={[styles.demoButton, styles.notCoveredButton]}
           onPress={() => handleDemoPress("041303001813")} // Gallon milk
         >
           <Typography variant="caption" weight="600" style={{ color: '#EF4444', textAlign: 'center', marginBottom: 4 }}>
-            🥛 Gallon Milk
+            🥛 {t('scanner.demoGallonMilk') || 'Gallon Milk'}
           </Typography>
           <Typography variant="caption" style={{ color: '#EF4444', textAlign: 'center', fontSize: 10 }}>
-            Not covered → See why
+            {t('scanner.notApproved')} ❌
           </Typography>
         </TouchableOpacity>
 
@@ -58,10 +60,10 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
           onPress={() => handleDemoPress("041303001806")} // Half-gallon milk
         >
           <Typography variant="caption" weight="600" style={{ color: '#10B981', textAlign: 'center', marginBottom: 4 }}>
-            🥛 ½ Gallon Milk
+            🥛 {t('scanner.demoHalfGallonMilk') || '½ Gallon Milk'}
           </Typography>
           <Typography variant="caption" style={{ color: '#10B981', textAlign: 'center', fontSize: 10 }}>
-            WIC Approved ✓
+            {t('scanner.approved')} ✓
           </Typography>
         </TouchableOpacity>
       </View>
@@ -72,10 +74,10 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
           onPress={() => handleDemoPress("072250015144")} // 20oz bread
         >
           <Typography variant="caption" weight="600" style={{ color: '#EF4444', textAlign: 'center', marginBottom: 4 }}>
-            🍞 20oz Bread
+            🍞 {t('scanner.demo20ozBread') || '20oz Bread'}
           </Typography>
           <Typography variant="caption" style={{ color: '#EF4444', textAlign: 'center', fontSize: 10 }}>
-            Wrong size → Alternative
+            {t('scanner.wrongSize')} ❌
           </Typography>
         </TouchableOpacity>
 
@@ -84,10 +86,10 @@ export default function DemoExamples({ onProductSelect }: DemoExamplesProps) {
           onPress={() => handleDemoPress("072250015137")} // 16oz bread
         >
           <Typography variant="caption" weight="600" style={{ color: '#10B981', textAlign: 'center', marginBottom: 4 }}>
-            🍞 16oz Bread
+            🍞 {t('scanner.demo16ozBread') || '16oz Bread'}
           </Typography>
           <Typography variant="caption" style={{ color: '#10B981', textAlign: 'center', fontSize: 10 }}>
-            WIC Approved ✓
+            {t('scanner.approved')} ✓
           </Typography>
         </TouchableOpacity>
       </View>
