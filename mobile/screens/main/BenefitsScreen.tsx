@@ -176,11 +176,11 @@ export default function BenefitsScreen() {
 
   // No need for auto-prompt - overlay handles it now
 
-  const toggleCategory = (category: CategoryKey) => {
+  const toggleCategory = (category: string) => {
     setExpandedCategory(expandedCategory === category ? null : category);
   };
 
-  const getCategoryTitle = (category: CategoryKey) => {
+  const getCategoryTitle = (category: string) => {
     return category.charAt(0).toUpperCase() + category.slice(1);
   };
 
@@ -190,6 +190,59 @@ export default function BenefitsScreen() {
     }
     return `${value} ${unit}`;
   };
+
+  // Group benefits by category
+  const benefitsByCategory = benefits.reduce((acc, benefit) => {
+    if (!acc[benefit.category]) {
+      acc[benefit.category] = [];
+    }
+    acc[benefit.category].push(benefit);
+    return acc;
+  }, {} as Record<string, WicBenefit[]>);
+
+  const categories = Object.keys(benefitsByCategory).sort();
+
+  // Show loading state
+  if (loading) {
+    return (
+      <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
+        <BenefitsHeader />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={theme.primary} />
+          <Text style={[styles.loadingText, { color: theme.textSecondary }]}>
+            Loading benefits...
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
+        <BenefitsHeader />
+        <View style={styles.errorContainer}>
+          <AlertCircle size={48} color="#DC2626" />
+          <Text style={[styles.errorText, { color: theme.text }]}>{error}</Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => {
+              if (cardNumber) {
+                setLoading(true);
+                getUserBenefits(cardNumber)
+                  .then(setBenefits)
+                  .catch(() => setError('Failed to load benefits'))
+                  .finally(() => setLoading(false));
+              }
+            }}
+          >
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: '#F5F5F5' }]}>
@@ -232,138 +285,142 @@ export default function BenefitsScreen() {
         style={styles.scrollContainer}
         contentContainerStyle={styles.contentContainer}
       >
-      {(Object.keys(mockBenefits) as CategoryKey[]).map((category) => {
-        const categoryData = mockBenefits[category];
-        const items = categoryData.items;
-        const IconComponent = categoryData.icon;
-        const totalItems = items.length;
-        
-        // For current view, show actual used items. For future view, all items are unused
-        const usedItems = viewMode === 'current' 
-          ? items.filter(item => item.used > 0).length 
-          : 0;
-        
-        const isExpanded = expandedCategory === category;
+      {categories.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
+            No benefits available for this card
+          </Text>
+        </View>
+      ) : (
+        categories.map((category) => {
+          const categoryBenefits = benefitsByCategory[category];
+          const IconComponent = categoryIcons[category] || Package2;
+          const categoryColor = categoryColors[category] || '#F0F0F0';
+          
+          // Calculate totals for the category
+          const totalAmount = categoryBenefits.reduce((sum, b) => sum + Number(b.totalAmount), 0);
+          const remainingAmount = categoryBenefits.reduce((sum, b) => sum + Number(b.remainingAmount), 0);
+          const usedAmount = totalAmount - remainingAmount;
+          const usagePercentage = totalAmount > 0 ? (usedAmount / totalAmount) * 100 : 0;
+          
+          const isExpanded = expandedCategory === category;
 
-        return (
-          <View key={category} style={styles.sectionNoPad}>
-            <View style={[styles.categoryCard, viewMode === 'future' && styles.categoryCardFuture]}>
-              <TouchableOpacity
-                style={styles.categoryHeader}
-                onPress={() => toggleCategory(category)}
-              >
-              <View style={styles.categoryLeft}>
-                <View style={[
-                  styles.iconContainer, 
-                  { backgroundColor: categoryData.color },
-                  viewMode === 'future' && styles.iconContainerFuture
-                ]}>
-                  <IconComponent
-                    size={24}
-                    stroke={viewMode === 'future' ? '#999' : '#1A1A1A'}
-                    fill="#FFFFFF"
-                    strokeWidth={2}
-                  />
-                </View>
-                <View>
-                  <Text style={[
-                    styles.categoryTitle, 
-                    { color: viewMode === 'future' ? '#999' : theme.text }
+          return (
+            <View key={category} style={styles.sectionNoPad}>
+              <View style={[styles.categoryCard, viewMode === 'future' && styles.categoryCardFuture]}>
+                <TouchableOpacity
+                  style={styles.categoryHeader}
+                  onPress={() => toggleCategory(category)}
+                >
+                <View style={styles.categoryLeft}>
+                  <View style={[
+                    styles.iconContainer, 
+                    { backgroundColor: categoryColor },
+                    viewMode === 'future' && styles.iconContainerFuture
                   ]}>
-                    {getCategoryTitle(category)}
-                  </Text>
-                  <Text style={[styles.categorySubtitle, { color: theme.textSecondary }]}>
-                    {viewMode === 'current' 
-                      ? `${totalItems} ${t('benefits.items')} • ${usedItems} ${t('benefits.used')}`
-                      : `${totalItems} ${t('benefits.itemsAvailable')}`}
-                  </Text>
+                    <IconComponent
+                      size={24}
+                      stroke={viewMode === 'future' ? '#999' : '#1A1A1A'}
+                      fill="#FFFFFF"
+                      strokeWidth={2}
+                    />
+                  </View>
+                  <View>
+                    <Text style={[
+                      styles.categoryTitle, 
+                      { color: viewMode === 'future' ? '#999' : theme.text }
+                    ]}>
+                      {getCategoryTitle(category)}
+                    </Text>
+                    <Text style={[styles.categorySubtitle, { color: theme.textSecondary }]}>
+                      {categoryBenefits[0].unit === 'dollars' 
+                        ? `$${remainingAmount.toFixed(2)} remaining`
+                        : `${remainingAmount.toFixed(1)} ${categoryBenefits[0].unit} remaining`}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-              <View style={styles.chevronContainer}>
-                {isExpanded ? (
-                  <View style={[styles.chevronUp, viewMode === 'future' && styles.chevronFuture]} />
-                ) : (
-                  <View style={[styles.chevronDown, viewMode === 'future' && styles.chevronFuture]} />
-                )}
-              </View>
-            </TouchableOpacity>
+                <View style={styles.chevronContainer}>
+                  {isExpanded ? (
+                    <View style={[styles.chevronUp, viewMode === 'future' && styles.chevronFuture]} />
+                  ) : (
+                    <View style={[styles.chevronDown, viewMode === 'future' && styles.chevronFuture]} />
+                  )}
+                </View>
+              </TouchableOpacity>
 
-              {isExpanded && (
-                <View style={styles.itemsContainer}>
-                  {items.map((item) => {
-                    // For future view, show full quantities with no usage
-                    const remaining = viewMode === 'current' 
-                      ? item.quantity - item.used 
-                      : item.quantity;
-                    const percentage = viewMode === 'current'
-                      ? (item.used / item.quantity) * 100
-                      : 0;
-                    const ItemIcon = item.icon;
+                {isExpanded && (
+                  <View style={styles.itemsContainer}>
+                    {categoryBenefits.map((benefit) => {
+                      const remaining = Number(benefit.remainingAmount);
+                      const total = Number(benefit.totalAmount);
+                      const used = total - remaining;
+                      const percentage = total > 0 ? (used / total) * 100 : 0;
 
-                    return (
-                      <View key={item.id} style={styles.item}>
-                        <View style={styles.itemTop}>
-                          <View style={[
-                            styles.itemIconContainer,
-                            viewMode === 'future' && styles.itemIconContainerFuture
-                          ]}>
-                            <ItemIcon
-                              size={20}
-                              stroke={viewMode === 'future' ? '#AAA' : '#666'}
-                              fill={viewMode === 'future' ? '#F9F9F9' : '#F5F5F5'}
-                              strokeWidth={1.5}
+                      return (
+                        <View key={benefit.id} style={styles.item}>
+                          <View style={styles.itemTop}>
+                            <View style={[
+                              styles.itemIconContainer,
+                              viewMode === 'future' && styles.itemIconContainerFuture
+                            ]}>
+                              <IconComponent
+                                size={20}
+                                stroke={viewMode === 'future' ? '#AAA' : '#666'}
+                                fill={viewMode === 'future' ? '#F9F9F9' : '#F5F5F5'}
+                                strokeWidth={1.5}
+                              />
+                            </View>
+                            <View style={styles.itemLeft}>
+                              <Text style={[
+                                styles.itemName, 
+                                { color: viewMode === 'future' ? '#999' : theme.text }
+                              ]}>
+                                {getCategoryTitle(benefit.category)}
+                              </Text>
+                              <Text style={[
+                                styles.itemSuggestion, 
+                                { color: viewMode === 'future' ? '#AAA' : theme.textSecondary }
+                              ]}>
+                                Total: {formatValue(total, benefit.unit)}
+                              </Text>
+                            </View>
+                            <View style={styles.itemRight}>
+                              <Text style={[
+                                styles.itemRemaining, 
+                                { color: viewMode === 'future' ? '#999' : theme.text }
+                              ]}>
+                                {formatValue(remaining, benefit.unit)}
+                              </Text>
+                              <Text style={[
+                                styles.itemRemainingLabel, 
+                                { color: viewMode === 'future' ? '#BBB' : theme.textSecondary }
+                              ]}>
+                                {t('benefits.remaining')}
+                              </Text>
+                            </View>
+                          </View>
+                          
+                          <View style={[styles.progressBar, { backgroundColor: '#F0F0F0' }]}>
+                            <View
+                              style={[
+                                styles.progressFill,
+                                { 
+                                  width: `${percentage}%`,
+                                  backgroundColor: viewMode === 'future' ? '#CCC' : '#4CAF50'
+                                }
+                              ]}
                             />
                           </View>
-                          <View style={styles.itemLeft}>
-                            <Text style={[
-                              styles.itemName, 
-                              { color: viewMode === 'future' ? '#999' : theme.text }
-                            ]}>
-                              {item.name}
-                            </Text>
-                            <Text style={[
-                              styles.itemSuggestion, 
-                              { color: viewMode === 'future' ? '#AAA' : theme.textSecondary }
-                            ]}>
-                              {item.suggestion}
-                            </Text>
-                          </View>
-                          <View style={styles.itemRight}>
-                            <Text style={[
-                              styles.itemRemaining, 
-                              { color: viewMode === 'future' ? '#999' : theme.text }
-                            ]}>
-                              {formatValue(remaining, item.unit)}
-                            </Text>
-                            <Text style={[
-                              styles.itemRemainingLabel, 
-                              { color: viewMode === 'future' ? '#BBB' : theme.textSecondary }
-                            ]}>
-                              {t('benefits.remaining')}
-                            </Text>
-                          </View>
                         </View>
-                        
-                        <View style={[styles.progressBar, { backgroundColor: '#F0F0F0' }]}>
-                          <View
-                            style={[
-                              styles.progressFill,
-                              {
-                                width: `${percentage}%`,
-                                backgroundColor: percentage >= 80 ? '#DC2626' : percentage >= 50 ? '#F59E0B' : '#10B981',
-                              },
-                            ]}
-                          />
-                        </View>
-                      </View>
-                    );
-                  })}
-                </View>
-              )}
+                      );
+                    })}
+                  </View>
+                )}
+              </View>
             </View>
-          </View>
-        );
-      })}
+          );
+        })
+      )}
 
       <View style={styles.bottomPadding} />
       </ScrollView>
@@ -589,6 +646,47 @@ const styles = StyleSheet.create({
   progressFill: {
     height: '100%',
     borderRadius: 2,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    marginTop: 12,
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#2563EB',
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  emptyContainer: {
+    padding: 40,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    textAlign: 'center',
   },
   bottomPadding: {
     height: 20,
