@@ -17,7 +17,7 @@ interface BenefitTilesGroupProps {
   onCardPress?: (key: string) => void;
 }
 
-const PASTEL_COLORS = ['#FFB5B5', '#B5FFB5', '#FFE5B5', '#E5B5FF'];
+const PASTEL_COLORS = ['#FFB5B5', '#B5FFB5', '#FFE5B5', '#B5B5FF', '#B5E5FF', '#FFB5E5'];
 
 export default function BenefitTilesGroup({ items, onCardPress }: BenefitTilesGroupProps) {
   return (
