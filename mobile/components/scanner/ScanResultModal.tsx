@@ -18,7 +18,7 @@ type Product = {
   size_oz: number;
   size_display: string;
   isApproved: boolean;
-  image: string;
+  image?: string;  // Optional fallback emoji/icon
   imageFilename?: string;
   emoji?: string;
   reasons: string[];
@@ -175,9 +175,9 @@ export default function ScanResultModal({
           <View style={styles.resultHeader}>
             {/* Product Image or Emoji */}
             <View style={styles.productImageContainer}>
-              {product.imageUrl ? (
+              {product.imageFilename ? (
                 <Image 
-                  source={{ uri: product.imageUrl }} 
+                  source={{ uri: product.imageFilename }} // Backend sends imageUrl, we treat as filename
                   style={styles.productImage}
                   resizeMode="contain"
                 />

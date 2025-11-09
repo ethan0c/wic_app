@@ -107,7 +107,7 @@ export interface ApprovedProduct {
     upcCode?: string;
     pluCode?: string;
     unitSize?: string;
-    imageUrl?: string;
+    imageFilename?: string; // Backend sends imageUrl, we treat as filename
   };
 }
 

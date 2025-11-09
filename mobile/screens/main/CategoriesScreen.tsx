@@ -114,8 +114,8 @@ export default function CategoriesScreen() {
                   style={[styles.productCard, { backgroundColor: theme.card, borderColor: theme.border }]}
                 >
                   <View style={styles.productImage}>
-                    {product.generalFood?.imageUrl ? (
-                      <Image source={{ uri: product.generalFood.imageUrl }} style={styles.image} />
+                    {product.generalFood?.imageFilename ? (
+                      <Image source={{ uri: product.generalFood.imageFilename }} style={styles.image} /> 
                     ) : (
                       <View style={[styles.imagePlaceholder, { backgroundColor: '#F3F4F6' }]}>
                         <Text style={styles.placeholderEmoji}>📦</Text>

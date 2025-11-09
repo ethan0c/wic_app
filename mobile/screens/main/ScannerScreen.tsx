@@ -33,7 +33,7 @@ type Product = {
   size_oz: number;
   size_display: string;
   isApproved: boolean;
-  image: string;
+  image?: string;  // Optional fallback emoji/icon
   imageFilename?: string;  // Local image filename
   emoji?: string;     // Category emoji fallback
   reasons: string[];
