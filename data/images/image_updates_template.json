@@ -1,0 +1,82 @@
+[
+  {
+    "code": "011110123456",
+    "name": "Whole Milk",
+    "imageUrl": "https://example.com/whole_milk.jpg"
+  },
+  {
+    "code": "011110123457",
+    "name": "2% Reduced Fat Milk",
+    "imageUrl": "https://example.com/2percent_milk.jpg"
+  },
+  {
+    "code": "011110123458",
+    "name": "Cheddar Cheese",
+    "imageUrl": "https://example.com/cheddar_cheese.jpg"
+  },
+  {
+    "code": "011110123459",
+    "name": "Plain Yogurt",
+    "imageUrl": "https://example.com/plain_yogurt.jpg"
+  },
+  {
+    "code": "4011",
+    "name": "Fresh Bananas",
+    "imageUrl": "https://example.com/bananas.jpg"
+  },
+  {
+    "code": "4131",
+    "name": "Fresh Apples",
+    "imageUrl": "https://example.com/apples.jpg"
+  },
+  {
+    "code": "011110456789",
+    "name": "Fresh Strawberries",
+    "imageUrl": "https://example.com/strawberries.jpg"
+  },
+  {
+    "code": "011110234567",
+    "name": "Whole Wheat Bread",
+    "imageUrl": "https://example.com/whole_wheat_bread.jpg"
+  },
+  {
+    "code": "011110234568",
+    "name": "Brown Rice",
+    "imageUrl": "https://example.com/brown_rice.jpg"
+  },
+  {
+    "code": "011110234569",
+    "name": "Whole Grain Cereal",
+    "imageUrl": "https://example.com/cereal.jpg"
+  },
+  {
+    "code": "011110345678",
+    "name": "Large Eggs",
+    "imageUrl": "https://example.com/eggs.jpg"
+  },
+  {
+    "code": "011110345679",
+    "name": "Peanut Butter",
+    "imageUrl": "https://example.com/peanut_butter.jpg"
+  },
+  {
+    "code": "011110345680",
+    "name": "Dried Pinto Beans",
+    "imageUrl": "https://example.com/pinto_beans.jpg"
+  },
+  {
+    "code": "4562",
+    "name": "Fresh Carrots",
+    "imageUrl": "https://example.com/carrots.jpg"
+  },
+  {
+    "code": "4060",
+    "name": "Fresh Broccoli",
+    "imageUrl": "https://example.com/broccoli.jpg"
+  },
+  {
+    "code": "011110567890",
+    "name": "Fresh Spinach",
+    "imageUrl": "https://example.com/spinach.jpg"
+  }
+]

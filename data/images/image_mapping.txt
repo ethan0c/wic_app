@@ -1,0 +1,186 @@
+WIC APPROVED FOOD PRODUCTS - IMAGE MAPPING
+===========================================
+
+This file maps UPC/PLU codes to image filenames for all WIC products.
+Place corresponding images in the data/images folder with the exact filenames listed below.
+
+Format: UPC/PLU | Product Name | Brand | Size | WIC Category | Status | Image Filename
+-----------------------------------------------------------------------------------------
+
+DAIRY
+-----
+011110123457 | 2% Reduced Fat Milk | Generic | 1 gallon | dairy | APPROVED | 2%_reduced_fat_milk_011110123457.jpg | Image: YES
+011110123458 | Cheddar Cheese | Generic | 16 oz | dairy | APPROVED | cheddar_cheese_011110123458.jpg | Image: YES
+011110123459 | Plain Yogurt | Generic | 32 oz | dairy | APPROVED | plain_yogurt_011110123459.jpg | Image: YES
+011110123456 | Whole Milk | Generic | 1 gallon | dairy | APPROVED | whole_milk_011110123456.jpg | Image: YES
+
+FRUITS
+------
+4131 | Fresh Apples | Generic | per lb | fruits | APPROVED | fresh_apples_4131.jpg | Image: YES
+4011 | Fresh Bananas | Generic | per lb | fruits | APPROVED | fresh_bananas_4011.jpg | Image: YES
+011110456789 | Fresh Strawberries | Generic | 16 oz | fruits | APPROVED | fresh_strawberries_011110456789.jpg | Image: YES
+
+GRAINS
+------
+011110234568 | Brown Rice | Generic | 32 oz | grains | APPROVED | brown_rice_011110234568.jpg | Image: YES
+011110234569 | Whole Grain Cereal | Generic | 18 oz | grains | APPROVED | whole_grain_cereal_011110234569.jpg | Image: YES
+011110234567 | Whole Wheat Bread | Generic | 24 oz | grains | APPROVED | whole_wheat_bread_011110234567.jpg | Image: YES
+
+PROTEIN
+-------
+011110345680 | Dried Pinto Beans | Generic | 16 oz | protein | APPROVED | dried_pinto_beans_011110345680.jpg | Image: YES
+011110345678 | Large Eggs | Generic | 12 count | protein | APPROVED | large_eggs_011110345678.jpg | Image: YES
+011110345679 | Peanut Butter | Generic | 18 oz | protein | APPROVED | peanut_butter_011110345679.jpg | Image: YES
+
+VEGETABLES
+----------
+4060 | Fresh Broccoli | Generic | per lb | vegetables | APPROVED | fresh_broccoli_4060.jpg | Image: YES
+4562 | Fresh Carrots | Generic | per lb | vegetables | APPROVED | fresh_carrots_4562.jpg | Image: YES
+011110567890 | Fresh Spinach | Generic | 10 oz | vegetables | APPROVED | fresh_spinach_011110567890.jpg | Image: YES
+
+
+===========================================
+SUMMARY
+===========================================
+Total Products: 16
+Approved Products: 16
+Not Approved Products: 0
+Products with Image URLs: 16
+Products needing images: 0
+
+Categories: 5
+- DAIRY: 4 products
+- FRUITS: 3 products
+- GRAINS: 3 products
+- PROTEIN: 3 products
+- VEGETABLES: 3 products
+
+===========================================
+NOTES
+===========================================
+- All images should be high-quality product photos
+- Recommended format: JPG (for photos)
+- Recommended size: 800x800 pixels minimum
+- Images should show the actual product packaging clearly
+- Keep file sizes reasonable (< 500KB per image)
+
+Current Image Status:
+- 16 products already have imageUrl in database
+- 0 products need images to be added
+
+===========================================
+DETAILED LIST WITH IMAGE URLS
+===========================================
+
+011110123457 - 2% Reduced Fat Milk
+  Filename: 2%_reduced_fat_milk_011110123457.jpg
+  Current URL: https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400
+  Brand: Generic
+  Category: dairy
+  WIC Status: Approved
+
+011110123458 - Cheddar Cheese
+  Filename: cheddar_cheese_011110123458.jpg
+  Current URL: https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=400
+  Brand: Generic
+  Category: dairy
+  WIC Status: Approved
+
+011110123459 - Plain Yogurt
+  Filename: plain_yogurt_011110123459.jpg
+  Current URL: https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400
+  Brand: Generic
+  Category: dairy
+  WIC Status: Approved
+
+011110123456 - Whole Milk
+  Filename: whole_milk_011110123456.jpg
+  Current URL: https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400
+  Brand: Generic
+  Category: dairy
+  WIC Status: Approved
+
+4131 - Fresh Apples
+  Filename: fresh_apples_4131.jpg
+  Current URL: https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=400
+  Brand: Generic
+  Category: fruits
+  WIC Status: Approved
+
+4011 - Fresh Bananas
+  Filename: fresh_bananas_4011.jpg
+  Current URL: https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400
+  Brand: Generic
+  Category: fruits
+  WIC Status: Approved
+
+011110456789 - Fresh Strawberries
+  Filename: fresh_strawberries_011110456789.jpg
+  Current URL: https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400
+  Brand: Generic
+  Category: fruits
+  WIC Status: Approved
+
+011110234568 - Brown Rice
+  Filename: brown_rice_011110234568.jpg
+  Current URL: https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400
+  Brand: Generic
+  Category: grains
+  WIC Status: Approved
+
+011110234569 - Whole Grain Cereal
+  Filename: whole_grain_cereal_011110234569.jpg
+  Current URL: https://images.unsplash.com/photo-1517686748989-2f761c654cee?w=400
+  Brand: Generic
+  Category: grains
+  WIC Status: Approved
+
+011110234567 - Whole Wheat Bread
+  Filename: whole_wheat_bread_011110234567.jpg
+  Current URL: https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400
+  Brand: Generic
+  Category: grains
+  WIC Status: Approved
+
+011110345680 - Dried Pinto Beans
+  Filename: dried_pinto_beans_011110345680.jpg
+  Current URL: https://images.unsplash.com/photo-1589621316382-008455b857cd?w=400
+  Brand: Generic
+  Category: protein
+  WIC Status: Approved
+
+011110345678 - Large Eggs
+  Filename: large_eggs_011110345678.jpg
+  Current URL: https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=400
+  Brand: Generic
+  Category: protein
+  WIC Status: Approved
+
+011110345679 - Peanut Butter
+  Filename: peanut_butter_011110345679.jpg
+  Current URL: https://images.unsplash.com/photo-1509296298-4faba293b39a?w=400
+  Brand: Generic
+  Category: protein
+  WIC Status: Approved
+
+4060 - Fresh Broccoli
+  Filename: fresh_broccoli_4060.jpg
+  Current URL: https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400
+  Brand: Generic
+  Category: vegetables
+  WIC Status: Approved
+
+4562 - Fresh Carrots
+  Filename: fresh_carrots_4562.jpg
+  Current URL: https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=400
+  Brand: Generic
+  Category: vegetables
+  WIC Status: Approved
+
+011110567890 - Fresh Spinach
+  Filename: fresh_spinach_011110567890.jpg
+  Current URL: https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400
+  Brand: Generic
+  Category: vegetables
+  WIC Status: Approved
+

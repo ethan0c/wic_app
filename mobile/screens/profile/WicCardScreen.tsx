@@ -13,6 +13,14 @@ export default function WicCardScreen() {
   const [inputValue, setInputValue] = useState(cardNumber || '');
   const [isSaving, setIsSaving] = useState(false);
 
+  // Mask card number to show only last 4 digits
+  const maskCardNumber = (card: string): string => {
+    if (!card || card.length < 4) return card;
+    const last4 = card.slice(-4);
+    const masked = '•'.repeat(card.length - 4);
+    return `${masked}${last4}`;
+  };
+
   const handleSave = async () => {
     if (!inputValue.trim()) {
       Alert.alert('Invalid Card', 'Please enter a WIC card number');
@@ -133,7 +141,7 @@ export default function WicCardScreen() {
 
         {cardNumber && (
           <Typography variant="caption" color="textSecondary" style={styles.currentCard}>
-            Current card: {cardNumber}
+            Current card: {maskCardNumber(cardNumber)}
           </Typography>
         )}
 
@@ -210,11 +218,11 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 32,
+    paddingTop: 16,
   },
   iconContainer: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   title: {
     textAlign: 'center',

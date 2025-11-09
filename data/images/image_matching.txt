@@ -1,0 +1,50 @@
+WIC APPROVED FOOD PRODUCTS - IMAGE MAPPING
+===========================================
+
+This file maps UPC codes to image filenames for WIC approved (and non-approved) products.
+Place corresponding images in this folder with the exact filenames listed below.
+
+Format: UPC | Product Name | Brand | Size | Status | Image Filename
+---------------------------------------------------------------------------
+
+MILK PRODUCTS
+-------------
+041303001806 | Whole Milk | Great Value | ½ gallon (64 oz) | APPROVED | milk_half_gallon.jpg
+041303001813 | Whole Milk | Great Value | 1 gallon (128 oz) | NOT APPROVED | milk_gallon.jpg
+041303002002 | 2% Reduced Fat Milk | Great Value | ½ gallon (64 oz) | APPROVED | milk_2percent_half.jpg
+041303002001 | 2% Reduced Fat Milk | Great Value | 1 gallon (128 oz) | NOT APPROVED | milk_2percent_gallon.jpg
+
+CEREAL PRODUCTS
+---------------
+016000275218 | Cheerios | General Mills | 18 oz | APPROVED | cheerios_18oz.jpg
+016000275225 | Cheerios Family Size | General Mills | 36 oz | APPROVED | cheerios_36oz.jpg
+016000275232 | Cheerios Mega Size | General Mills | 48 oz | NOT APPROVED | cheerios_48oz.jpg
+
+BREAD PRODUCTS
+--------------
+072250015137 | White Bread | Wonder | 16 oz loaf | APPROVED | wonder_16oz.jpg
+072250015144 | White Bread | Wonder | 20 oz loaf | NOT APPROVED | wonder_20oz.jpg
+
+===========================================
+SUMMARY
+===========================================
+Total Products: 9
+Approved Products: 5
+Not Approved Products: 4
+
+Categories Represented:
+- Milk: 4 products (2 approved)
+- Cereal: 3 products (2 approved)
+- Bread: 2 products (1 approved)
+
+===========================================
+NOTES
+===========================================
+- All images should be high-quality product photos
+- Recommended format: JPG (for photos)
+- Recommended size: 800x800 pixels minimum
+- Images should show the actual product packaging clearly
+- Keep file sizes reasonable (< 500KB per image)
+
+Currently using imageUrl from Walmart for live images.
+This mapping is for downloading and storing images locally.
