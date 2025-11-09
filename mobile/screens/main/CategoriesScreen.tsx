@@ -4,24 +4,38 @@ import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useNavigation } from '@react-navigation/native';
 import Typography from '../../components/Typography';
-import { getAllApprovedProducts, ApprovedProduct } from '../../services/wicApi';
 import { getImageSource } from '../../utils/imageHelper';
+import aplData from '../../data/apl.json';
+
+// Local product type based on apl.json structure
+interface LocalProduct {
+  upc: string;
+  name: string;
+  brand: string;
+  category: string;
+  size_oz: number;
+  size_display: string;
+  isApproved: boolean;
+  imageFilename?: string;
+  reasons: string[];
+}
 
 export default function CategoriesScreen() {
   const { theme } = useTheme();
   const { t } = useLanguage();
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState<ApprovedProduct[]>([]);
+  const [products, setProducts] = useState<LocalProduct[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const categories = [
     { key: 'all', label: 'All Foods', emoji: '🛒' },
-    { key: 'dairy', label: 'Dairy', emoji: '🥛' },
-    { key: 'grains', label: 'Grains', emoji: '🌾' },
-    { key: 'protein', label: 'Protein', emoji: '🐟' },
-    { key: 'fruits', label: 'Fruits', emoji: '🍎' },
-    { key: 'vegetables', label: 'Vegetables', emoji: '�' },
+    { key: 'milk', label: 'Milk', emoji: '🥛' },
+    { key: 'cereal', label: 'Cereal', emoji: '🥣' },
+    { key: 'bread', label: 'Bread', emoji: '🍞' },
+    { key: 'cheese', label: 'Cheese', emoji: '🧀' },
+    { key: 'eggs', label: 'Eggs', emoji: '🥚' },
+    { key: 'cvb', label: 'Fruits & Vegetables', emoji: '🥕' },
   ];
 
   useEffect(() => {
@@ -31,11 +45,16 @@ export default function CategoriesScreen() {
   const loadApprovedProducts = async () => {
     setLoading(true);
     try {
-      const data = await getAllApprovedProducts();
-      setProducts(data || []);
+      // Load products from local apl.json data
+      const approvedProducts = aplData.products.filter((product: any) => product.isApproved);
+      console.log('📱 CategoriesScreen: Loaded products count:', approvedProducts.length);
+      console.log('📱 CategoriesScreen: First product:', approvedProducts[0]);
+      console.log('📱 CategoriesScreen: Products with images:', 
+        approvedProducts.filter((p: any) => p.imageFilename).length
+      );
+      setProducts(approvedProducts);
     } catch (error) {
       console.error('Failed to load approved products:', error);
-      // Fallback to empty array on error
       setProducts([]);
     } finally {
       setLoading(false);
@@ -44,7 +63,7 @@ export default function CategoriesScreen() {
 
   const filteredProducts = selectedCategory === 'all' 
     ? products 
-    : products.filter(p => p.wicCategory?.toLowerCase() === selectedCategory.toLowerCase());
+    : products.filter(p => p.category?.toLowerCase() === selectedCategory.toLowerCase());
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -109,14 +128,14 @@ export default function CategoriesScreen() {
             </View>
           ) : (
             <View style={styles.productsList}>
-              {filteredProducts.map((product) => (
+              {filteredProducts.map((product, index) => (
                 <View 
-                  key={product.id} 
+                  key={product.upc || `product-${index}`} 
                   style={[styles.productCard, { backgroundColor: theme.card, borderColor: theme.border }]}
                 >
                   <View style={styles.productImage}>
                     {(() => {
-                      const imageSource = getImageSource(product.generalFood?.imageFilename);
+                      const imageSource = getImageSource(product.imageFilename);
                       
                       if (imageSource.source) {
                         return <Image source={imageSource.source} style={styles.image} />; 
@@ -131,13 +150,13 @@ export default function CategoriesScreen() {
                   </View>
                   <View style={styles.productInfo}>
                     <Typography variant="body" weight="600" numberOfLines={2}>
-                      {product.generalFood?.name || 'Unknown Product'}
+                      {product.name || 'Unknown Product'}
                     </Typography>
                     <Typography variant="caption" color="textSecondary" style={{ marginTop: 4 }}>
-                      {product.generalFood?.brand || 'Generic'}
+                      {product.brand || 'Generic'}
                     </Typography>
                     <Typography variant="caption" color="textSecondary">
-                      {product.generalFood?.unitSize || 'Various sizes'}
+                      {product.size_display || 'Various sizes'}
                     </Typography>
                     <View style={styles.approvedBadge}>
                       <Text style={styles.checkmark}>✓</Text>
