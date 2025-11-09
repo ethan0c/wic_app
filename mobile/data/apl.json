@@ -52,8 +52,7 @@
       "size_oz": 64,
       "size_display": "½ gallon",
       "isApproved": true,
-      "image": "milk_half_gallon.jpg",
-      "imageUrl": "https://i5.walmartimages.com/seo/Great-Value-Whole-Milk-Half-Gallon-64-fl-oz_5bc2c14a-68c0-4e4b-8d97-f86731c27ff5.jpg",
+      "imageFilename": "milk_half_gallon.jpg",
       "reasons": [],
       "alternatives": []
     },
@@ -65,8 +64,7 @@
       "size_oz": 128,
       "size_display": "1 gallon",
       "isApproved": false,
-      "image": "milk_gallon.jpg",
-      "imageUrl": "https://i5.walmartimages.com/seo/Great-Value-Whole-Milk-Gallon-Plastic-Jug_8e4c564a-2e0b-45c0-be87-907a53d3b58d.jpg",
+      "imageFilename": "milk_gallon.jpg",
       "reasons": ["package_size_not_allowed"],
       "alternatives": [
         {

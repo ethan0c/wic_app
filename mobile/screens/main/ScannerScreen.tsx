@@ -34,14 +34,14 @@ type Product = {
   size_display: string;
   isApproved: boolean;
   image: string;
-  imageUrl?: string;  // Real product image URL
+  imageFilename?: string;  // Local image filename
   emoji?: string;     // Category emoji fallback
   reasons: string[];
   alternatives: Array<{
     upc: string;
     suggestion: string;
     reason: string;
-    imageUrl?: string;  // Alternative product image
+    imageFilename?: string;  // Alternative product image filename
     emoji?: string;     // Alternative emoji
   }>;
   benefitCalculation?: {  // NEW: Benefit balance info
@@ -197,7 +197,7 @@ export default function ScannerScreen({ route }: any) {
         upc: alt.upc || '',
         suggestion: `Try ${alt.brand} ${alt.name} (${alt.size})`,
         reason: `This is a WIC-approved alternative in the ${alt.category} category`,
-        imageUrl: alt.imageUrl,
+        imageFilename: alt.imageUrl, // Backend sends imageUrl, we treat as filename
         emoji: getCategoryEmoji(alt.category),
       }));
       
@@ -211,7 +211,7 @@ export default function ScannerScreen({ route }: any) {
         size_display: size > 0 ? `${size} oz` : 'Unknown',
         isApproved: scanResult.isWicApproved,
         image: '',
-        imageUrl: undefined,
+        imageFilename: undefined,
         emoji: getCategoryEmoji(category),
         reasons: scanResult.isWicApproved ? [] : ['brand_or_product_not_approved'],
         alternatives,

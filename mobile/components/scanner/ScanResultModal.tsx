@@ -19,14 +19,14 @@ type Product = {
   size_display: string;
   isApproved: boolean;
   image: string;
-  imageUrl?: string;
+  imageFilename?: string;
   emoji?: string;
   reasons: string[];
   alternatives: Array<{
     upc: string;
     suggestion: string;
     reason: string;
-    imageUrl?: string;
+    imageFilename?: string;
     emoji?: string;
   }>;
   benefitCalculation?: {
