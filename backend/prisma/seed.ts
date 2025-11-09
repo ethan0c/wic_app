@@ -123,7 +123,7 @@ async function main() {
       subcategory: 'milk',
       upcCode: '011110123456',
       unitSize: '1 gallon',
-      imageUrl: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400',
+      imageFilename: 'whole_milk_011110123456.jpg',
     },
   });
 
@@ -135,7 +135,7 @@ async function main() {
       subcategory: 'milk',
       upcCode: '011110123457',
       unitSize: '1 gallon',
-      imageUrl: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400',
+      imageFilename: '2percent_milk_011110123457.jpg',
     },
   });
 
@@ -147,7 +147,7 @@ async function main() {
       subcategory: 'cheese',
       upcCode: '011110123458',
       unitSize: '16 oz',
-      imageUrl: 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=400',
+      imageFilename: 'cheddar_cheese_011110123458.jpg',
     },
   });
 
@@ -159,7 +159,7 @@ async function main() {
       subcategory: 'yogurt',
       upcCode: '011110123459',
       unitSize: '32 oz',
-      imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400',
+      imageFilename: 'plain_yogurt_011110123459.jpg',
     },
   });
 
@@ -172,7 +172,7 @@ async function main() {
       subcategory: 'bread',
       upcCode: '011110234567',
       unitSize: '24 oz',
-      imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400',
+      imageFilename: 'whole_wheat_bread_011110234567.jpg',
     },
   });
 
@@ -184,7 +184,7 @@ async function main() {
       subcategory: 'rice',
       upcCode: '011110234568',
       unitSize: '32 oz',
-      imageUrl: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400',
+      imageFilename: 'brown_rice_011110234568.jpg',
     },
   });
 
@@ -196,7 +196,7 @@ async function main() {
       subcategory: 'cereal',
       upcCode: '011110234569',
       unitSize: '18 oz',
-      imageUrl: 'https://images.unsplash.com/photo-1517686748989-2f761c654cee?w=400',
+      imageFilename: 'whole_grain_cereal_011110234569.jpg',
     },
   });
 
@@ -209,7 +209,7 @@ async function main() {
       subcategory: 'eggs',
       upcCode: '011110345678',
       unitSize: '12 count',
-      imageUrl: 'https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=400',
+      imageFilename: 'large_eggs_011110345678.jpg',
     },
   });
 
@@ -221,7 +221,7 @@ async function main() {
       subcategory: 'nut-butter',
       upcCode: '011110345679',
       unitSize: '18 oz',
-      imageUrl: 'https://images.unsplash.com/photo-1509296298-4faba293b39a?w=400',
+      imageFilename: 'peanut_butter_011110345679.jpg',
     },
   });
 
@@ -233,7 +233,7 @@ async function main() {
       subcategory: 'beans',
       upcCode: '011110345680',
       unitSize: '16 oz',
-      imageUrl: 'https://images.unsplash.com/photo-1589621316382-008455b857cd?w=400',
+      imageFilename: 'dried_pinto_beans_011110345680.jpg',
     },
   });
 
@@ -246,7 +246,7 @@ async function main() {
       subcategory: 'fresh',
       pluCode: '4131',
       unitSize: 'per lb',
-      imageUrl: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=400',
+      imageFilename: 'fresh_apples_4131.jpg',
     },
   });
 
@@ -258,7 +258,7 @@ async function main() {
       subcategory: 'fresh',
       pluCode: '4011',
       unitSize: 'per lb',
-      imageUrl: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400',
+      imageFilename: 'fresh_bananas_4011.jpg',
     },
   });
 
@@ -270,7 +270,7 @@ async function main() {
       subcategory: 'fresh',
       upcCode: '011110456789',
       unitSize: '16 oz',
-      imageUrl: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400',
+      imageFilename: 'fresh_strawberries_011110456789.jpg',
     },
   });
 
@@ -283,7 +283,7 @@ async function main() {
       subcategory: 'fresh',
       pluCode: '4562',
       unitSize: 'per lb',
-      imageUrl: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=400',
+      imageFilename: 'fresh_carrots_4562.jpg',
     },
   });
 
@@ -295,7 +295,7 @@ async function main() {
       subcategory: 'leafy',
       upcCode: '011110567890',
       unitSize: '10 oz',
-      imageUrl: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400',
+      imageFilename: 'fresh_spinach_011110567890.jpg',
     },
   });
 
@@ -307,7 +307,7 @@ async function main() {
       subcategory: 'fresh',
       pluCode: '4060',
       unitSize: 'per lb',
-      imageUrl: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400',
+      imageFilename: 'fresh_broccoli_4060.jpg',
     },
   });
 

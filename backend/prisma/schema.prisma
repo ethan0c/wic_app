@@ -50,19 +50,19 @@ model WicStore {
 
 // General Foods Database (all foods, not just WIC-approved)
 model GeneralFood {
-  id          String   @id @default(uuid())
-  name        String
-  brand       String?
-  category    String // 'dairy', 'produce', 'grains', 'cereal', 'meat', 'snacks', etc.
-  subcategory String?
-  upcCode     String?  @map("upc_code")
-  pluCode     String?  @map("plu_code")
-  description String?
-  imageUrl    String?  @map("image_url")
-  unitSize    String?  @map("unit_size")
-  nutrition   Json? // Calories, protein, etc.
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id            String   @id @default(uuid())
+  name          String
+  brand         String?
+  category      String // 'dairy', 'produce', 'grains', 'cereal', 'meat', 'snacks', etc.
+  subcategory   String?
+  upcCode       String?  @map("upc_code")
+  pluCode       String?  @map("plu_code")
+  description   String?
+  imageFilename String?  @map("image_filename")
+  unitSize      String?  @map("unit_size")
+  nutrition     Json? // Calories, protein, etc.
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
   approvedFood ApprovedFood?
   recipeItems  RecipeItem[]
