@@ -94,7 +94,7 @@ export default function ScanResultModal({
       
       // Not in WIC category at all
       if (product.reasons.includes("product_not_in_wic_category") || product.reasons.includes("notInWicCategory")) {
-        return `${product.name} is not a WIC-approved product category.`;
+        return `${product.name} ${t('scanner.notInWicCategory')}.`;
       }
       
       // Wrong package size
@@ -104,18 +104,18 @@ export default function ScanResultModal({
         // Milk - gallon not allowed
         if (product.category === "milk" && product.size_oz === 128) {
           return categoryRules?.messages?.size_restriction?.en || 
-                 `${product.name} (${product.size_display}) is not approved. WIC only covers half-gallon (64 oz) milk containers.`;
+                 `${product.name} (${product.size_display}) ${t('scanner.productNotApproved')}. ${t('scanner.milkSizeRule')}`;
         }
         
         // Bread - must be exactly 16 oz
         if (product.category === "bread") {
           return categoryRules?.messages?.size_restriction?.en || 
-                 `${product.name} (${product.size_display}) is not approved. WIC only covers 16-ounce bread loaves.`;
+                 `${product.name} (${product.size_display}) ${t('scanner.productNotApproved')}. ${t('scanner.breadSizeRule')}`;
         }
         
         // Generic size restriction
         return categoryRules?.messages?.size_restriction?.en || 
-               `${product.name} (${product.size_display}) is the wrong size for WIC coverage.`;
+               `${product.name} (${product.size_display}) ${t('scanner.wrongSizeForWic')}.`;
       }
       
       // Exceeds monthly limit
@@ -124,15 +124,15 @@ export default function ScanResultModal({
         
         if (product.category === "cereal") {
           return categoryRules?.messages?.size_restriction?.en || 
-                 `${product.name} (${product.size_display}) exceeds your monthly 72 oz cereal allowance. Choose a smaller size.`;
+                 `${product.name} (${product.size_display}) ${t('scanner.cerealSizeRule')} ${t('scanner.chooseSmallerSize')}.`;
         }
         
-        return `${product.name} (${product.size_display}) exceeds your monthly benefit allowance for this category.`;
+        return `${product.name} (${product.size_display}) ${t('scanner.exceedsMonthlyAllowance')}.`;
       }
       
       // Brand not approved
       if (product.reasons.includes("brand_or_product_not_approved") || product.reasons.includes("brand_not_approved")) {
-        return `${product.brand} ${product.name} is not on the WIC approved product list for this category.`;
+        return `${product.brand} ${product.name} ${t('scanner.notOnApprovedList')}.`;
       }
       
       // Generic fallback
@@ -264,19 +264,17 @@ export default function ScanResultModal({
                     <>
                       {product.category === "milk" && product.size_oz === 128 && (
                         <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
-                          WIC policy only allows <Typography variant="body" weight="600">half-gallon (64 oz)</Typography> milk containers. 
-                          Gallon sizes are not covered to ensure proper portion control and freshness.
+                          {t('scanner.milkPolicyExplanation')}
                         </Typography>
                       )}
                       {product.category === "bread" && product.size_oz !== 16 && (
                         <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
-                          WIC policy requires <Typography variant="body" weight="600">exactly 16 ounce</Typography> bread loaves. 
-                          This {product.size_oz} oz loaf does not meet the size requirement.
+                          {t('scanner.breadPolicyExplanation')}
                         </Typography>
                       )}
                       {product.category === "cereal" && (
                         <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
-                          Your monthly cereal allowance is 72 oz total. You can mix different cereal sizes and brands as long as the total doesn't exceed 72 oz.
+                          {t('scanner.cerealPolicyExplanation')}
                         </Typography>
                       )}
                     </>
@@ -285,29 +283,26 @@ export default function ScanResultModal({
                   {/* Exceeds monthly limit */}
                   {product.reasons.includes("exceeds_monthly_limit") && (
                     <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
-                      This {product.size_oz} oz package would exceed your monthly benefit allowance. 
-                      Choose a smaller size or check your remaining balance.
+                      {t('scanner.monthlyLimitExplanation')}
                     </Typography>
                   )}
                   
                   {/* Brand not approved */}
                   {product.reasons.includes("brand_or_product_not_approved") && (
                     <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
-                      This specific brand or product is not on the WIC approved product list. 
-                      Only pre-approved brands and products are covered.
+                      {t('scanner.brandPolicyExplanation')}
                     </Typography>
                   )}
                   
                   {/* Product not in WIC category */}
                   {(product.reasons.includes("product_not_in_wic_category") || product.reasons.includes("notInWicCategory")) && (
                     <Typography variant="body" style={{ marginBottom: 8, lineHeight: 20 }}>
-                      This product category is not covered by WIC benefits. 
-                      WIC covers specific food categories like milk, bread, cereal, eggs, cheese, fruits, and vegetables.
+                      {t('scanner.categoryPolicyExplanation')}
                     </Typography>
                   )}
                   
                   <Typography variant="caption" color="textSecondary" style={{ marginTop: 4 }}>
-                    Check the approved alternatives below or scan a different product.
+                    {t('scanner.checkAlternatives')}
                   </Typography>
                 </View>
               </View>

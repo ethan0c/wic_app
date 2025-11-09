@@ -19,6 +19,7 @@ export const translations = {
     // Scanner
     scanner: {
       title: 'Scan Item',
+      scanProduct: 'Scan Product',
       tapToScan: 'Tap to Scan',
       scanning: 'Scanning...',
       approved: 'WIC Approved!',
@@ -43,6 +44,22 @@ export const translations = {
       cannotDetermineSize: 'Could not determine product size. Please try a different product or check with WIC staff.',
       brandNotApproved: 'This brand is not WIC-approved. See suggested alternatives below.',
       notInWicCategory: 'This product category is not covered by WIC benefits.',
+      
+      // Detailed error messages
+      productNotApproved: 'is not approved',
+      wrongSizeForWic: 'is the wrong size for WIC coverage',
+      notOnApprovedList: 'is not on the WIC approved product list for this category',
+      exceedsMonthlyAllowance: 'exceeds your monthly benefit allowance for this category',
+      chooseSmallerSize: 'Choose a smaller size',
+      
+      // Policy explanations
+      milkPolicyExplanation: 'WIC policy only allows half-gallon (64 oz) milk containers. Gallon sizes are not covered to ensure proper portion control and freshness.',
+      breadPolicyExplanation: 'WIC policy requires exactly 16 ounce bread loaves. This loaf does not meet the size requirement.',
+      cerealPolicyExplanation: 'Your monthly cereal allowance is 72 oz total. You can mix different cereal sizes and brands as long as the total doesn\'t exceed 72 oz.',
+      monthlyLimitExplanation: 'This package would exceed your monthly benefit allowance. Choose a smaller size or check your remaining balance.',
+      brandPolicyExplanation: 'This specific brand or product is not on the WIC approved product list. Only pre-approved brands and products are covered.',
+      categoryPolicyExplanation: 'This product category is not covered by WIC benefits. WIC covers specific food categories like milk, bread, cereal, eggs, cheese, fruits, and vegetables.',
+      checkAlternatives: 'Check the approved alternatives below or scan a different product.',
       
       // Reasons
       wrongSize: 'Wrong size',
@@ -106,6 +123,11 @@ export const translations = {
       scanAreaStartCamera: 'Start Camera Scan',
       scanAreaManualEntry: 'Enter Barcode Manually',
       cameraPermissionRequired: 'Camera permission is required to scan barcodes',
+      
+      // Accessibility labels
+      disableTTS: 'Disable Text-to-Speech',
+      enableTTS: 'Enable Text-to-Speech',
+      tapToToggleAudio: 'Tap to toggle audio feedback',
     },
     
     // Home
@@ -132,6 +154,9 @@ export const translations = {
       dollars: 'dollars',
       packages: 'packages',
       ounces: 'ounces',
+      // Benefit card text
+      available: 'Available',
+      total: 'total',
     },
     
     // Categories
@@ -280,6 +305,7 @@ export const translations = {
     // Scanner
     scanner: {
       title: 'Eskane Pwodwi',
+      scanProduct: 'Eskane Pwodwi',
       tapToScan: 'Tape pou Eskane',
       scanning: 'Ap eskane...',
       approved: 'WIC Apwouve!',
@@ -304,6 +330,22 @@ export const translations = {
       cannotDetermineSize: 'Nou pa kapab detèmine gwosè pwodwi a. Tanpri eseye yon lòt pwodwi oswa mande pèsonèl WIC.',
       brandNotApproved: 'Mak sa a pa apwouve pa WIC. Gade altènativ nou sigjere yo anba a.',
       notInWicCategory: 'Kategori pwodwi sa a pa kouvri pa benefis WIC.',
+      
+      // Detailed error messages
+      productNotApproved: 'pa apwouve',
+      wrongSizeForWic: 'move gwosè pou WIC',
+      notOnApprovedList: 'pa sou lis pwodwi WIC apwouve pou kategori sa a',
+      exceedsMonthlyAllowance: 'ta depase limit benefis chak mwa ou pou kategori sa a',
+      chooseSmallerSize: 'Chwazi yon ti gwosè',
+      
+      // Policy explanations
+      milkPolicyExplanation: 'Règleman WIC pèmèt sèlman demi-galon (64 oz) lèt. Yo pa kouvri galon konple pou asire bon kontwòl ak frechè.',
+      breadPolicyExplanation: 'Règleman WIC mande egzakteman 16 ons pen. Pen sa a pa konfòm ak kondisyon gwosè a.',
+      cerealPolicyExplanation: 'Limit sereyal chak mwa ou se 72 ons total. Ou ka melanje diferan gwosè ak mak sereyal yo depi total la pa depase 72 ons.',
+      monthlyLimitExplanation: 'Pake sa a ta depase limit benefis chak mwa ou. Chwazi yon ti gwosè oswa verifye ki benefis ki rete.',
+      brandPolicyExplanation: 'Mak oswa pwodwi espesifik sa a pa sou lis pwodwi WIC apwouve yo. Sèlman mak ak pwodwi ki pre-apwouve kouvri.',
+      categoryPolicyExplanation: 'Kategori pwodwi sa a pa kouvri pa benefis WIC. WIC kouvri kategori manje espesifik tankou lèt, pen, sereyal, ze, fromaj, fwi, ak legim.',
+      checkAlternatives: 'Tcheke altènativ apwouve yo anba a oswa eskane yon lòt pwodwi.',
       
       // Reasons
       wrongSize: 'Move gwosè',
@@ -367,6 +409,11 @@ export const translations = {
       scanAreaStartCamera: 'Kòmanse Eskane Kamera',
       scanAreaManualEntry: 'Antre Kòd Ba Manyèlman',
       cameraPermissionRequired: 'Pèmisyon kamera obligatwa pou eskane kòd ba',
+      
+      // Accessibility labels
+      disableTTS: 'Fèmen Koute Tèks',
+      enableTTS: 'Ouvè Koute Tèks',
+      tapToToggleAudio: 'Tape pou chanje fonksyon son an',
     },
     
     // Home
@@ -393,6 +440,9 @@ export const translations = {
       dollars: 'dola',
       packages: 'pake',
       ounces: 'ons',
+      // Benefit card text
+      available: 'Disponib',
+      total: 'total',
     },
     
     // Categories

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Volume2, VolumeX } from 'lucide-react-native';
 import { useScannerSettings } from '../../context/ScannerSettingsContext';
+import { useLanguage } from '../../context/LanguageContext';
 import Typography from '../Typography';
 
 interface ScannerHeaderProps {
@@ -10,6 +11,7 @@ interface ScannerHeaderProps {
 
 export default function ScannerHeader({ onReadScreen }: ScannerHeaderProps) {
   const { settings, updateSettings } = useScannerSettings();
+  const { t } = useLanguage();
 
   const toggleTTS = () => {
     const newState = !settings.audioEnabled;
@@ -29,13 +31,13 @@ export default function ScannerHeader({ onReadScreen }: ScannerHeaderProps) {
       <View style={styles.headerRow}>
         <View style={{ width: 24 }} />
         <Typography variant="heading" weight="500" style={{ fontSize: 20, textAlign: 'center', flex: 1 }}>
-          Scan Product
+          {t('scanner.scanProduct')}
         </Typography>
         <TouchableOpacity 
           activeOpacity={0.7} 
           accessibilityRole="button" 
-          accessibilityLabel={settings.audioEnabled ? "Disable Text-to-Speech" : "Enable Text-to-Speech"}
-          accessibilityHint="Tap to toggle audio feedback"
+          accessibilityLabel={settings.audioEnabled ? t('scanner.disableTTS') : t('scanner.enableTTS')}
+          accessibilityHint={t('scanner.tapToToggleAudio')}
           onPress={toggleTTS}
         >
           {settings.audioEnabled ? (

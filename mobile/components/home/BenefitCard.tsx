@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Typography from '../Typography';
+import { useLanguage } from '../../context/LanguageContext';
 import * as LucideIcons from 'lucide-react-native';
 
 interface BenefitCardProps {
@@ -37,6 +38,8 @@ export default function BenefitCard({
   iconColor,
   onPress,
 }: BenefitCardProps) {
+  const { t } = useLanguage();
+  
   // Generate darker border color from background color
   const getDarkerBorderColor = (bgColor: string) => {
     // Simple function to darken hex colors
@@ -112,7 +115,7 @@ export default function BenefitCard({
       </View>
       
       <Typography variant="caption" style={{ color: iconColor, opacity: 0.8, marginTop: 12, marginBottom: 4 }}>
-        Available
+        {t('home.available')}
       </Typography>
       <Typography variant="body" weight="700" style={{ color: iconColor, fontSize: 20 }}>
         {unit === 'dollars' ? `$${remaining.toFixed(2)}` : remaining} {unit === 'dollars' ? '' : unit}
@@ -121,7 +124,7 @@ export default function BenefitCard({
       {renderProgressBar()}
       
       <Typography variant="caption" style={{ color: iconColor, opacity: 0.8, marginTop: 4 }}>
-        of {unit === 'dollars' ? `$${total.toFixed(2)}` : `${total} ${unit}`} total
+        of {unit === 'dollars' ? `$${total.toFixed(2)}` : `${total} ${unit}`} {t('home.total')}
       </Typography>
     </TouchableOpacity>
   );
