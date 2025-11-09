@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Vibration } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Vibration, Image as RNImage } from 'react-native';
 import { ArrowLeft, Image, CheckCircle, XCircle, Volume2, ArrowRight } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import Typography from '../../components/Typography';
 import Button from '../../components/Button';
 import aplData from '../../data/apl.json';
 import * as Speech from 'expo-speech';
+import { getImageSource } from '../../utils/imageHelper';
 
 type Product = {
   upc: string;
@@ -17,11 +18,17 @@ type Product = {
   size_display: string;
   isApproved: boolean;
   image?: string;  // Optional fallback emoji/icon
+  imageFilename?: string;
+  imageUrl?: string;
+  emoji?: string;
   reasons: string[];
   alternatives: Array<{
     upc: string;
     suggestion: string;
     reason: string;
+    imageFilename?: string;
+    imageUrl?: string;
+    emoji?: string;
   }>;
 };
 
@@ -81,9 +88,32 @@ export default function ProductDetailScreen({ route }: any) {
       </View>
 
       <View style={styles.content}>
-        {/* Product Image Placeholder */}
+        {/* Product Image */}
         <View style={[styles.productImage, { backgroundColor: theme.card }]}>
-          <Image size={80} color={theme.textSecondary} stroke={theme.textSecondary} />
+          {(() => {
+            const imageSource = getImageSource(product.imageFilename, product.imageUrl);
+            
+            if (imageSource.source) {
+              return (
+                <RNImage 
+                  source={imageSource.source}
+                  style={styles.productImageContent}
+                  resizeMode="contain"
+                />
+              );
+            }
+            
+            // Fallback to emoji or icon
+            if (product.emoji) {
+              return (
+                <Text style={{ fontSize: 80 }}>
+                  {product.emoji}
+                </Text>
+              );
+            }
+            
+            return <Image size={80} color={theme.textSecondary} stroke={theme.textSecondary} />;
+          })()}
         </View>
 
         {/* Status Card */}
@@ -220,6 +250,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    overflow: 'hidden',
+  },
+  productImageContent: {
+    width: 180,
+    height: 180,
   },
   statusCard: {
     borderRadius: 16,

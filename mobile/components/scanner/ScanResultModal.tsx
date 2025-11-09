@@ -329,12 +329,45 @@ export default function ScanResultModal({
                   <Typography variant="subheading" weight="600" style={{ marginBottom: 8, color: '#10B981' }}>
                     ✨ {t('scanner.wicApprovedAlternative')}
                   </Typography>
-                  <Typography variant="body" weight="600" style={{ marginBottom: 4 }}>
-                    {product.alternatives[0].suggestion}
-                  </Typography>
-                  <Typography variant="body" style={{ marginBottom: 12 }}>
-                    {product.alternatives[0].reason}
-                  </Typography>
+                  
+                  {/* Alternative Product Image and Details */}
+                  <View style={styles.alternativeProduct}>
+                    {/* Alternative Product Image */}
+                    <View style={styles.alternativeImageContainer}>
+                      {(() => {
+                        const altImageSource = getImageSource(
+                          product.alternatives[0].imageFilename, 
+                          product.alternatives[0].imageUrl
+                        );
+                        
+                        if (altImageSource.source) {
+                          return (
+                            <Image 
+                              source={altImageSource.source}
+                              style={styles.alternativeImage}
+                              resizeMode="contain"
+                            />
+                          );
+                        }
+                        
+                        return (
+                          <Typography variant="body" style={{ fontSize: 24 }}>
+                            {product.alternatives[0].emoji || getCategoryEmoji(product.category)}
+                          </Typography>
+                        );
+                      })()}
+                    </View>
+                    
+                    {/* Alternative Product Text */}
+                    <View style={styles.alternativeTextContainer}>
+                      <Typography variant="body" weight="600" style={{ marginBottom: 4 }}>
+                        {product.alternatives[0].suggestion}
+                      </Typography>
+                      <Typography variant="body" style={{ marginBottom: 12 }}>
+                        {product.alternatives[0].reason}
+                      </Typography>
+                    </View>
+                  </View>
                   
                   <TouchableOpacity
                     style={styles.alternativeButton}
@@ -497,5 +530,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
     marginTop: 10,
+  },
+  alternativeProduct: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+    gap: 12,
+  },
+  alternativeImageContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  alternativeImage: {
+    width: 45,
+    height: 45,
+  },
+  alternativeTextContainer: {
+    flex: 1,
   },
 });
