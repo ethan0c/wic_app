@@ -9,6 +9,7 @@ import Button from '../Button';
 import SectionCard from '../home/SectionCard';
 import aplData from '../../data/apl.json';
 import * as Speech from 'expo-speech';
+import { getImageSource } from '../../utils/imageHelper';
 
 type Product = {
   upc: string;
@@ -20,6 +21,7 @@ type Product = {
   isApproved: boolean;
   image?: string;  // Optional fallback emoji/icon
   imageFilename?: string;
+  imageUrl?: string;  // Fallback URL if local image not available
   emoji?: string;
   reasons: string[];
   alternatives: Array<{
@@ -27,6 +29,7 @@ type Product = {
     suggestion: string;
     reason: string;
     imageFilename?: string;
+    imageUrl?: string;
     emoji?: string;
   }>;
   benefitCalculation?: {
@@ -175,17 +178,25 @@ export default function ScanResultModal({
           <View style={styles.resultHeader}>
             {/* Product Image or Emoji */}
             <View style={styles.productImageContainer}>
-              {product.imageFilename ? (
-                <Image 
-                  source={{ uri: product.imageFilename }} // Backend sends imageUrl, we treat as filename
-                  style={styles.productImage}
-                  resizeMode="contain"
-                />
-              ) : (
-                <Typography variant="heading" style={{ fontSize: 48 }}>
-                  {product.emoji || getCategoryEmoji(product.category)}
-                </Typography>
-              )}
+              {(() => {
+                const imageSource = getImageSource(product.imageFilename, product.imageUrl);
+                
+                if (imageSource.source) {
+                  return (
+                    <Image 
+                      source={imageSource.source}
+                      style={styles.productImage}
+                      resizeMode="contain"
+                    />
+                  );
+                }
+                
+                return (
+                  <Typography variant="heading" style={{ fontSize: 48 }}>
+                    {product.emoji || getCategoryEmoji(product.category)}
+                  </Typography>
+                );
+              })()}
             </View>
 
             <View style={[

@@ -5,6 +5,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useNavigation } from '@react-navigation/native';
 import Typography from '../../components/Typography';
 import { getAllApprovedProducts, ApprovedProduct } from '../../services/wicApi';
+import { getImageSource } from '../../utils/imageHelper';
 
 export default function CategoriesScreen() {
   const { theme } = useTheme();
@@ -114,13 +115,19 @@ export default function CategoriesScreen() {
                   style={[styles.productCard, { backgroundColor: theme.card, borderColor: theme.border }]}
                 >
                   <View style={styles.productImage}>
-                    {product.generalFood?.imageFilename ? (
-                      <Image source={{ uri: product.generalFood.imageFilename }} style={styles.image} /> 
-                    ) : (
-                      <View style={[styles.imagePlaceholder, { backgroundColor: '#F3F4F6' }]}>
-                        <Text style={styles.placeholderEmoji}>📦</Text>
-                      </View>
-                    )}
+                    {(() => {
+                      const imageSource = getImageSource(product.generalFood?.imageFilename);
+                      
+                      if (imageSource.source) {
+                        return <Image source={imageSource.source} style={styles.image} />; 
+                      }
+                      
+                      return (
+                        <View style={[styles.imagePlaceholder, { backgroundColor: '#F3F4F6' }]}>
+                          <Text style={styles.placeholderEmoji}>📦</Text>
+                        </View>
+                      );
+                    })()}
                   </View>
                   <View style={styles.productInfo}>
                     <Typography variant="body" weight="600" numberOfLines={2}>
