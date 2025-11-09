@@ -16,7 +16,7 @@ type Product = {
   size_oz: number;
   size_display: string;
   isApproved: boolean;
-  image: string;
+  image?: string;  // Optional fallback emoji/icon
   reasons: string[];
   alternatives: Array<{
     upc: string;

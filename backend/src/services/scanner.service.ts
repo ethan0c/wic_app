@@ -46,7 +46,7 @@ export async function scanProduct(upc: string): Promise<ScanResult & { alternati
         name: alt.generalFood.name,
         brand: alt.generalFood.brand,
         size: alt.generalFood.unitSize,
-        imageUrl: alt.generalFood.imageUrl,
+        imageUrl: alt.generalFood.imageFilename, // Using imageFilename but naming it imageUrl for API compatibility
         category: alt.wicCategory,
       }));
     }
