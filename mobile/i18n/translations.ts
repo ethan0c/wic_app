@@ -161,18 +161,45 @@ export const translations = {
     
     // Categories
     categories: {
-      milk: 'Milk & Dairy',
-      dairy: 'Dairy',
+      title: 'WIC Approved Foods',
+      subtitle: 'Browse all WIC-approved products in your area',
+      products: 'Products',
+      showing: 'Showing',
+      filterTitle: 'Filter by Category',
+      allFoods: 'All Foods',
+      noProductsFound: 'No Products Found',
+      noProductsInCategory: 'No approved products in this category yet',
+      loadingProducts: 'Loading approved products...',
+      
+      // Category names (keeping dairy, vegetables etc. in English as requested)
+      milk: 'Milk',
+      dairy: 'Dairy', 
       produce: 'Fruits & Vegetables',
       grains: 'Bread & Grains',
       protein: 'Protein',
       vegetables: 'Vegetables',
       fruits: 'Fruits',
-      cereal: 'Breakfast Cereal',
+      cereal: 'Cereal',
       juice: 'Juice',
       eggs: 'Eggs',
       peanutButter: 'Peanut Butter',
       beans: 'Beans',
+      bread: 'Bread',
+      cheese: 'Cheese',
+      cvb: 'Fruits & Vegetables',
+      fruitsVegetables: 'Fruits & Vegetables',
+      
+      // Product details
+      wicApproved: 'WIC APPROVED',
+      brand: 'Brand',
+      size: 'Size',
+      upc: 'UPC',
+      category: 'Category',
+      weight: 'Weight',
+      status: 'Status',
+      approved: 'Approved',
+      productInfo: 'Product Information',
+      noImageAvailable: 'No Image Available',
     },
     
     // Shopping List
@@ -277,6 +304,12 @@ export const translations = {
       itemsAvailable: 'items available',
       remaining: 'remaining',
       of: 'of',
+      // Category titles - keep dairy and vegetables in English as requested
+      dairy: 'Dairy',
+      vegetables: 'Vegetables', 
+      grains: 'Grains',
+      protein: 'Protein',
+      fruits: 'Fruits',
     },
     
     // Benefit Detail Modal
@@ -447,18 +480,45 @@ export const translations = {
     
     // Categories
     categories: {
-      milk: 'Lèt ak Pwodwi Lèt',
-      dairy: 'Pwodwi Lèt',
-      produce: 'Fwi ak Legim',
+      title: 'Manje WIC ki Apwouve',
+      subtitle: 'Gade tout pwodwi WIC ki apwouve yo nan zòn ou an',
+      products: 'Pwodwi',
+      showing: 'Ap Montre',
+      filterTitle: 'Filtre pa Kategori',
+      allFoods: 'Tout Manje',
+      noProductsFound: 'Pa Gen Pwodwi',
+      noProductsInCategory: 'Pa gen pwodwi ki apwouve nan kategori sa a ankò',
+      loadingProducts: 'Ap chaje pwodwi ki apwouve yo...',
+      
+      // Category names (keeping dairy, vegetables etc. in English as requested)
+      milk: 'Lèt',
+      dairy: 'Dairy',
+      produce: 'Fruits ak Vegetables',
       grains: 'Pen ak Sereyal',
-      protein: 'Pwoteyin',
-      vegetables: 'Legim',
-      fruits: 'Fwi',
-      cereal: 'Sereyal Manje Maten',
+      protein: 'Protein',
+      vegetables: 'Vegetables',
+      fruits: 'Fruits',
+      cereal: 'Sereyal',
       juice: 'Ji',
       eggs: 'Ze',
       peanutButter: 'Manba',
       beans: 'Pwa',
+      bread: 'Pen',
+      cheese: 'Fromaj',
+      cvb: 'Fruits ak Vegetables',
+      fruitsVegetables: 'Fruits ak Vegetables',
+      
+      // Product details
+      wicApproved: 'WIC APWOUVE',
+      brand: 'Mak',
+      size: 'Gwosè', 
+      upc: 'UPC',
+      category: 'Kategori',
+      weight: 'Pèz',
+      status: 'Sitiyasyon',
+      approved: 'Apwouve',
+      productInfo: 'Enfòmasyon Pwodwi',
+      noImageAvailable: 'Pa Gen Foto',
     },
     
     // Shopping List
@@ -563,6 +623,12 @@ export const translations = {
       itemsAvailable: 'pwodwi disponib',
       remaining: 'ki rete',
       of: 'sou',
+      // Category titles - keep dairy and vegetables in English as requested  
+      dairy: 'Dairy',
+      vegetables: 'Vegetables',
+      grains: 'Sereyal',
+      protein: 'Pwoteyin', 
+      fruits: 'Fwi',
     },
     
     // Benefit Detail Modal

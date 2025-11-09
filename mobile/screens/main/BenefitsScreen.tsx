@@ -122,7 +122,9 @@ export default function BenefitsScreen() {
   };
 
   const getCategoryTitle = (category: string) => {
-    return category.charAt(0).toUpperCase() + category.slice(1);
+    // Use translation for category titles while keeping dairy/vegetables in English as requested
+    const categoryKey = `benefits.${category}` as const;
+    return t(categoryKey);
   };
 
   const formatValue = (value: number, unit: string) => {

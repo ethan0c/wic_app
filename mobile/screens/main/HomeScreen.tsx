@@ -87,7 +87,7 @@ export default function HomeScreen() {
   const wicBenefits = benefits.map(benefit => ({
     key: benefit.category.toLowerCase(),
     Icon: getCategoryIcon(benefit.category),
-    title: benefit.category.charAt(0).toUpperCase() + benefit.category.slice(1),
+    title: t(`benefits.${benefit.category.toLowerCase()}`),
     remaining: Number(benefit.remainingAmount),
     total: Number(benefit.totalAmount),
     unit: benefit.unit,

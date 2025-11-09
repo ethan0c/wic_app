@@ -34,13 +34,13 @@ export default function CategoriesScreen() {
   const [selectedProduct, setSelectedProduct] = useState<LocalProduct | null>(null);
 
   const categories = [
-    { key: 'all', label: 'All Foods', emoji: '🛒' },
-    { key: 'milk', label: 'Milk', emoji: '🥛' },
-    { key: 'cereal', label: 'Cereal', emoji: '🥣' },
-    { key: 'bread', label: 'Bread', emoji: '🍞' },
-    { key: 'cheese', label: 'Cheese', emoji: '🧀' },
-    { key: 'eggs', label: 'Eggs', emoji: '🥚' },
-    { key: 'cvb', label: 'Fruits & Vegetables', emoji: '🥕' },
+    { key: 'all', label: t('categories.allFoods'), emoji: '🛒' },
+    { key: 'milk', label: t('categories.milk'), emoji: '🥛' },
+    { key: 'cereal', label: t('categories.cereal'), emoji: '🥣' },
+    { key: 'bread', label: t('categories.bread'), emoji: '🍞' },
+    { key: 'cheese', label: t('categories.cheese'), emoji: '🧀' },
+    { key: 'eggs', label: t('categories.eggs'), emoji: '🥚' },
+    { key: 'cvb', label: t('categories.fruitsVegetables'), emoji: '🥕' },
   ];
 
   useEffect(() => {
@@ -85,10 +85,32 @@ export default function CategoriesScreen() {
       <ScrollView style={styles.scrollContainer}>
         {/* Header Section */}
         <View style={styles.headerSection}>
-          <Typography variant="body" color="textSecondary" style={{ marginTop: -40 , textAlign: 'center' }}>
-            Browse all WIC-approved products
-            Tap each image to expand it
-          </Typography>
+          <View style={styles.headerContent}>
+            <Typography variant="heading" weight="700" style={styles.headerTitle}>
+              🛒 {t('categories.title')}
+            </Typography>
+            <Typography variant="body" color="textSecondary" style={styles.headerSubtitle}>
+              {t('categories.subtitle')}
+            </Typography>
+            <View style={styles.statsRow}>
+              <View style={styles.statBadge}>
+                <Typography variant="caption" weight="600" style={styles.statNumber}>
+                  {products.length}
+                </Typography>
+                <Typography variant="caption" style={styles.statLabel}>
+                  {t('categories.products')}
+                </Typography>
+              </View>
+              <View style={styles.statBadge}>
+                <Typography variant="caption" weight="600" style={styles.statNumber}>
+                  {filteredProducts.length}
+                </Typography>
+                <Typography variant="caption" style={styles.statLabel}>
+                  {t('categories.showing')}
+                </Typography>
+              </View>
+            </View>
+          </View>
         </View>
 
         {/* Category Filter */}
@@ -133,10 +155,10 @@ export default function CategoriesScreen() {
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyEmoji}>📦</Text>
               <Typography variant="subheading" weight="600" style={{ marginTop: 12 }}>
-                No Products Found
+                {t('categories.noProductsFound')}
               </Typography>
               <Typography variant="body" color="textSecondary" style={{ marginTop: 8, textAlign: 'center' }}>
-                No approved products in this category yet
+                {t('categories.noProductsInCategory')}
               </Typography>
             </View>
           ) : (
@@ -269,7 +291,7 @@ export default function CategoriesScreen() {
 
                     <View style={styles.modalCategoryRow}>
                       <Typography variant="caption" color="textSecondary">
-                        Category: 
+                        {t('categories.category')}: 
                       </Typography>
                       <View style={styles.modalCategoryBadge}>
                         <Text style={styles.modalCategoryEmoji}>
@@ -317,9 +339,50 @@ const styles = StyleSheet.create({
   },
   headerSection: {
     paddingTop: 60,
-    paddingHorizontal: 20,
-    paddingBottom: 0,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
     backgroundColor: '#FFFFFF',
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  headerContent: {
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 28,
+    color: '#1F2937',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  headerSubtitle: {
+    textAlign: 'center',
+    marginBottom: 20,
+    paddingHorizontal: 12,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  statBadge: {
+    backgroundColor: '#F0FDF4',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    minWidth: 80,
+  },
+  statNumber: {
+    color: '#10B981',
+    fontSize: 18,
+  },
+  statLabel: {
+    color: '#10B981',
+    marginTop: 2,
   },
   categoriesScroll: {
     backgroundColor: '#FFFFFF',
