@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearUserData } from '../utils/storageUtils';
 
 interface User {
   id: string;
@@ -207,10 +208,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     try {
+      // Clear user state first
       setUser(null);
-      await AsyncStorage.removeItem(STORAGE_KEY);
+      
+      // Clear all user-specific AsyncStorage data using utility function
+      await clearUserData();
+      
+      // Note: clearUserData preserves device-level preferences:
+      // - '@wic_app_language' (language preference should persist across users)
+      // - 'scannerSettings' (scanner audio/settings are device-level preferences)  
+      // - '@wic_users' (stored users for login functionality)
+      
     } catch (error) {
       console.error('Failed to sign out:', error);
+      throw error; // Re-throw so UI can handle the error
     }
   };
 

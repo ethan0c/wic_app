@@ -31,6 +31,17 @@ export default function ExploreScreen() {
   const { t } = useLanguage();
   const navigation = useNavigation<ExploreScreenNavigationProp>();
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      // Sign out successful - AuthContext will handle navigation
+    } catch (error) {
+      console.error('Sign out failed:', error);
+      // Could show an alert or toast here if needed
+      // For now, we'll just log the error since signOut is critical functionality
+    }
+  };
+
   const cards: ExploreCard[] = [
     { 
       key: 'benefits', 
@@ -203,7 +214,7 @@ export default function ExploreScreen() {
 
             <TouchableOpacity 
               style={styles.accountOption}
-              onPress={signOut}
+              onPress={handleSignOut}
             >
               <LogOut size={20} color="#EF4444" stroke="#EF4444" />
               <Typography variant="body" style={{ marginLeft: 12, flex: 1, color: '#EF4444' }}>
