@@ -70,10 +70,7 @@ export default function CategoriesScreen() {
       <ScrollView style={styles.scrollContainer}>
         {/* Header Section */}
         <View style={styles.headerSection}>
-          <Typography variant="heading" weight="600" style={{ fontSize: 24 }}>
-            WIC Approved Foods
-          </Typography>
-          <Typography variant="body" color="textSecondary" style={{ marginTop: 8 }}>
+          <Typography variant="body" color="textSecondary" style={{ marginTop: -40 , textAlign: 'center' }}>
             Browse all WIC-approved products
           </Typography>
         </View>
@@ -187,7 +184,7 @@ const styles = StyleSheet.create({
   headerSection: {
     paddingTop: 60,
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 0,
     backgroundColor: '#FFFFFF',
   },
   categoriesScroll: {
