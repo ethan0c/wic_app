@@ -490,14 +490,14 @@ export const translations = {
       noProductsInCategory: 'Pa gen pwodwi ki apwouve nan kategori sa a ankò',
       loadingProducts: 'Ap chaje pwodwi ki apwouve yo...',
       
-      // Category names (keeping dairy, vegetables etc. in English as requested)
+      // Category names (now translating dairy and vegetables)
       milk: 'Lèt',
-      dairy: 'Dairy',
-      produce: 'Fruits ak Vegetables',
+      dairy: 'Lèt ak Fromaj',
+      produce: 'Fruits ak Legim',
       grains: 'Pen ak Sereyal',
-      protein: 'Protein',
-      vegetables: 'Vegetables',
-      fruits: 'Fruits',
+      protein: 'Pwoteyin',
+      vegetables: 'Legim',
+      fruits: 'Fwi',
       cereal: 'Sereyal',
       juice: 'Ji',
       eggs: 'Ze',
@@ -623,9 +623,9 @@ export const translations = {
       itemsAvailable: 'pwodwi disponib',
       remaining: 'ki rete',
       of: 'sou',
-      // Category titles - keep dairy and vegetables in English as requested  
-      dairy: 'Dairy',
-      vegetables: 'Vegetables',
+      // Category titles - now translating dairy and vegetables
+      dairy: 'Lèt ak Fromaj',
+      vegetables: 'Legim',
       grains: 'Sereyal',
       protein: 'Pwoteyin', 
       fruits: 'Fwi',
