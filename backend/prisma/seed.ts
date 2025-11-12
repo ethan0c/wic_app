@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Three test WIC card numbers
 const CARD_NUMBERS = {
   HEAVY_USER: '1234567890', // Low remaining benefits - heavy usage
   MODERATE_USER: '0987654321', // Medium remaining benefits - moderate usage
