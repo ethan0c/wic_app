@@ -179,6 +179,17 @@ export default function ScanResultModal({
             {/* Product Image or Emoji */}
             <View style={styles.productImageContainer}>
               {(() => {
+                // Priority: 1. OpenFoodFacts image from API, 2. Local image, 3. Emoji fallback
+                if (product.image) {
+                  return (
+                    <Image 
+                      source={{ uri: product.image }}
+                      style={styles.productImage}
+                      resizeMode="contain"
+                    />
+                  );
+                }
+                
                 const imageSource = getImageSource(product.imageFilename, product.imageUrl);
                 
                 if (imageSource.source) {

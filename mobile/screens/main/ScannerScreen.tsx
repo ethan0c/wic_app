@@ -184,12 +184,12 @@ export default function ScannerScreen({ route }: any) {
         name: productData.name || 'Unknown Product',
         brand: productData.brand || 'Unknown Brand',
         category,
-        size_oz: 0, // Size info not available from simplified API
-        size_display: 'Unknown',
+        size_oz: productData.size_oz || 0,
+        size_display: productData.size_display || 'Unknown',
         isApproved: scanResult.isWicApproved,
-        image: productData.image || '',
+        image: productData.image || '', // Use actual product image from OpenFoodFacts
         imageFilename: undefined,
-        emoji: getCategoryEmoji(category),
+        emoji: productData.image ? undefined : getCategoryEmoji(category), // Only show emoji if no image
         reasons: scanResult.isWicApproved ? [] : ['brand_or_product_not_approved'],
         alternatives: [], // Simplified - no alternatives for now
         benefitCalculation: null,
@@ -197,7 +197,8 @@ export default function ScannerScreen({ route }: any) {
       
       console.log('📦 Processed product:', product.isApproved ? 'APPROVED ✅' : 'NOT APPROVED ❌');
       console.log('🏷️ Category:', product.category);
-      console.log('�️ Image URL:', product.image);
+      console.log('📏 Size:', product.size_display);
+      console.log('🖼️ Image URL:', product.image);
       
       return product;
     } catch (error) {

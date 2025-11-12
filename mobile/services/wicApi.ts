@@ -7,6 +7,8 @@ export interface ScanResult {
     brand: string;
     image?: string;
     upc: string;
+    size_oz?: number;
+    size_display?: string;
   };
   isWicApproved: boolean;
   wicCategory?: string;
