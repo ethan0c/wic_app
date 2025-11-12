@@ -228,6 +228,7 @@ export default function ScanResultModal({
             </Typography>
             <Typography variant="body" color="textSecondary" style={{ textAlign: 'center', marginTop: 4 }}>
               {product.brand} • {product.size_display}
+              {product.size_oz > 0 && product.size_display && !product.size_display.toLowerCase().includes('oz') && ` (${product.size_oz} oz)`}
             </Typography>
           </View>
 

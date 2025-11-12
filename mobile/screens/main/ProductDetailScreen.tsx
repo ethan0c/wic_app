@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Vibration, Image as RNImage } from 'react-native';
 import { ArrowLeft, Image, CheckCircle, XCircle, Volume2, ArrowRight } from 'lucide-react-native';
 import { useTheme } from '../../context/ThemeContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { useNavigation } from '@react-navigation/native';
 import Typography from '../../components/Typography';
 import Button from '../../components/Button';
@@ -35,8 +36,8 @@ type Product = {
 export default function ProductDetailScreen({ route }: any) {
   const { product, categoryName }: { product: Product, categoryName: string } = route.params;
   const { theme } = useTheme();
+  const { t, language, setLanguage } = useLanguage();
   const navigation = useNavigation();
-  const [language, setLanguage] = useState<'en' | 'ht'>('en');
 
   const speakProductInfo = () => {
     const status = product.isApproved ? "approved" : "not covered";
@@ -76,13 +77,21 @@ export default function ProductDetailScreen({ route }: any) {
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
+        <TouchableOpacity 
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <ArrowLeft size={24} color={theme.text} stroke={theme.text} />
+        </TouchableOpacity>
+        
+        <View style={{ flex: 1 }} />
         
         <TouchableOpacity 
-          onPress={() => setLanguage(lang => lang === 'en' ? 'ht' : 'en')}
+          onPress={() => setLanguage(language === 'en' ? 'ht' : 'en')}
           style={[styles.langButton, { backgroundColor: theme.primary + '15' }]}
         >
           <Text style={[styles.langText, { color: theme.primary }]}>
-            {language === 'en' ? 'EN' : 'HT'}
+            {language.toUpperCase()}
           </Text>
         </TouchableOpacity>
       </View>
@@ -242,13 +251,19 @@ export default function ProductDetailScreen({ route }: any) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   header: { 
-    paddingTop: 60, 
+    paddingTop: 50, 
     paddingHorizontal: 20, 
-    paddingBottom: 24,
+    paddingBottom: 16,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  backButton: { width: 40, height: 40, justifyContent: 'center' },
+  backButton: { 
+    width: 40, 
+    height: 40, 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
   langButton: { 
     width: 40, 
     height: 40, 
@@ -257,9 +272,9 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
   langText: { fontSize: 12, fontWeight: '600' },
-  content: { paddingHorizontal: 20, paddingBottom: 100 },
+  content: { paddingHorizontal: 20, paddingBottom: 40 },
   productImage: {
-    height: 200,
+    height: 240,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
@@ -267,8 +282,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   productImageContent: {
-    width: 180,
-    height: 180,
+    width: '90%',
+    height: '90%',
   },
   statusCard: {
     borderRadius: 16,
@@ -306,7 +321,9 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    alignItems: 'flex-start',
+    marginBottom: 12,
+    paddingVertical: 4,
   },
   ruleCard: {
     borderRadius: 16,
@@ -328,6 +345,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   actions: {
-    marginTop: 20,
+    marginTop: 12,
+    marginBottom: 20,
   },
 });
