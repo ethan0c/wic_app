@@ -162,69 +162,42 @@ export default function ScannerScreen({ route }: any) {
       return productWithEmoji;
     }
     
-    // Not in local database - call backend API (which uses USDA)
+    // Not in local database - call backend API (which now uses OpenFoodFacts)
     try {
       console.log('🔍 Product not in local DB, checking backend API...', upcOrName);
       const scanResult = await scanProductByUPC(upcOrName, wicCardNumber || undefined);
       
-      if (!scanResult.found) {
-        console.log('❌ Not found in backend/USDA database');
+      if (!scanResult.found || !scanResult.product) {
+        console.log('❌ Not found in backend/OpenFoodFacts database');
         return null;
       }
       
       console.log('✅ Found via backend:', scanResult);
       
-      // Backend returns ScanResult with usdaProduct and wicCategory
-      const usdaProduct = scanResult.usdaProduct;
+      // Backend returns simplified product info
+      const productData = scanResult.product;
       const category = scanResult.wicCategory || 'unknown';
-      
-      // Extract size from USDA data or local product info
-      let size = 0;
-      const sizeText = usdaProduct?.householdServingFullText || scanResult.localProduct?.subcategory || '';
-      if (sizeText) {
-        const ozMatch = sizeText.match(/(\d+\.?\d*)\s*(oz|ounce)/i);
-        if (ozMatch) size = parseFloat(ozMatch[1]);
-        
-        const gallonMatch = sizeText.match(/(\d+\.?\d*)\s*gallon/i);
-        if (gallonMatch) size = parseFloat(gallonMatch[1]) * 128;
-        
-        const lbMatch = sizeText.match(/(\d+\.?\d*)\s*(lb|pound)/i);
-        if (lbMatch) size = parseFloat(lbMatch[1]) * 16;
-      }
-      
-      // Map backend alternatives to frontend format
-      const alternatives = (scanResult.alternatives || []).map(alt => ({
-        upc: alt.upc || '',
-        suggestion: `Try ${alt.brand} ${alt.name} (${alt.size})`,
-        reason: `This is a WIC-approved alternative in the ${alt.category} category`,
-        imageFilename: alt.imageUrl, // Backend sends imageUrl, we treat as filename
-        emoji: getCategoryEmoji(alt.category),
-      }));
       
       // Convert backend result to Product type
       const product: Product = {
         upc: upcOrName,
-        name: usdaProduct?.description || scanResult.localProduct?.name || 'Unknown Product',
-        brand: usdaProduct?.brandOwner || usdaProduct?.brandName || scanResult.localProduct?.brand || 'Unknown',
+        name: productData.name || 'Unknown Product',
+        brand: productData.brand || 'Unknown Brand',
         category,
-        size_oz: size,
-        size_display: size > 0 ? `${size} oz` : 'Unknown',
+        size_oz: 0, // Size info not available from simplified API
+        size_display: 'Unknown',
         isApproved: scanResult.isWicApproved,
-        image: '',
+        image: productData.image || '',
         imageFilename: undefined,
         emoji: getCategoryEmoji(category),
         reasons: scanResult.isWicApproved ? [] : ['brand_or_product_not_approved'],
-        alternatives,
-        benefitCalculation: scanResult.benefitCalculation || null,
+        alternatives: [], // Simplified - no alternatives for now
+        benefitCalculation: null,
       };
       
       console.log('📦 Processed product:', product.isApproved ? 'APPROVED ✅' : 'NOT APPROVED ❌');
-      console.log('📏 Size:', product.size_display);
       console.log('🏷️ Category:', product.category);
-      console.log('💡 Alternatives:', alternatives.length);
-      if (product.benefitCalculation) {
-        console.log('💰 Benefit Impact:', product.benefitCalculation);
-      }
+      console.log('�️ Image URL:', product.image);
       
       return product;
     } catch (error) {

@@ -2,17 +2,14 @@ import api from './api';
 
 export interface ScanResult {
   found: boolean;
-  usdaProduct?: any;
-  isWicApproved: boolean;
-  wicCategory?: string;
-  approvalNotes?: string;
-  localProduct?: {
-    id: string;
+  product?: {
     name: string;
     brand: string;
-    category: string;
-    subcategory: string;
+    image?: string;
+    upc: string;
   };
+  isWicApproved: boolean;
+  wicCategory?: string;
   alternatives?: Array<{
     id: string;
     upc: string;

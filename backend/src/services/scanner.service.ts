@@ -1,136 +1,53 @@
 import { PrismaClient } from '@prisma/client';
-import { searchByUPC, searchByPLU, type ScanResult } from './usda.service';
+import { searchByUPC, searchByName, type ScanResult, type ProductInfo } from './openfoodfacts.service';
 
 const prisma = new PrismaClient();
 
 /**
- * Scan a product by UPC barcode
- * 1. Check our local DB for WIC approval
- * 2. Fetch product details from USDA API
- * 3. Find approved alternatives if product is not approved
- * 4. Return combined result
+ * Scan a product by UPC barcode using OpenFoodFacts (no database dependency)
  */
-export async function scanProduct(upc: string): Promise<ScanResult & { alternatives?: any[] }> {
+export async function scanProduct(upc: string): Promise<ScanResult> {
   try {
-    // Step 1: Check our local database for WIC approval
-    const localProduct = await prisma.generalFood.findFirst({
-      where: { upcCode: upc },
-      include: {
-        approvedFood: true,
-      },
-    });
+    // Try to get product info from OpenFoodFacts
+    const productInfo = await searchByUPC(upc);
 
-    // Step 2: Fetch from USDA API for rich product details
-    const usdaProduct = await searchByUPC(upc);
-
-    // Step 3: If product is not approved, find alternatives in same category
-    let alternatives: any[] = [];
-    const category = localProduct?.category || localProduct?.approvedFood?.wicCategory;
-    
-    if (category && (!localProduct?.approvedFood?.isApproved || !localProduct)) {
-      // Find approved alternatives in the same category
-      const approvedAlternatives = await prisma.approvedFood.findMany({
-        where: {
-          wicCategory: category,
-          isApproved: true,
-        },
-        include: {
-          generalFood: true,
-        },
-        take: 3, // Limit to 3 alternatives
-      });
-
-      alternatives = approvedAlternatives.map(alt => ({
-        id: alt.generalFood.id,
-        upc: alt.generalFood.upcCode,
-        name: alt.generalFood.name,
-        brand: alt.generalFood.brand,
-        size: alt.generalFood.unitSize,
-        imageUrl: alt.generalFood.imageFilename, // Using imageFilename but naming it imageUrl for API compatibility
-        category: alt.wicCategory,
-      }));
-    }
-
-    // Step 4: Combine results
-    if (localProduct) {
+    if (productInfo) {
       return {
         found: true,
-        usdaProduct: usdaProduct || undefined,
-        isWicApproved: !!localProduct.approvedFood?.isApproved,
-        wicCategory: localProduct.approvedFood?.wicCategory,
-        approvalNotes: localProduct.approvedFood?.notes || undefined,
-        localProduct: {
-          id: localProduct.id,
-          name: localProduct.name,
-          brand: localProduct.brand || 'Generic',
-          category: localProduct.category,
-          subcategory: localProduct.subcategory || '',
-        },
-        alternatives: alternatives.length > 0 ? alternatives : undefined,
+        product: productInfo,
+        isWicApproved: false, // Default to false, can be enhanced later
+        wicCategory: 'unknown'
       };
     }
 
-    // Product not in our DB but found in USDA
-    if (usdaProduct) {
-      return {
-        found: true,
-        usdaProduct,
-        isWicApproved: false,
-        localProduct: undefined,
-        alternatives: alternatives.length > 0 ? alternatives : undefined,
-      };
-    }
-
-    // Not found anywhere
     return {
       found: false,
       isWicApproved: false,
-      alternatives: [],
     };
   } catch (error) {
     console.error('Scan error:', error);
-    throw error;
+    // Return not found instead of throwing
+    return {
+      found: false,
+      isWicApproved: false,
+    };
   }
 }
 
 /**
- * Scan produce by PLU code
+ * Scan produce by PLU code using OpenFoodFacts search (simplified)
  */
 export async function scanProduce(plu: string): Promise<ScanResult> {
   try {
-    // Check local DB
-    const localProduct = await prisma.generalFood.findFirst({
-      where: { pluCode: plu },
-      include: {
-        approvedFood: true,
-      },
-    });
+    // Search OpenFoodFacts by product name/PLU
+    const productInfo = await searchByName(`PLU ${plu}`);
 
-    // Fetch from USDA
-    const usdaProduct = await searchByPLU(plu);
-
-    if (localProduct) {
+    if (productInfo) {
       return {
         found: true,
-        usdaProduct: usdaProduct || undefined,
-        isWicApproved: !!localProduct.approvedFood?.isApproved,
-        wicCategory: localProduct.approvedFood?.wicCategory,
-        approvalNotes: localProduct.approvedFood?.notes || undefined,
-        localProduct: {
-          id: localProduct.id,
-          name: localProduct.name,
-          brand: localProduct.brand || 'Fresh',
-          category: localProduct.category,
-          subcategory: localProduct.subcategory || '',
-        },
-      };
-    }
-
-    if (usdaProduct) {
-      return {
-        found: true,
-        usdaProduct,
-        isWicApproved: false,
+        product: productInfo,
+        isWicApproved: false, // Default to false
+        wicCategory: 'produce'
       };
     }
 
@@ -140,41 +57,25 @@ export async function scanProduce(plu: string): Promise<ScanResult> {
     };
   } catch (error) {
     console.error('Scan error:', error);
-    throw error;
+    return {
+      found: false,
+      isWicApproved: false,
+    };
   }
 }
 
 /**
- * Get all WIC-approved products by category
+ * Get all WIC-approved products by category (placeholder)
  */
 export async function getApprovedProductsByCategory(category: string) {
-  return prisma.approvedFood.findMany({
-    where: {
-      wicCategory: category,
-      isApproved: true,
-    },
-    include: {
-      generalFood: true,
-    },
-  });
+  // Return empty array for now since we're not using database
+  return [];
 }
 
 /**
- * Search for WIC-approved products by name
+ * Search for WIC-approved products by name (placeholder)
  */
 export async function searchApprovedProducts(searchTerm: string) {
-  return prisma.approvedFood.findMany({
-    where: {
-      isApproved: true,
-      generalFood: {
-        name: {
-          contains: searchTerm,
-          mode: 'insensitive',
-        },
-      },
-    },
-    include: {
-      generalFood: true,
-    },
-  });
+  // Return empty array for now since we're not using database
+  return [];
 }
