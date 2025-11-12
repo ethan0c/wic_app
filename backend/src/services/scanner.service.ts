@@ -1,7 +1,4 @@
-import { PrismaClient } from '@prisma/client';
 import { searchByUPC, searchByName, type ScanResult, type ProductInfo } from './openfoodfacts.service';
-
-const prisma = new PrismaClient();
 
 /**
  * Scan a product by UPC barcode using OpenFoodFacts (no database dependency)
