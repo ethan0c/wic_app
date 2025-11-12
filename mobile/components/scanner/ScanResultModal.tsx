@@ -387,7 +387,11 @@ export default function ScanResultModal({
                       if (alternativeProduct) {
                         onClose();
                         (navigation as any).navigate('ProductDetail', { 
-                          product: alternativeProduct, 
+                          product: {
+                            ...alternativeProduct,
+                            size_oz: alternativeProduct.size_oz,
+                            size_display: alternativeProduct.size_display
+                          }, 
                           categoryName: (aplData.categories as any)[alternativeProduct.category]?.name || 'Unknown'
                         });
                       }
@@ -427,7 +431,11 @@ export default function ScanResultModal({
             onPress={() => {
               onClose();
               (navigation as any).navigate('ProductDetail', { 
-                product, 
+                product: {
+                  ...product,
+                  size_oz: product.size_oz,
+                  size_display: product.size_display
+                }, 
                 categoryName: (aplData.categories as any)[product.category]?.name || 'Unknown'
               });
             }}

@@ -91,6 +91,17 @@ export default function ProductDetailScreen({ route }: any) {
         {/* Product Image */}
         <View style={[styles.productImage, { backgroundColor: theme.card }]}>
           {(() => {
+            // Priority: 1. OpenFoodFacts image from API, 2. Local image, 3. Emoji fallback
+            if (product.image) {
+              return (
+                <RNImage 
+                  source={{ uri: product.image }}
+                  style={styles.productImageContent}
+                  resizeMode="contain"
+                />
+              );
+            }
+            
             const imageSource = getImageSource(product.imageFilename, product.imageUrl);
             
             if (imageSource.source) {
@@ -152,7 +163,10 @@ export default function ProductDetailScreen({ route }: any) {
           </View>
           <View style={styles.infoRow}>
             <Typography variant="body" color="textSecondary">Size:</Typography>
-            <Typography variant="body">{product.size_display} ({product.size_oz} oz)</Typography>
+            <Typography variant="body">
+              {product.size_display}
+              {product.size_oz > 0 && product.size_display && !product.size_display.includes('oz') && ` (${product.size_oz} oz)`}
+            </Typography>
           </View>
           <View style={styles.infoRow}>
             <Typography variant="body" color="textSecondary">Category:</Typography>
